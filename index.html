@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeRE - Eventos Mensais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            background-color: #E8E8E8;
+            color: #000000;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background-color: #D3D3D3;
+            padding: 8px 12px;
+            border-bottom: 1px solid #999999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* TOOLBAR */
+        .toolbar {
+            background-color: #E8E8E8;
+            padding: 6px 12px;
+            border-bottom: 1px solid #999999;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toolbar button {
+            padding: 4px 12px;
+            border: 1px solid #999999;
+            background-color: #F0F0F0;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .toolbar button:hover {
+            background-color: #E0E0E0;
+        }
+
+        .toolbar select {
+            padding: 3px 6px;
+            border: 1px solid #999999;
+            font-size: 11px;
+            background-color: #FFFFFF;
+        }
+
+        .toolbar input[type="text"] {
+            padding: 3px 6px;
+            border: 1px solid #999999;
+            font-size: 11px;
+            width: 120px;
+        }
+
+        /* MAIN CONTENT */
+        .content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background-color: #F5F5F5;
+            border-right: 1px solid #999999;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .sidebar-title {
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 8px;
+            padding: 5px;
+            background-color: #D3D3D3;
+            border: 1px solid #999999;
+        }
+
+        .tree-item {
+            padding: 6px 12px;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            margin: 2px 0;
+            border-radius: 2px;
+        }
+
+        .tree-item:hover {
+            background-color: #E0E0E0;
+        }
+
+        .tree-item.active {
+            background-color: #D3D3D3;
+            font-weight: bold;
+            border-left: 3px solid #0066CC;
+        }
+
+        .tree-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* MAIN PANEL */
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* EVENT SCREENS */
+        .event-screen {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .event-screen.active {
+            display: flex;
+        }
+
+        /* FILTER SECTION */
+        .filter-section {
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #999999;
+            padding: 10px 12px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-size: 11px;
+            font-weight: normal;
+            min-width: 120px;
+        }
+
+        .filter-group input[type="text"],
+        .filter-group input[type="date"],
+        .filter-group select {
+            padding: 4px 6px;
+            border: 1px solid #999999;
+            font-size: 11px;
+            background-color: #FFFFFF;
+            min-width: 150px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 11px;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* MONTH SLIDER */
+        .month-slider-container {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            width: auto;
+        }
+
+        .month-slider {
+            display: flex;
+            gap: 3px;
+            padding: 6px;
+            background-color: #F5F5F5;
+            border: 1px solid #999999;
+            border-radius: 3px;
+            overflow-x: auto;
+            width: fit-content;
+        }
+
+        .month-btn {
+            min-width: 38px;
+            padding: 5px 8px;
+            border: 1px solid #999999;
+            background-color: #FFFFFF;
+            cursor: pointer;
+            font-size: 9px;
+            font-weight: normal;
+            text-align: center;
+            white-space: nowrap;
+            border-radius: 2px;
+        }
+
+        .month-btn:hover {
+            background-color: #E8E8E8;
+        }
+
+        .month-btn.active {
+            background-color: #0066CC;
+            color: #FFFFFF;
+            border-color: #0066CC;
+            font-weight: bold;
+        }
+
+        .year-select {
+            padding: 5px 8px;
+            border: 1px solid #999999;
+            background-color: #FFFFFF;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: Arial, sans-serif;
+            border-radius: 2px;
+            min-width: 80px;
+        }
+
+        .year-select:hover {
+            background-color: #E8E8E8;
+        }
+
+        .filter-button-container {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .filter-button-container button {
+            padding: 6px 16px;
+            border: 1px solid #999999;
+            background-color: #F0F0F0;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: normal;
+            border-radius: 2px;
+        }
+
+        .filter-button-container button:hover {
+            background-color: #E0E0E0;
+        }
+
+        /* FREQUENCY FIELD */
+        .frequency-field {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 4px 0;
+        }
+
+        .frequency-field label {
+            font-size: 11px;
+            font-weight: normal;
+            white-space: nowrap;
+        }
+
+        .frequency-value {
+            padding: 4px 8px;
+            background-color: #E8E8E8;
+            border: 1px solid #999999;
+            font-size: 11px;
+            color: #666666;
+            border-radius: 2px;
+            min-width: 100px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #0066CC;
+            color: #FFFFFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: help;
+            position: relative;
+        }
+
+        .info-icon:hover::after {
+            content: 'Essa informação será buscada do cadastro da empresa,\Aaba Parâmetros Contábeis, campo\AFrequência de Encerramento Contábil';
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333333;
+            color: #FFFFFF;
+            padding: 8px 10px;
+            border-radius: 3px;
+            font-size: 10px;
+            white-space: pre-wrap;
+            width: 240px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .info-icon:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #333333;
+            z-index: 1000;
+        }
+
+        /* TABLE SECTION */
+        .table-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .table-title {
+            background-color: #D3D3D3;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            border-bottom: 1px solid #999999;
+        }
+
+        .table-search-wrapper {
+            background-color: #E8E8E8;
+            padding: 8px 12px;
+            border-bottom: 1px solid #999999;
+            display: flex;
+            gap: 6px;
+        }
+
+        .table-search-wrapper input {
+            padding: 4px 8px;
+            border: 1px solid #999999;
+            font-size: 11px;
+            width: 200px;
+            font-family: Arial, sans-serif;
+            background-color: #FFFFFF;
+        }
+
+        .table-wrapper {
+            flex: 1;
+            overflow: auto;
+            background-color: #FFFFFF;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        table thead {
+            background-color: #D3D3D3;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        table th {
+            padding: 6px 8px;
+            text-align: left;
+            border: 1px solid #999999;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        table td {
+            padding: 4px 8px;
+            border: 1px solid #CCCCCC;
+            text-align: left;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #F9F9F9;
+        }
+
+        table tr:hover {
+            background-color: #E8F4FF;
+        }
+
+        table td.number {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* TABS */
+        .tabs-section {
+            background-color: #FFFFFF;
+            border-top: 1px solid #999999;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0;
+            background-color: #E8E8E8;
+            border-bottom: 1px solid #999999;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background-color: #D3D3D3;
+            border: 1px solid #999999;
+            border-bottom: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: normal;
+            user-select: none;
+        }
+
+        .tab:hover {
+            background-color: #C0C0C0;
+        }
+
+        .tab.active {
+            background-color: #FFFFFF;
+            font-weight: bold;
+            border-bottom: 1px solid #FFFFFF;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 10px 12px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-data {
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .tab-data p {
+            margin: 4px 0;
+        }
+
+        .tab-data strong {
+            display: inline-block;
+            min-width: 150px;
+            font-weight: bold;
+        }
+
+        .grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        .grid-table thead {
+            background-color: #D3D3D3;
+            border-bottom: 1px solid #999999;
+        }
+
+        .grid-table th {
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: bold;
+            border-right: 1px solid #999999;
+        }
+
+        .grid-table th:last-child {
+            border-right: none;
+        }
+
+        .grid-table tbody tr {
+            border-bottom: 1px solid #E8E8E8;
+        }
+
+        .grid-table tbody tr:hover {
+            background-color: #F5F5F5;
+        }
+
+        .grid-table td {
+            padding: 6px 12px;
+            border-right: 1px solid #E8E8E8;
+        }
+
+        .grid-table td:last-child {
+            border-right: none;
+        }
+
+        .grid-table td.number {
+            text-align: right;
+        }
+
+        .main-table tbody tr.selected {
+            background-color: #CCDDFF;
+            font-weight: bold;
+        }
+
+        .main-table tbody tr {
+            cursor: pointer;
+        }
+
+        /* FOOTER */
+        .footer {
+            background-color: #D3D3D3;
+            border-top: 1px solid #999999;
+            padding: 8px 12px;
+            font-size: 10px;
+            text-align: right;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #E8E8E8;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #999999;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #666666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>DeRE - Eventos Mensais</h1>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+            <button>📁 Abrir</button>
+            <button>💾 Salvar</button>
+            <button>🖨️ Imprimir</button>
+            <button>📊 Exportar</button>
+            <select>
+                <option>Ferramentas</option>
+                <option>Configurações</option>
+                <option>Preferências</option>
+            </select>
+            <select>
+                <option>Opções</option>
+                <option>Filtros avançados</option>
+                <option>Validações</option>
+            </select>
+            <button>↻ Atualizar</button>
+        </div>
+
+        <div class="content">
+            <!-- SIDEBAR -->
+            <div class="sidebar">
+                <div class="sidebar-title">Estrutura de Eventos</div>
+
+                <div class="tree-item active" data-event="d1101">
+                    <div class="tree-icon">📊</div>
+                    <span>D-1101 Balancete Mensal</span>
+                </div>
+
+                <div class="tree-item" data-event="d1106">
+                    <div class="tree-icon">💰</div>
+                    <span>D-1106 Aplicações Financeiras</span>
+                </div>
+
+                <div class="tree-item" data-event="d1121">
+                    <div class="tree-icon">📉</div>
+                    <span>D-1121 Deduções Utilizadas</span>
+                </div>
+            </div>
+
+            <!-- MAIN PANEL -->
+            <div class="main-panel">
+
+                <!-- SHARED FILTER SECTION (FIXED) -->
+                <div class="filter-section" id="shared-filter-section">
+                    <div class="filter-row">
+                        <div class="month-slider-container">
+                            <label style="font-size: 11px; font-weight: normal; white-space: nowrap;">Período de Apuração:</label>
+                            <div class="month-slider" id="month-slider">
+                                <button class="month-btn" data-month="01">Jan</button>
+                                <button class="month-btn" data-month="02">Fev</button>
+                                <button class="month-btn" data-month="03" id="month-03">Mar</button>
+                                <button class="month-btn" data-month="04">Abr</button>
+                                <button class="month-btn" data-month="05">Mai</button>
+                                <button class="month-btn" data-month="06">Jun</button>
+                                <button class="month-btn" data-month="07">Jul</button>
+                                <button class="month-btn" data-month="08">Ago</button>
+                                <button class="month-btn" data-month="09">Set</button>
+                                <button class="month-btn" data-month="10">Out</button>
+                                <button class="month-btn" data-month="11">Nov</button>
+                                <button class="month-btn" data-month="12">Dez</button>
+                            </div>
+                            <select id="year-select" class="year-select">
+                                <option value="2026" selected>2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                            </select>
+                            <div class="filter-button-container">
+                                <button id="filter-btn">🔍 Filtrar</button>
+                                <button id="process-btn-shared">⚙️ Processar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="frequency-field">
+                            <label>Frequência de Encerramento Contábil:</label>
+                            <div class="frequency-value">Trimestral</div>
+                            <div class="info-icon" title="Essa informação será buscada do cadastro da empresa, aba Parâmetros Contábeis, campo Frequência de Encerramento Contábil">i</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCREEN D-1101: BALANCETE MENSAL -->
+                <div class="event-screen active" id="screen-d1101">
+                    <div class="filter-section">
+                        <div class="filter-row">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="exibirContas1" checked>
+                                <label for="exibirContas1">Exibir Contas Zeradas</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-section">
+                        <div class="table-title" id="d1101-title">Registro D - 1101 - Balancete Mensal - Período Março/2026</div>
+
+                        <div class="table-search-wrapper">
+                            <input type="text" id="search-d1101" placeholder="Pesquisar conta...">
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="main-table" id="d1101-main-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código reduzido da Conta</th>
+                                        <th>Cód.</th>
+                                        <th>Descrição</th>
+                                        <th>Saldo Inicial</th>
+                                        <th>Valor total de Débitos</th>
+                                        <th>Valor de Ajuste a Débito</th>
+                                        <th>Valor Total de Créditos</th>
+                                        <th>Valor de Ajuste a Crédito</th>
+                                        <th>Saldo Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-account="1.1.01.01">
+                                        <td>1101</td>
+                                        <td>1.1.01.01</td>
+                                        <td>Caixa - Moeda Nacional</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="1.1.02.01">
+                                        <td>1102</td>
+                                        <td>1.1.02.01</td>
+                                        <td>Banco A - Conta Corrente</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="1.1.02.02">
+                                        <td>1103</td>
+                                        <td>1.1.02.02</td>
+                                        <td>Banco B - Conta Poupança</td>
+                                        <td class="number">36.225,79</td>
+                                        <td class="number">1.949,65</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">132,68</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">38.042,76</td>
+                                    </tr>
+                                    <tr data-account="1.1.02.03">
+                                        <td>1104</td>
+                                        <td>1.1.02.03</td>
+                                        <td>Banco C - Investimentos</td>
+                                        <td class="number">54.852,31</td>
+                                        <td class="number">19,50</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.946,33</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">51.925,48</td>
+                                    </tr>
+                                    <tr data-account="1.2.01.01">
+                                        <td>1201</td>
+                                        <td>1.2.01.01</td>
+                                        <td>Clientes - Pessoa Jurídica</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="1.2.01.02">
+                                        <td>1202</td>
+                                        <td>1.2.01.02</td>
+                                        <td>Clientes - Pessoa Física</td>
+                                        <td class="number">17.271,85</td>
+                                        <td class="number">1.207,45</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">386,87</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">18.092,43</td>
+                                    </tr>
+                                    <tr data-account="1.2.02.01">
+                                        <td>1203</td>
+                                        <td>1.2.02.01</td>
+                                        <td>Provisão Devedores Duvidosos</td>
+                                        <td class="number">90.774,77</td>
+                                        <td class="number">1.135,60</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.681,14</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">89.229,23</td>
+                                    </tr>
+                                    <tr data-account="1.3.01.01">
+                                        <td>1301</td>
+                                        <td>1.3.01.01</td>
+                                        <td>Estoques - Produtos Acabados</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="1.3.02.01">
+                                        <td>1302</td>
+                                        <td>1.3.02.01</td>
+                                        <td>Despesas Antecipadas - Seguros</td>
+                                        <td class="number">38.618,74</td>
+                                        <td class="number">159,58</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">911,59</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">37.866,73</td>
+                                    </tr>
+                                    <tr data-account="1.3.02.02">
+                                        <td>1303</td>
+                                        <td>1.3.02.02</td>
+                                        <td>Despesas Antecipadas - Aluguéis</td>
+                                        <td class="number">15.561,59</td>
+                                        <td class="number">729,66</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.111,89</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">15.179,36</td>
+                                    </tr>
+                                    <tr data-account="2.1.01.01">
+                                        <td>2101</td>
+                                        <td>2.1.01.01</td>
+                                        <td>Imobilizado - Máquinas e Equipamentos</td>
+                                        <td class="number">-55.544,17</td>
+                                        <td class="number">2.592,14</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">800,93</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">-53.752,96</td>
+                                    </tr>
+                                    <tr data-account="2.1.02.01">
+                                        <td>2102</td>
+                                        <td>2.1.02.01</td>
+                                        <td>Depreciação Acumulada - Máquinas</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="2.1.03.01">
+                                        <td>2103</td>
+                                        <td>2.1.03.01</td>
+                                        <td>Imobilizado - Móveis e Utensílios</td>
+                                        <td class="number">83.671,81</td>
+                                        <td class="number">1.685,70</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.227,80</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">83.129,71</td>
+                                    </tr>
+                                    <tr data-account="2.1.04.01">
+                                        <td>2104</td>
+                                        <td>2.1.04.01</td>
+                                        <td>Depreciação Acumulada - Móveis</td>
+                                        <td class="number">51.378,08</td>
+                                        <td class="number">535,48</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">128,40</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">51.785,16</td>
+                                    </tr>
+                                    <tr data-account="2.2.01.01">
+                                        <td>2201</td>
+                                        <td>2.2.01.01</td>
+                                        <td>Intangível - Software</td>
+                                        <td class="number">-19.910,99</td>
+                                        <td class="number">2.621,75</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.629,10</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">-19.918,34</td>
+                                    </tr>
+                                    <tr data-account="2.2.02.01">
+                                        <td>2202</td>
+                                        <td>2.2.02.01</td>
+                                        <td>Amortização Acumulada - Software</td>
+                                        <td class="number">-32.451,27</td>
+                                        <td class="number">986,51</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.376,56</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">-32.841,32</td>
+                                    </tr>
+                                    <tr data-account="3.1.01.01">
+                                        <td>3101</td>
+                                        <td>3.1.01.01</td>
+                                        <td>Fornecedores - Nacionais</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="3.1.02.01">
+                                        <td>3102</td>
+                                        <td>3.1.02.01</td>
+                                        <td>Fornecedores - Importação</td>
+                                        <td class="number">-43.508,28</td>
+                                        <td class="number">94,23</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.019,05</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">-44.433,10</td>
+                                    </tr>
+                                    <tr data-account="3.2.01.01">
+                                        <td>3201</td>
+                                        <td>3.2.01.01</td>
+                                        <td>Salários a Pagar</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="3.2.02.01">
+                                        <td>3202</td>
+                                        <td>3.2.02.01</td>
+                                        <td>INSS a Recolher</td>
+                                        <td class="number">-75.004,01</td>
+                                        <td class="number">1.721,56</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.058,23</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">-74.340,68</td>
+                                    </tr>
+                                    <tr data-account="3.2.03.01">
+                                        <td>3203</td>
+                                        <td>3.2.03.01</td>
+                                        <td>IRRF a Recolher</td>
+                                        <td class="number">43.261,86</td>
+                                        <td class="number">533,65</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.726,84</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">41.068,67</td>
+                                    </tr>
+                                    <tr data-account="3.3.01.01">
+                                        <td>3301</td>
+                                        <td>3.3.01.01</td>
+                                        <td>Impostos a Pagar - ICMS</td>
+                                        <td class="number">37.078,79</td>
+                                        <td class="number">1.907,63</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.739,06</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">37.247,36</td>
+                                    </tr>
+                                    <tr data-account="3.3.02.01">
+                                        <td>3302</td>
+                                        <td>3.3.02.01</td>
+                                        <td>Impostos a Pagar - PIS</td>
+                                        <td class="number">59.941,23</td>
+                                        <td class="number">1.825,26</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.002,34</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">59.764,15</td>
+                                    </tr>
+                                    <tr data-account="4.1.01.01">
+                                        <td>4101</td>
+                                        <td>4.1.01.01</td>
+                                        <td>Capital Social - Integralizado</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="4.2.01.01">
+                                        <td>4201</td>
+                                        <td>4.2.01.01</td>
+                                        <td>Reserva Legal</td>
+                                        <td class="number">70.517,55</td>
+                                        <td class="number">1,14</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">3.114,51</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">67.404,18</td>
+                                    </tr>
+                                    <tr data-account="4.3.01.01">
+                                        <td>4301</td>
+                                        <td>4.3.01.01</td>
+                                        <td>Lucros/Prejuízos Acumulados</td>
+                                        <td class="number">15.036,59</td>
+                                        <td class="number">1.663,33</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">3.716,39</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">12.983,53</td>
+                                    </tr>
+                                    <tr data-account="7.1.01.01">
+                                        <td>7101</td>
+                                        <td>7.1.01.01</td>
+                                        <td>Receita de Serviços</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="7.1.02.01">
+                                        <td>7102</td>
+                                        <td>7.1.02.01</td>
+                                        <td>Receita de Consultoria</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="7.1.03.01">
+                                        <td>7103</td>
+                                        <td>7.1.03.01</td>
+                                        <td>Receita de Manutenção</td>
+                                        <td class="number">-153.628,99</td>
+                                        <td class="number">2.115,69</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">795,17</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">-152.308,47</td>
+                                    </tr>
+                                    <tr data-account="7.2.01.01">
+                                        <td>7201</td>
+                                        <td>7.2.01.01</td>
+                                        <td>Receita Financeira - Juros</td>
+                                        <td class="number">-76.729,80</td>
+                                        <td class="number">1.558,58</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.189,79</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">-77.361,01</td>
+                                    </tr>
+                                    <tr data-account="8.1.01.01">
+                                        <td>8101</td>
+                                        <td>8.1.01.01</td>
+                                        <td>CMV - Custo de Produtos Vendidos</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="8.2.01.01">
+                                        <td>8201</td>
+                                        <td>8.2.01.01</td>
+                                        <td>Custo de Serviços Prestados</td>
+                                        <td class="number">56.902,63</td>
+                                        <td class="number">440,43</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.941,54</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">54.401,52</td>
+                                    </tr>
+                                    <tr data-account="9.1.01.01">
+                                        <td>9101</td>
+                                        <td>9.1.01.01</td>
+                                        <td>Despesa com Salários</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                    </tr>
+                                    <tr data-account="9.1.02.01">
+                                        <td>9102</td>
+                                        <td>9.1.02.01</td>
+                                        <td>Despesa com Encargos Sociais</td>
+                                        <td class="number">20.973,67</td>
+                                        <td class="number">264,62</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.675,91</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">18.562,38</td>
+                                    </tr>
+                                    <tr data-account="9.2.01.01">
+                                        <td>9201</td>
+                                        <td>9.2.01.01</td>
+                                        <td>Despesa de Aluguel</td>
+                                        <td class="number">75.959,43</td>
+                                        <td class="number">1.614,99</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.890,68</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">75.683,74</td>
+                                    </tr>
+                                    <tr data-account="9.2.02.01">
+                                        <td>9202</td>
+                                        <td>9.2.02.01</td>
+                                        <td>Despesa de Utilidades</td>
+                                        <td class="number">15.353,60</td>
+                                        <td class="number">934,05</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.724,20</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">14.563,45</td>
+                                    </tr>
+                                    <tr data-account="9.2.03.01">
+                                        <td>9203</td>
+                                        <td>9.2.03.01</td>
+                                        <td>Despesa de Telefone e Internet</td>
+                                        <td class="number">80.123,94</td>
+                                        <td class="number">805,24</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">3.936,66</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">76.992,52</td>
+                                    </tr>
+                                    <tr data-account="9.3.01.01">
+                                        <td>9301</td>
+                                        <td>9.3.01.01</td>
+                                        <td>Despesa de Depreciação</td>
+                                        <td class="number">68.178,56</td>
+                                        <td class="number">897,23</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">994,63</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">68.081,16</td>
+                                    </tr>
+                                    <tr data-account="9.3.02.01">
+                                        <td>9302</td>
+                                        <td>9.3.02.01</td>
+                                        <td>Despesa de Amortização</td>
+                                        <td class="number">32.554,66</td>
+                                        <td class="number">886,26</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">999,23</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">32.441,69</td>
+                                    </tr>
+                                    <tr data-account="9.4.01.01">
+                                        <td>9401</td>
+                                        <td>9.4.01.01</td>
+                                        <td>Despesa Financeira - Juros</td>
+                                        <td class="number">67.661,01</td>
+                                        <td class="number">1.672,06</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">202,35</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">69.130,72</td>
+                                    </tr>
+                                    <tr data-account="9.4.02.01">
+                                        <td>9402</td>
+                                        <td>9.4.02.01</td>
+                                        <td>Despesa Financeira - Banco</td>
+                                        <td class="number">105.303,11</td>
+                                        <td class="number">971,28</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">3.394,78</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">102.879,61</td>
+                                    </tr>
+                                    <tr data-account="9.5.01.01">
+                                        <td>9501</td>
+                                        <td>9.5.01.01</td>
+                                        <td>Outras Despesas Operacionais</td>
+                                        <td class="number">31.966,09</td>
+                                        <td class="number">1.970,62</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">234,54</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">33.702,17</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tabs-section">
+                        <div class="tabs-header">
+                            <div class="tab tab-1101 active">Lançamentos de Ajuste a Débito</div>
+                            <div class="tab tab-1101">Lançamentos de Ajuste a Crédito</div>
+                        </div>
+                        <div class="tab-content active">
+                            <table class="grid-table">
+                                <thead>
+                                    <tr>
+                                        <th>Número do Lançamento</th>
+                                        <th>Data</th>
+                                        <th>Valor</th>
+                                        <th>Histórico</th>
+                                        <th>Contrapartida</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>001</td>
+                                        <td>2025-03-15</td>
+                                        <td class="number">15.000,00</td>
+                                        <td>Ajuste de Receita de Serviços</td>
+                                        <td>7.1.01.01</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-content">
+                            <table class="grid-table">
+                                <thead>
+                                    <tr>
+                                        <th>Número do Lançamento</th>
+                                        <th>Data</th>
+                                        <th>Valor</th>
+                                        <th>Histórico</th>
+                                        <th>Contrapartida</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>001</td>
+                                        <td>2025-03-20</td>
+                                        <td class="number">8.500,00</td>
+                                        <td>Ajuste de Despesa com Salários</td>
+                                        <td>9.1.01.01</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCREEN D-1106: APLICAÇÕES FINANCEIRAS -->
+                <div class="event-screen" id="screen-d1106">
+                    <div class="filter-section">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label>Tipo de Aplicação:</label>
+                                <select>
+                                    <option value="">-- Todos --</option>
+                                    <option value="01">Renda Fixa</option>
+                                    <option value="02">Renda Variável</option>
+                                    <option value="03">Fundos de Investimento</option>
+                                </select>
+                            </div>
+                            <button style="margin-left: auto;">🔍 Filtrar</button>
+                        </div>
+                    </div>
+
+                    <div class="table-section">
+                        <div class="table-title">Registro - Aplicações Financeiras (Período 2025-03)</div>
+
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Cód.</th>
+                                        <th>Descrição</th>
+                                        <th>Tipo</th>
+                                        <th>Valor Inicial</th>
+                                        <th>Valor Investido</th>
+                                        <th>Valor Final</th>
+                                        <th>Rentabilidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-account="1.1.01.01">
+                                        <td>1101</td>
+                                        <td>1.1.01.01</td>
+                                        <td>Caixa - Moeda Nacional</td>
+                                        <td class="number">46.701,82</td>
+                                        <td class="number">2.871,95</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.275,04</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">47.298,73</td>
+                                    </tr>
+                                    <tr data-account="1.1.02.01">
+                                        <td>1102</td>
+                                        <td>1.1.02.01</td>
+                                        <td>Banco A - Conta Corrente</td>
+                                        <td class="number">116.639,80</td>
+                                        <td class="number">890,12</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">3.592,04</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">113.937,88</td>
+                                    </tr>
+                                    <tr data-account="1.1.02.02">
+                                        <td>1103</td>
+                                        <td>1.1.02.02</td>
+                                        <td>Banco B - Conta Poupança</td>
+                                        <td class="number">106.017,45</td>
+                                        <td class="number">171,50</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.710,98</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">103.477,97</td>
+                                    </tr>
+                                    <tr data-account="1.1.02.03">
+                                        <td>1104</td>
+                                        <td>1.1.02.03</td>
+                                        <td>Banco C - Investimentos</td>
+                                        <td class="number">74.678,02</td>
+                                        <td class="number">2.882,34</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">4.263,60</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">73.296,76</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tabs-section">
+                        <div class="tabs-header">
+                            <div class="tab tab-1106 active">Detalhes da Aplicação</div>
+                            <div class="tab tab-1106">Histórico de Movimentações</div>
+                            <div class="tab tab-1106">Rentabilidade</div>
+                        </div>
+                        <div class="tab-content active">
+                            <div class="tab-data">
+                                <p><strong>Aplicação Selecionada:</strong> APP001</p>
+                                <p><strong>Instituição Financeira:</strong> Banco do Brasil</p>
+                                <p><strong>Data de Aquisição:</strong> 2025-01-10</p>
+                                <p><strong>Data de Vencimento:</strong> 2026-01-10</p>
+                                <p><strong>Taxa de Juros:</strong> 10,5% a.a.</p>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-data">
+                                <p><strong>Movimentação 1:</strong> 2025-03-01 - Investimento de R$ 10.000,00</p>
+                                <p><strong>Movimentação 2:</strong> 2025-03-15 - Rendimento de R$ 1.250,00</p>
+                                <p><strong>Saldo Atual:</strong> R$ 61.250,00</p>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-data">
+                                <p><strong>Rentabilidade Acumulada:</strong> 2,5%</p>
+                                <p><strong>Rentabilidade Mensal:</strong> 0,85%</p>
+                                <p><strong>Rentabilidade Esperada (a.a.):</strong> 10,5%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCREEN D-1121: DEDUÇÕES UTILIZADAS -->
+                <div class="event-screen" id="screen-d1121">
+                    <div class="filter-section">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label>Tipo de Dedução:</label>
+                                <select>
+                                    <option value="">-- Todos --</option>
+                                    <option value="01">Despesas Operacionais</option>
+                                    <option value="02">Depreciação</option>
+                                    <option value="03">Amortização</option>
+                                    <option value="04">Provisões</option>
+                                </select>
+                            </div>
+                            <button style="margin-left: auto;">🔍 Filtrar</button>
+                        </div>
+                    </div>
+
+                    <div class="table-section">
+                        <div class="table-title">Registro - Deduções Utilizadas na Apuração (Período 2025-03)</div>
+
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Cód.</th>
+                                        <th>Descrição</th>
+                                        <th>Tipo</th>
+                                        <th>Valor da Dedução</th>
+                                        <th>Base de Cálculo</th>
+                                        <th>% Aplicado</th>
+                                        <th>Valor Líquido</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-account="9.3.02.01">
+                                        <td>9302</td>
+                                        <td>9.3.02.01</td>
+                                        <td>Despesa de Amortização</td>
+                                        <td class="number">52.135,81</td>
+                                        <td class="number">1.061,84</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.326,22</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">50.871,43</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tabs-section">
+                        <div class="tabs-header">
+                            <div class="tab tab-1121 active">Análise de Deduções</div>
+                            <div class="tab tab-1121">Conformidade Fiscal</div>
+                            <div class="tab tab-1121">Justificativas</div>
+                        </div>
+                        <div class="tab-content active">
+                            <div class="tab-data">
+                                <p><strong>Total de Deduções:</strong> R$ 295.000,00</p>
+                                <p><strong>Base de Cálculo:</strong> R$ 825.000,00</p>
+                                <p><strong>% do Total de Deduções:</strong> 35,76%</p>
+                                <p><strong>Maior Dedução:</strong> Salários e Encargos (R$ 150.000,00)</p>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-data">
+                                <p><strong>Status de Conformidade:</strong> ✅ Conforme</p>
+                                <p><strong>Validação Fiscal:</strong> Pendente análise</p>
+                                <p><strong>Documentação Anexada:</strong> Sim</p>
+                                <p><strong>Última Revisão:</strong> 2025-03-16</p>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-data">
+                                <p><strong>Justificativa D-001:</strong> Folha de pagamento conforme RAIS/CAGED</p>
+                                <p><strong>Justificativa D-002:</strong> Depreciação conforme NPC 27 - CPC 27</p>
+                                <p><strong>Justificativa D-003:</strong> Software registrado e licenciado</p>
+                                <p><strong>Justificativa D-004:</strong> Provisão constituída conforme CLT</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <span id="footer-text">Balancete Mensal D-1101 | Período: 2025-03 | Total de Registros: 4 | Último processamento: 2025-03-16 10:30:45</span>
+        </div>
+    </div>
+
+    <script>
+        // Event mapping with footer text
+        const eventData = {
+            'd1101': {
+                name: 'D-1101 Balancete Mensal',
+                footer: 'Balancete Mensal D-1101 | Período: 2025-03 | Total de Registros: 4 | Último processamento: 2025-03-16 10:30:45'
+            },
+            'd1106': {
+                name: 'D-1106 Aplicações Financeiras',
+                footer: 'Aplicações Financeiras D-1106 | Período: 2025-03 | Total de Registros: 3 | Último processamento: 2025-03-16 10:35:20'
+            },
+            'd1121': {
+                name: 'D-1121 Deduções Utilizadas',
+                footer: 'Deduções Utilizadas D-1121 | Período: 2025-03 | Total de Registros: 4 | Último processamento: 2025-03-16 10:40:15'
+            }
+        };
+
+        // Checkbox for zeroed accounts filter
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('exibirContas1');
+            if (checkbox) {
+                checkbox.addEventListener('change', applyZeroedAccountsFilter);
+                // Apply filter on initial load
+                applyZeroedAccountsFilter();
+            }
+        });
+
+        // Tree item click handler
+        document.querySelectorAll('.tree-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const eventId = this.getAttribute('data-event');
+
+                // Update active tree item
+                document.querySelectorAll('.tree-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                // Hide all screens
+                document.querySelectorAll('.event-screen').forEach(screen => {
+                    screen.classList.remove('active');
+                });
+
+                // Show selected screen
+                document.getElementById(`screen-${eventId}`).classList.add('active');
+
+                // Update footer
+                document.getElementById('footer-text').textContent = eventData[eventId].footer;
+
+                // Reset tabs for the new screen
+                const activeScreen = document.getElementById(`screen-${eventId}`);
+                const tabs = activeScreen.querySelectorAll('.tab');
+                const tabContents = activeScreen.querySelectorAll('.tab-content');
+
+                tabs.forEach((tab, index) => {
+                    tab.classList.remove('active');
+                    tabContents[index].classList.remove('active');
+                });
+
+                if (tabs.length > 0) {
+                    tabs[0].classList.add('active');
+                    tabContents[0].classList.add('active');
+                }
+            });
+        });
+
+        // Tab switching within each screen
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabsHeader = this.parentElement;
+                const tabsSection = tabsHeader.parentElement;
+
+                // Get all tabs and contents in this specific screen
+                const allTabs = tabsSection.querySelectorAll('.tab');
+                const allContents = tabsSection.querySelectorAll('.tab-content');
+
+                allTabs.forEach(t => t.classList.remove('active'));
+                allContents.forEach(c => c.classList.remove('active'));
+
+                const index = Array.from(allTabs).indexOf(this);
+                this.classList.add('active');
+                allContents[index].classList.add('active');
+            });
+        });
+
+        // Month names mapping
+        const monthNames = {
+            '01': 'Janeiro',
+            '02': 'Fevereiro',
+            '03': 'Março',
+            '04': 'Abril',
+            '05': 'Maio',
+            '06': 'Junho',
+            '07': 'Julho',
+            '08': 'Agosto',
+            '09': 'Setembro',
+            '10': 'Outubro',
+            '11': 'Novembro',
+            '12': 'Dezembro'
+        };
+
+        // Dados de lançamentos vinculados a cada conta (apenas contas de resultado)
+        let selectedAccountForLancamentos = null;
+
+        const lancamentosDebito = {
+            '7.1.01.01': [
+                { num: '001', data: '2025-03-15', valor: '15.000,00', historico: 'Ajuste de Receita de Serviços', contrapartida: '7.1.01.01' }
+            ],
+            '9.1.01.01': [
+                { num: '007', data: '2025-03-28', valor: '3.500,00', historico: 'Ajuste de Salários', contrapartida: '9.1.02.01' }
+            ]
+        };
+
+        const lancamentosCredito = {
+            '9.1.01.01': [
+                { num: '001', data: '2025-03-20', valor: '8.500,00', historico: 'Ajuste de Despesa com Salários', contrapartida: '9.1.01.01' }
+            ]
+        };
+
+        // Store original table data for restoration
+        let originalTableHTML = null;
+
+        // Function to check if a row is completely zeroed (all numeric columns are 0,00)
+        function isRowCompletelyZeroed(row) {
+            const numberCells = row.querySelectorAll('td.number');
+            return Array.from(numberCells).every(cell => cell.textContent.trim() === '0,00');
+        }
+
+        // Function to suppress or restore accounts based on checkbox state
+        function applyZeroedAccountsFilter() {
+            const checkbox = document.getElementById('exibirContas1');
+            const table = document.getElementById('d1101-main-table');
+            if (!table) return;
+
+            // Save original HTML on first call
+            if (!originalTableHTML) {
+                originalTableHTML = table.innerHTML;
+            }
+
+            if (checkbox.checked) {
+                // Show all accounts (restore original)
+                table.innerHTML = originalTableHTML;
+            } else {
+                // Remove zeroed accounts (suppress them)
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                rows.forEach(row => {
+                    if (isRowCompletelyZeroed(row)) {
+                        row.remove();
+                    }
+                });
+            }
+        }
+
+        // Function to check if account has adjustment value
+        function hasAdjustmentValue(accountCode, type) {
+            const table = document.getElementById('d1101-main-table');
+            const row = table?.querySelector(`tr[data-account="${accountCode}"]`);
+            if (!row) return false;
+
+            const numberCells = row.querySelectorAll('td.number');
+            if (type === 'debito' && numberCells.length >= 3) {
+                // Índice 2 = Valor de Ajuste a Débito
+                const value = numberCells[2].textContent.trim();
+                return value !== '0,00' && value !== '';
+            }
+            if (type === 'credito' && numberCells.length >= 5) {
+                // Índice 4 = Valor de Ajuste a Crédito
+                const value = numberCells[4].textContent.trim();
+                return value !== '0,00' && value !== '';
+            }
+            return false;
+        }
+
+        // Function to update lancamentos grid (Débito)
+        function updateLancamentosDebito(accountCode) {
+            const gridBody = document.querySelector('#screen-d1101 .tab-content.active .grid-table tbody');
+            if (!gridBody) return;
+
+            // Limpar grid
+            gridBody.innerHTML = '';
+
+            // Verificar se a conta tem ajuste a débito
+            if (!hasAdjustmentValue(accountCode, 'debito')) {
+                gridBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Nenhum lançamento para esta conta</td></tr>';
+                return;
+            }
+
+            // Obter lançamentos da conta
+            const lancamentos = lancamentosDebito[accountCode] || [];
+
+            if (lancamentos.length === 0) {
+                gridBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Nenhum lançamento para esta conta</td></tr>';
+                return;
+            }
+
+            // Preencher grid com lançamentos
+            lancamentos.forEach(lancamento => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${lancamento.num}</td>
+                    <td>${lancamento.data}</td>
+                    <td class="number">${lancamento.valor}</td>
+                    <td>${lancamento.historico}</td>
+                    <td>${lancamento.contrapartida}</td>
+                `;
+                gridBody.appendChild(row);
+            });
+        }
+
+        // Function to update lancamentos grid (Crédito)
+        function updateLancamentosCredito(accountCode) {
+            // Encontrar o segundo grid-table (aba de crédito)
+            const tabContents = document.querySelectorAll('#screen-d1101 .tab-content');
+            const gridBody = tabContents[1]?.querySelector('.grid-table tbody');
+            if (!gridBody) return;
+
+            // Limpar grid
+            gridBody.innerHTML = '';
+
+            // Verificar se a conta tem ajuste a crédito
+            if (!hasAdjustmentValue(accountCode, 'credito')) {
+                gridBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Nenhum lançamento para esta conta</td></tr>';
+                return;
+            }
+
+            // Obter lançamentos da conta
+            const lancamentos = lancamentosCredito[accountCode] || [];
+
+            if (lancamentos.length === 0) {
+                gridBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Nenhum lançamento para esta conta</td></tr>';
+                return;
+            }
+
+            // Preencher grid com lançamentos
+            lancamentos.forEach(lancamento => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${lancamento.num}</td>
+                    <td>${lancamento.data}</td>
+                    <td class="number">${lancamento.valor}</td>
+                    <td>${lancamento.historico}</td>
+                    <td>${lancamento.contrapartida}</td>
+                `;
+                gridBody.appendChild(row);
+            });
+        }
+
+        // Adicionar click listener na tabela principal
+        document.getElementById('d1101-main-table').addEventListener('click', function(e) {
+            const row = e.target.closest('tr');
+            if (!row) return;
+
+            // Remover seleção anterior
+            document.querySelectorAll('#d1101-main-table tbody tr.selected').forEach(r => r.classList.remove('selected'));
+
+            // Adicionar seleção nova
+            row.classList.add('selected');
+
+            // Obter código da conta
+            const accountCode = row.getAttribute('data-account');
+            if (accountCode) {
+                selectedAccountForLancamentos = accountCode;
+                updateLancamentosDebito(accountCode);
+                updateLancamentosCredito(accountCode);
+            }
+        });
+
+        // Month slider functionality
+        let selectedMonth = '03'; // March
+        let selectedYear = '2026'; // Default year
+
+        // Function to update the D-1101 title
+        function updateD1101Title() {
+            const monthName = monthNames[selectedMonth];
+            const titleElement = document.getElementById('d1101-title');
+            if (titleElement) {
+                titleElement.textContent = `Registro D - 1101 - Balancete Mensal - Período ${monthName}/${selectedYear}`;
+            }
+        }
+
+        document.querySelectorAll('.month-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active from all months
+                document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+
+                // Add active to clicked month
+                this.classList.add('active');
+                selectedMonth = this.getAttribute('data-month');
+                updateD1101Title();
+            });
+        });
+
+        // Set March as active by default
+        document.getElementById('month-03').classList.add('active');
+
+        // Year select functionality
+        document.getElementById('year-select').addEventListener('change', function() {
+            selectedYear = this.value;
+            console.log(`Ano selecionado: ${selectedYear}`);
+            updateD1101Title();
+        });
+
+        // Filter button functionality
+        document.getElementById('filter-btn').addEventListener('click', function() {
+            console.log(`Filtro aplicado: Período ${selectedYear}-${selectedMonth}`);
+            alert(`Filtro aplicado!\nPeríodo: ${selectedYear}-${selectedMonth}`);
+        });
+
+        // Process button functionality (shared)
+        document.getElementById('process-btn-shared').addEventListener('click', function() {
+            console.log(`Processando: Período ${selectedYear}-${selectedMonth}`);
+            alert(`Processando eventos...\nPeríodo: ${selectedYear}-${selectedMonth}`);
+        });
+
+        // Search functionality for D-1101 table
+        const searchInput = document.getElementById('search-d1101');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const d1101Screen = document.getElementById('screen-d1101');
+                const tableRows = d1101Screen.querySelectorAll('table tbody tr');
+
+                tableRows.forEach(row => {
+                    const codigoReduzido = row.cells[0].textContent.toLowerCase();
+                    const codigoCompleto = row.cells[1].textContent.toLowerCase();
+                    const descricao = row.cells[2].textContent.toLowerCase();
+
+                    if (codigoReduzido.includes(searchTerm) || codigoCompleto.includes(searchTerm) || descricao.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
