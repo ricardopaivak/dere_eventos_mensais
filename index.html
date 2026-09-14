@@ -315,6 +315,22 @@
             align-items: center;
         }
 
+        .filter-button-container .frequency-field {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            padding: 0;
+            margin-left: 12px;
+            border-left: 1px solid #999999;
+            padding-left: 12px;
+        }
+
+        .filter-button-container .frequency-value {
+            min-width: 70px;
+            font-weight: bold;
+            padding: 3px 6px;
+        }
+
         .info-icon {
             width: 16px;
             height: 16px;
@@ -365,6 +381,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            width: 75%;
         }
 
         .table-title {
@@ -601,6 +618,21 @@
             text-align: center;
             padding: 6px;
         }
+
+        /* GROUP SEPARATOR ROWS */
+        .group-separator {
+            background-color: #D0D0D0;
+            font-weight: bold;
+            text-align: center;
+            height: 25px;
+            color: #333333;
+            border-top: 2px solid #999999;
+            border-bottom: 2px solid #999999;
+        }
+
+        .group-separator td {
+            padding: 4px;
+        }
     </style>
 </head>
 <body>
@@ -680,14 +712,12 @@
                             <div class="filter-button-container">
                                 <button id="filter-btn">🔍 Filtrar</button>
                                 <button id="process-btn-shared">⚙️ Processar</button>
+                                <div class="frequency-field">
+                                    <label>Frequência de Encerramento:</label>
+                                    <div class="frequency-value">Trimestral</div>
+                                    <div class="info-icon" title="Essa informação será buscada do cadastro da empresa, aba Parâmetros Contábeis, campo Frequência de Encerramento Contábil">i</div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="filter-row">
-                        <div class="frequency-field">
-                            <label>Frequência de Encerramento Contábil:</label>
-                            <div class="frequency-value">Trimestral</div>
-                            <div class="info-icon" title="Essa informação será buscada do cadastro da empresa, aba Parâmetros Contábeis, campo Frequência de Encerramento Contábil">i</div>
                         </div>
                     </div>
                 </div>
@@ -696,9 +726,22 @@
                 <div class="event-screen active" id="screen-d1101">
                     <div class="filter-section">
                         <div class="filter-row">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="exibirContas1" checked>
-                                <label for="exibirContas1">Exibir Contas Zeradas</label>
+                            <fieldset style="border: 1px solid #999999; padding: 10px; border-radius: 3px; min-width: 400px;">
+                                <legend style="font-size: 11px; font-weight: bold; padding: 0 8px; margin-left: -8px;">Exibir</legend>
+                                <div style="display: flex; gap: 20px;">
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="exibirContas1">
+                                        <label for="exibirContas1">Contas Zeradas</label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="exibirSaldos">
+                                        <label for="exibirSaldos">Saldo Inicial / Saldo Final</label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="checkbox-group" style="margin-left: 20px; display: flex; align-items: center;">
+                                <input type="checkbox" id="exibirSinalNegativo">
+                                <label for="exibirSinalNegativo" style="margin: 0; margin-left: 8px;">Exibir Sinal Negativo</label>
                             </div>
                         </div>
                     </div>
@@ -715,521 +758,704 @@
                                 <thead>
                                     <tr>
                                         <th>Código reduzido da Conta</th>
-                                        <th>Cód.</th>
-                                        <th>Conta Desmembrada</th>
+                                        <th>Conta Contábil</th>
                                         <th>Descrição</th>
+                                        <th>Cod Trib</th>
+                                        <th>Conta Desmembrada</th>
                                         <th>Saldo Inicial</th>
-                                        <th>Valor total de Débitos</th>
-                                        <th>Valor de Ajuste a Débito</th>
-                                        <th>Valor Total de Créditos</th>
-                                        <th>Valor de Ajuste a Crédito</th>
+                                        <th>Débitos do Período</th>
+                                        <th>Ajuste Redução Débito</th>
+                                        <th>Créditos do Período</th>
+                                        <th>Ajuste Redução Crédito</th>
                                         <th>Saldo Final</th>
+                                        <th>Vlr. Apurado DeRE</th>
+                                        <th>D/C</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-account="1.1.01.01.001">
-                                        <td>1101</td>
-                                        <td>1.1.01.01.001</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" checked disabled disabled></td>
+                                    <tr class="group-separator">
+                                        <td colspan="13">─ ATIVO ─</td>
+                                    </tr>
+                                    <tr data-account="1.01.001">
+                                        <td>101001</td>
+                                        <td>1.01.001</td>
                                         <td>Caixa - Moeda Nacional</td>
+                                        <td>110112001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" checked disabled disabled></td>
                                         <td class="number">0,00</td>
                                         <td class="number">0,00</td>
                                         <td class="number">0,00</td>
                                         <td class="number">0,00</td>
                                         <td class="number">0,00</td>
                                         <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
                                     </tr>
-                                    <tr data-account="1.1.02.01">
-                                        <td>1102</td>
-                                        <td>1.1.02.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                    <tr data-account="1.02">
+                                        <td>102</td>
+                                        <td>1.02</td>
                                         <td>Banco A - Conta Corrente</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                    </tr>
-                                    <tr data-account="1.1.02.02">
-                                        <td>1103</td>
-                                        <td>1.1.02.02</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">3.000,00</td>
+                                        <td class="number">7.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">5.000,00</td>
+
+                                        <td class="number">6.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="1.03">
+                                        <td>103</td>
+                                        <td>1.03</td>
                                         <td>Banco B - Conta Poupança</td>
-                                        <td class="number">36.225,79</td>
-                                        <td class="number">1.949,65</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">132,68</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">38.042,76</td>
-                                    </tr>
-                                    <tr data-account="1.1.02.03">
-                                        <td>1104</td>
-                                        <td>1.1.02.03</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">9.000,00</td>
+                                        <td class="number">7.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">14.000,00</td>
+
+                                        <td class="number">5.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="1.04">
+                                        <td>104</td>
+                                        <td>1.04</td>
                                         <td>Banco C - Investimentos</td>
-                                        <td class="number">54.852,31</td>
-                                        <td class="number">19,50</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.946,33</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">51.925,48</td>
-                                    </tr>
-                                    <tr data-account="1.2.01.01">
-                                        <td>1201</td>
-                                        <td>1.2.01.01</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">10.000,00</td>
+                                        <td class="number">9.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">11.000,00</td>
+                                    
+                                        <td class="number">1.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="1.05">
+                                        <td>105</td>
+                                        <td>1.05</td>
                                         <td>Clientes - Pessoa Jurídica</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                    </tr>
-                                    <tr data-account="1.2.01.02">
-                                        <td>1202</td>
-                                        <td>1.2.01.02</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">10.000,00</td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">14.000,00</td>
+
+                                        <td class="number">4.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="1.06">
+                                        <td>106</td>
+                                        <td>1.06</td>
                                         <td>Clientes - Pessoa Física</td>
-                                        <td class="number">17.271,85</td>
-                                        <td class="number">1.207,45</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">386,87</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">18.092,43</td>
-                                    </tr>
-                                    <tr data-account="1.2.02.01">
-                                        <td>1203</td>
-                                        <td>1.2.02.01</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">6.000,00</td>
+                                        <td class="number">10.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">8.000,00</td>
+
+                                        <td class="number">2.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="1.07">
+                                        <td>107</td>
+                                        <td>1.07</td>
                                         <td>Provisão Devedores Duvidosos</td>
-                                        <td class="number">90.774,77</td>
-                                        <td class="number">1.135,60</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.681,14</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">89.229,23</td>
-                                    </tr>
-                                    <tr data-account="1.3.01.01">
-                                        <td>1301</td>
-                                        <td>1.3.01.01</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">9.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">9.000,00</td>
+
+                                        <td class="number">5.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="1.08">
+                                        <td>108</td>
+                                        <td>1.08</td>
                                         <td>Estoques - Produtos Acabados</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                    </tr>
-                                    <tr data-account="1.3.02.01">
-                                        <td>1302</td>
-                                        <td>1.3.02.01</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">5.000,00</td>
+                                        <td class="number">10.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">7.000,00</td>
+
+                                        <td class="number">2.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="1.09">
+                                        <td>109</td>
+                                        <td>1.09</td>
                                         <td>Despesas Antecipadas - Seguros</td>
-                                        <td class="number">38.618,74</td>
-                                        <td class="number">159,58</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">911,59</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">37.866,73</td>
-                                    </tr>
-                                    <tr data-account="1.3.02.02">
-                                        <td>1303</td>
-                                        <td>1.3.02.02</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="1.10">
+                                        <td>110</td>
+                                        <td>1.10</td>
                                         <td>Despesas Antecipadas - Aluguéis</td>
-                                        <td class="number">15.561,59</td>
-                                        <td class="number">729,66</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.111,89</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">15.179,36</td>
-                                    </tr>
-                                    <tr data-account="2.1.01.01">
-                                        <td>2101</td>
-                                        <td>2.1.01.01</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr class="group-separator">
+                                        <td colspan="13">─ PASSIVO E PATRIMÔNIO LÍQUIDO ─</td>
+                                    </tr>
+                                    <tr data-account="2.01">
+                                        <td>201</td>
+                                        <td>2.01</td>
                                         <td>Imobilizado - Máquinas e Equipamentos</td>
-                                        <td class="number">-55.544,17</td>
-                                        <td class="number">2.592,14</td>
+                                        <td>110113001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">3.000,00</td>
                                         <td class="number">0,00</td>
-                                        <td class="number">800,93</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">-53.752,96</td>
+                                        <td class="number">7.000,00</td>
+                                        <td class="number">2.000,00</td>
+                                        <td class="number">4.000,00</td>
+
+                                        <td class="number">2.000,00</td>
+                                        <td>-</td>
                                     </tr>
-                                    <tr data-account="2.1.02.01.001">
-                                        <td>2102</td>
-                                        <td>2.1.02.01.001</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" checked disabled disabled></td>
+                                    <tr data-account="2.02.001">
+                                        <td>202001</td>
+                                        <td>2.02.001</td>
                                         <td>Depreciação Acumulada - Máquinas</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                    </tr>
-                                    <tr data-account="2.1.03.01">
-                                        <td>2103</td>
-                                        <td>2.1.03.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Imobilizado - Móveis e Utensílios</td>
-                                        <td class="number">83.671,81</td>
-                                        <td class="number">1.685,70</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.227,80</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">83.129,71</td>
-                                    </tr>
-                                    <tr data-account="2.1.04.01">
-                                        <td>2104</td>
-                                        <td>2.1.04.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Depreciação Acumulada - Móveis</td>
-                                        <td class="number">51.378,08</td>
-                                        <td class="number">535,48</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">128,40</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">51.785,16</td>
-                                    </tr>
-                                    <tr data-account="2.2.01.01">
-                                        <td>2201</td>
-                                        <td>2.2.01.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Intangível - Software</td>
-                                        <td class="number">-19.910,99</td>
-                                        <td class="number">2.621,75</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.629,10</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">-19.918,34</td>
-                                    </tr>
-                                    <tr data-account="2.2.02.01">
-                                        <td>2202</td>
-                                        <td>2.2.02.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Amortização Acumulada - Software</td>
-                                        <td class="number">-32.451,27</td>
-                                        <td class="number">986,51</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.376,56</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">-32.841,32</td>
-                                    </tr>
-                                    <tr data-account="3.1.01.01">
-                                        <td>3101</td>
-                                        <td>3.1.01.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Fornecedores - Nacionais</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                    </tr>
-                                    <tr data-account="3.1.02.01">
-                                        <td>3102</td>
-                                        <td>3.1.02.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Fornecedores - Importação</td>
-                                        <td class="number">-43.508,28</td>
-                                        <td class="number">94,23</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.019,05</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">-44.433,10</td>
-                                    </tr>
-                                    <tr data-account="3.2.01.01">
-                                        <td>3201</td>
-                                        <td>3.2.01.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Salários a Pagar</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                    </tr>
-                                    <tr data-account="3.2.02.01">
-                                        <td>3202</td>
-                                        <td>3.2.02.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>INSS a Recolher</td>
-                                        <td class="number">-75.004,01</td>
-                                        <td class="number">1.721,56</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.058,23</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">-74.340,68</td>
-                                    </tr>
-                                    <tr data-account="3.2.03.01">
-                                        <td>3203</td>
-                                        <td>3.2.03.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>IRRF a Recolher</td>
-                                        <td class="number">43.261,86</td>
-                                        <td class="number">533,65</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.726,84</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">41.068,67</td>
-                                    </tr>
-                                    <tr data-account="3.3.01.01">
-                                        <td>3301</td>
-                                        <td>3.3.01.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Impostos a Pagar - ICMS</td>
-                                        <td class="number">37.078,79</td>
-                                        <td class="number">1.907,63</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.739,06</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">37.247,36</td>
-                                    </tr>
-                                    <tr data-account="3.3.02.01">
-                                        <td>3302</td>
-                                        <td>3.3.02.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Impostos a Pagar - PIS</td>
-                                        <td class="number">59.941,23</td>
-                                        <td class="number">1.825,26</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.002,34</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">59.764,15</td>
-                                    </tr>
-                                    <tr data-account="4.1.01.01">
-                                        <td>4101</td>
-                                        <td>4.1.01.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Capital Social - Integralizado</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                    </tr>
-                                    <tr data-account="4.2.01.01">
-                                        <td>4201</td>
-                                        <td>4.2.01.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Reserva Legal</td>
-                                        <td class="number">70.517,55</td>
-                                        <td class="number">1,14</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">3.114,51</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">67.404,18</td>
-                                    </tr>
-                                    <tr data-account="4.3.01.01">
-                                        <td>4301</td>
-                                        <td>4.3.01.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td>Lucros/Prejuízos Acumulados</td>
-                                        <td class="number">15.036,59</td>
-                                        <td class="number">1.663,33</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">3.716,39</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">12.983,53</td>
-                                    </tr>
-                                    <tr data-account="7.1.01.01.001">
-                                        <td>7101</td>
-                                        <td>7.1.01.01.001</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" checked disabled disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.03">
+                                        <td>203</td>
+                                        <td>2.03</td>
+                                        <td>Imobilizado - Móveis e Utensílios</td>
+                                        <td>110112001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">7.000,00</td>
+                                        <td class="number">5.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">10.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">2.000,00</td>
+
+                                        <td class="number">5.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.04">
+                                        <td>204</td>
+                                        <td>2.04</td>
+                                        <td>Depreciação Acumulada - Móveis</td>
+                                        <td>110112001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.05">
+                                        <td>205</td>
+                                        <td>2.05</td>
+                                        <td>Intangível - Software</td>
+                                        <td>110112001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">6.000,00</td>
+                                        <td class="number">10.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">12.000,00</td>
+
+                                        <td class="number">6.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.06">
+                                        <td>206</td>
+                                        <td>2.06</td>
+                                        <td>Amortização Acumulada - Software</td>
+                                        <td>110112001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">1.000,00</td>
+                                        <td class="number">2.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">3.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">1.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.07">
+                                        <td>207</td>
+                                        <td>2.07</td>
+                                        <td>Fornecedores - Nacionais</td>
+                                        <td>110113001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.08">
+                                        <td>208</td>
+                                        <td>2.08</td>
+                                        <td>Fornecedores - Importação</td>
+                                        <td>110113001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.09">
+                                        <td>209</td>
+                                        <td>2.09</td>
+                                        <td>Salários a Pagar</td>
+                                        <td>110113001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.10">
+                                        <td>210</td>
+                                        <td>2.10</td>
+                                        <td>INSS a Recolher</td>
+                                        <td>110112003</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">6.000,00</td>
+                                        <td class="number">6.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">7.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">5.000,00</td>
+
+                                        <td class="number">1.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.11">
+                                        <td>211</td>
+                                        <td>2.11</td>
+                                        <td>IRRF a Recolher</td>
+                                        <td>110112003</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">1.000,00</td>
+                                        <td class="number">7.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">3.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">5.000,00</td>
+
+                                        <td class="number">4.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.12">
+                                        <td>212</td>
+                                        <td>2.12</td>
+                                        <td>Impostos a Pagar - ICMS</td>
+                                        <td>110112001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">3.000,00</td>
+                                        <td class="number">9.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">11.000,00</td>
+
+                                        <td class="number">8.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.13">
+                                        <td>213</td>
+                                        <td>2.13</td>
+                                        <td>Impostos a Pagar - PIS</td>
+                                        <td>110112001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.14">
+                                        <td>214</td>
+                                        <td>2.14</td>
+                                        <td>Capital Social - Integralizado</td>
+                                        <td>110211401</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">4.000,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.15">
+                                        <td>215</td>
+                                        <td>2.15</td>
+                                        <td>Reserva Legal</td>
+                                        <td>110211401</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">1.000,00</td>
+                                        <td class="number">6.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">6.000,00</td>
+
+                                        <td class="number">5.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="2.16">
+                                        <td>216</td>
+                                        <td>2.16</td>
+                                        <td>Lucros/Prejuízos Acumulados</td>
+                                        <td>110112001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">5.000,00</td>
+                                        <td class="number">2.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">6.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.000,00</td>
+
+                                        <td class="number">4.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr class="group-separator">
+                                        <td colspan="13">─ RECEITAS ─</td>
+                                    </tr>
+                                    <tr data-account="3.01.001">
+                                        <td>301001</td>
+                                        <td>3.01.001</td>
                                         <td>Receita de Serviços</td>
+                                        <td>110812001</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" checked disabled disabled></td>
                                         <td class="number">0,00</td>
                                         <td class="number">0,00</td>
-                                        <td class="number">5.250,00</td>
                                         <td class="number">0,00</td>
                                         <td class="number">0,00</td>
-                                        <td class="number">-5.250,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
                                     </tr>
-                                    <tr data-account="7.1.02.01">
-                                        <td>7102</td>
-                                        <td>7.1.02.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                    <tr data-account="3.02">
+                                        <td>302</td>
+                                        <td>3.02</td>
                                         <td>Receita de Consultoria</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                    </tr>
-                                    <tr data-account="7.1.03.01">
-                                        <td>7103</td>
-                                        <td>7.1.03.01</td>
+                                        <td>110812001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">7.000,00</td>
+                                        <td class="number">2.000,00</td>
+                                        <td class="number">1.000,00</td>
+
+                                        <td class="number">5.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="3.03">
+                                        <td>303</td>
+                                        <td>3.03</td>
                                         <td>Receita de Manutenção</td>
-                                        <td class="number">-153.628,99</td>
-                                        <td class="number">2.115,69</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">795,17</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">-152.308,47</td>
-                                    </tr>
-                                    <tr data-account="7.2.01.01">
-                                        <td>7201</td>
-                                        <td>7.2.01.01</td>
+                                        <td>110812001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">10.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">5.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">5.000,00</td>
+
+                                        <td class="number">5.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="3.04">
+                                        <td>304</td>
+                                        <td>3.04</td>
                                         <td>Receita Financeira - Juros</td>
-                                        <td class="number">-76.729,80</td>
-                                        <td class="number">1.558,58</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.189,79</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">-77.361,01</td>
-                                    </tr>
-                                    <tr data-account="8.1.01.01">
-                                        <td>8101</td>
-                                        <td>8.1.01.01</td>
+                                        <td>110812004</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">1.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">7.000,00</td>
+
+                                        <td class="number">1.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr class="group-separator">
+                                        <td colspan="13">─ DESPESAS ─</td>
+                                    </tr>
+                                    <tr data-account="4.01">
+                                        <td>401</td>
+                                        <td>4.01</td>
                                         <td>CMV - Custo de Produtos Vendidos</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                    </tr>
-                                    <tr data-account="8.2.01.01">
-                                        <td>8201</td>
-                                        <td>8.2.01.01</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.02">
+                                        <td>402</td>
+                                        <td>4.02</td>
                                         <td>Custo de Serviços Prestados</td>
-                                        <td class="number">56.902,63</td>
-                                        <td class="number">440,43</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.941,54</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">54.401,52</td>
-                                    </tr>
-                                    <tr data-account="9.1.01.01">
-                                        <td>9101</td>
-                                        <td>9.1.01.01</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.03">
+                                        <td>403</td>
+                                        <td>4.03</td>
                                         <td>Despesa com Salários</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">3.750,00</td>
-                                        <td class="number">-3.750,00</td>
-                                    </tr>
-                                    <tr data-account="9.1.02.01">
-                                        <td>9102</td>
-                                        <td>9.1.02.01</td>
+                                        <td>110211611</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.04">
+                                        <td>404</td>
+                                        <td>4.04</td>
                                         <td>Despesa com Encargos Sociais</td>
-                                        <td class="number">20.973,67</td>
-                                        <td class="number">264,62</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.675,91</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">18.562,38</td>
-                                    </tr>
-                                    <tr data-account="9.2.01.01">
-                                        <td>9201</td>
-                                        <td>9.2.01.01</td>
+                                        <td>110211611</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">3.000,00</td>
+                                        <td class="number">10.000,00</td>
+                                        <td class="number">3.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">13.000,00</td>
+
+                                        <td class="number">7.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.05">
+                                        <td>405</td>
+                                        <td>4.05</td>
                                         <td>Despesa de Aluguel</td>
-                                        <td class="number">75.959,43</td>
-                                        <td class="number">1.614,99</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.890,68</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">75.683,74</td>
-                                    </tr>
-                                    <tr data-account="9.2.02.01">
-                                        <td>9202</td>
-                                        <td>9.2.02.01</td>
+                                        <td>110212101</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">12.000,00</td>
+
+                                        <td class="number">8.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.06">
+                                        <td>406</td>
+                                        <td>4.06</td>
                                         <td>Despesa de Utilidades</td>
-                                        <td class="number">15.353,60</td>
-                                        <td class="number">934,05</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.724,20</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">14.563,45</td>
-                                    </tr>
-                                    <tr data-account="9.2.03.01">
-                                        <td>9203</td>
-                                        <td>9.2.03.01</td>
+                                        <td>110212101</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">7.000,00</td>
+                                        <td class="number">1.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">8.000,00</td>
+
+                                        <td class="number">1.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.07">
+                                        <td>407</td>
+                                        <td>4.07</td>
                                         <td>Despesa de Telefone e Internet</td>
-                                        <td class="number">80.123,94</td>
-                                        <td class="number">805,24</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">3.936,66</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">76.992,52</td>
-                                    </tr>
-                                    <tr data-account="9.3.01.01">
-                                        <td>9301</td>
-                                        <td>9.3.01.01</td>
+                                        <td>110212101</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">8.000,00</td>
+                                        <td class="number">1.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">9.000,00</td>
+
+                                        <td class="number">1.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.08">
+                                        <td>408</td>
+                                        <td>4.08</td>
                                         <td>Despesa de Depreciação</td>
-                                        <td class="number">68.178,56</td>
-                                        <td class="number">897,23</td>
+                                        <td>110211611</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">4.000,00</td>
                                         <td class="number">0,00</td>
-                                        <td class="number">994,63</td>
                                         <td class="number">0,00</td>
-                                        <td class="number">68.081,16</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">8.000,00</td>
+
+                                        <td class="number">4.000,00</td>
+                                        <td>-</td>
                                     </tr>
                                     <tr data-account="9.3.02.01">
-                                        <td>9302</td>
+                                        <td>930201</td>
                                         <td>9.3.02.01</td>
-                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
                                         <td>Despesa de Amortização</td>
-                                        <td class="number">32.554,66</td>
-                                        <td class="number">886,26</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">999,23</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">32.441,69</td>
-                                    </tr>
-                                    <tr data-account="9.4.01.01">
-                                        <td>9401</td>
-                                        <td>9.4.01.01</td>
+                                        <td>110211611</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.09">
+                                        <td>409</td>
+                                        <td>4.09</td>
                                         <td>Despesa Financeira - Juros</td>
-                                        <td class="number">67.661,01</td>
-                                        <td class="number">1.672,06</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">202,35</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">69.130,72</td>
-                                    </tr>
-                                    <tr data-account="9.4.02.01">
-                                        <td>9402</td>
-                                        <td>9.4.02.01</td>
+                                        <td>110212101</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">4.000,00</td>
+                                        <td class="number">2.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">6.000,00</td>
+
+                                        <td class="number">2.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.10">
+                                        <td>410</td>
+                                        <td>4.10</td>
                                         <td>Despesa Financeira - Banco</td>
-                                        <td class="number">105.303,11</td>
-                                        <td class="number">971,28</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">3.394,78</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">102.879,61</td>
-                                    </tr>
-                                    <tr data-account="9.5.01.01">
-                                        <td>9501</td>
-                                        <td>9.5.01.01</td>
+                                        <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
+                                        <td class="number">10.000,00</td>
+                                        <td class="number">2.000,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">12.000,00</td>
+
+                                        <td class="number">2.000,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr data-account="4.11">
+                                        <td>411</td>
+                                        <td>4.11</td>
                                         <td>Outras Despesas Operacionais</td>
-                                        <td class="number">31.966,09</td>
-                                        <td class="number">1.970,62</td>
+                                        <td>110212101</td>
+                                        <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
                                         <td class="number">0,00</td>
-                                        <td class="number">234,54</td>
                                         <td class="number">0,00</td>
-                                        <td class="number">33.702,17</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+                                        <td class="number">0,00</td>
+
+                                        <td class="number">0,00</td>
+                                        <td>-</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1238,15 +1464,15 @@
 
                     <div class="tabs-section">
                         <div class="tabs-header">
-                            <div class="tab tab-1101 active">Lançamentos de Ajuste a Débito</div>
-                            <div class="tab tab-1101">Lançamentos de Ajuste a Crédito</div>
+                            <div class="tab tab-1101 active">Lançamentos de Ajuste</div>
                         </div>
                         <div class="tab-content active">
                             <table class="grid-table">
                                 <thead>
                                     <tr>
-                                        <th>Número do Lançamento</th>
+                                        <th>Num. Lançamento</th>
                                         <th>Data</th>
+                                        <th>Tipo do Ajuste</th>
                                         <th>Valor</th>
                                         <th>Histórico</th>
                                         <th>Contrapartida</th>
@@ -1254,91 +1480,49 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>000001</td>
+                                        <td>2025-03-15</td>
+                                        <td>Redutor de Débito</td>
+                                        <td class="number">3.000,00</td>
+                                        <td>Ajuste Redução Débito - 1.02</td>
+                                        <td>9.9.01.01</td>
                                     </tr>
+
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>000002</td>
+                                        <td>2025-03-15</td>
+                                        <td>Redutor de Crédito</td>
+                                        <td class="number">2.000,00</td>
+                                        <td>Ajuste Redução Crédito - 2.01</td>
+                                        <td>9.9.02.01</td>
                                     </tr>
+
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>000003</td>
+                                        <td>2025-03-15</td>
+                                        <td>Redutor de Crédito</td>
+                                        <td class="number">1.000,00</td>
+                                        <td>Ajuste Redução Crédito - 4.05</td>
+                                        <td>9.9.02.01</td>
                                     </tr>
+
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>000004</td>
+                                        <td>2025-03-20</td>
+                                        <td>Redutor de Crédito</td>
+                                        <td class="number">2.000,00</td>
+                                        <td>Ajuste Redução Crédito - 3.02</td>
+                                        <td>9.9.02.01</td>
                                     </tr>
+
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-content">
-                            <table class="grid-table">
-                                <thead>
-                                    <tr>
-                                        <th>Número do Lançamento</th>
-                                        <th>Data</th>
-                                        <th>Valor</th>
-                                        <th>Histórico</th>
-                                        <th>Contrapartida</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
+                                        <td>000005</td>
+                                        <td>2025-03-20</td>
+                                        <td>Redutor de Débito</td>
+                                        <td class="number">3.000,00</td>
+                                        <td>Ajuste Redução Débito - 4.04</td>
+                                        <td>9.9.01.01</td>
+                                    </tr></tbody>
                             </table>
                         </div>
                     </div>
@@ -1388,10 +1572,11 @@
                                         <td class="number">2.275,04</td>
                                         <td class="number">0,00</td>
                                         <td class="number">47.298,73</td>
+                                        <td>-</td>
                                     </tr>
-                                    <tr data-account="1.1.02.01">
-                                        <td>1102</td>
-                                        <td>1.1.02.01</td>
+                                    <tr data-account="1.02">
+                                        <td>102</td>
+                                        <td>1.02</td>
                                         <td>Banco A - Conta Corrente</td>
                                         <td class="number">116.639,80</td>
                                         <td class="number">890,12</td>
@@ -1399,10 +1584,11 @@
                                         <td class="number">3.592,04</td>
                                         <td class="number">0,00</td>
                                         <td class="number">113.937,88</td>
+                                        <td>-</td>
                                     </tr>
-                                    <tr data-account="1.1.02.02">
-                                        <td>1103</td>
-                                        <td>1.1.02.02</td>
+                                    <tr data-account="1.03">
+                                        <td>103</td>
+                                        <td>1.03</td>
                                         <td>Banco B - Conta Poupança</td>
                                         <td class="number">106.017,45</td>
                                         <td class="number">171,50</td>
@@ -1410,10 +1596,11 @@
                                         <td class="number">2.710,98</td>
                                         <td class="number">0,00</td>
                                         <td class="number">103.477,97</td>
+                                        <td>-</td>
                                     </tr>
-                                    <tr data-account="1.1.02.03">
-                                        <td>1104</td>
-                                        <td>1.1.02.03</td>
+                                    <tr data-account="1.04">
+                                        <td>104</td>
+                                        <td>1.04</td>
                                         <td>Banco C - Investimentos</td>
                                         <td class="number">74.678,02</td>
                                         <td class="number">2.882,34</td>
@@ -1421,6 +1608,7 @@
                                         <td class="number">4.263,60</td>
                                         <td class="number">0,00</td>
                                         <td class="number">73.296,76</td>
+                                        <td>-</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1495,7 +1683,7 @@
                                 </thead>
                                 <tbody>
                                     <tr data-account="9.3.02.01">
-                                        <td>9302</td>
+                                        <td>930201</td>
                                         <td>9.3.02.01</td>
                                         <td>Despesa de Amortização</td>
                                         <td class="number">52.135,81</td>
@@ -1504,6 +1692,7 @@
                                         <td class="number">2.326,22</td>
                                         <td class="number">0,00</td>
                                         <td class="number">50.871,43</td>
+                                        <td>-</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1710,6 +1899,17 @@
                     });
                 }
             }
+
+            // Reapply column visibility after HTML restoration
+            const exibirSaldosCheckbox = document.getElementById('exibirSaldos');
+            if (exibirSaldosCheckbox) {
+                if (saldoInicialIndex !== -1) {
+                    toggleColumnVisibility(saldoInicialIndex, exibirSaldosCheckbox.checked);
+                }
+                if (saldoFinalIndex !== -1) {
+                    toggleColumnVisibility(saldoFinalIndex, exibirSaldosCheckbox.checked);
+                }
+            }
         }
 
         // Function to check if account has adjustment value
@@ -1813,6 +2013,64 @@
         }
 
         // Adicionar click listener na tabela principal
+        // Store account information for lancamentos filtering
+        const accountLancamentos = {};
+
+        // Build map of accounts to their lancamentos
+        function buildAccountLancamentosMap() {
+            const lancamentosTable = document.querySelector('.tabs-section table');
+            if (!lancamentosTable) return;
+
+            const lancamentosRows = lancamentosTable.querySelectorAll('tbody tr');
+            lancamentosRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 6) {
+                    const historico = cells[4].textContent.trim();
+
+                    // Extract account code from historico
+                    // Format: "Ajuste Redução Débito/Crédito - X.X.XX.XX[.XXX]"
+                    const accountMatch = historico.match(/- ([\d.]+)/);
+                    if (accountMatch) {
+                        const account = accountMatch[1];
+                        if (!accountLancamentos[account]) {
+                            accountLancamentos[account] = [];
+                        }
+                        accountLancamentos[account].push(row.cloneNode(true));
+                    }
+                }
+            });
+        }
+
+        // Filter lancamentos table by selected account
+        function filterLancamentosByAccount(accountCode) {
+            const lancamentosTable = document.querySelector('.tabs-section table');
+            if (!lancamentosTable) return;
+
+            const lancamentosBody = lancamentosTable.querySelector('tbody');
+            if (!lancamentosBody) return;
+
+            // Clear current rows
+            lancamentosBody.innerHTML = '';
+
+            // Show rows for selected account
+            if (accountCode && accountLancamentos[accountCode]) {
+                accountLancamentos[accountCode].forEach(row => {
+                    lancamentosBody.appendChild(row.cloneNode(true));
+                });
+            }
+
+            // If no lancamentos for this account, show empty row
+            if (!accountCode || !accountLancamentos[accountCode] || accountLancamentos[accountCode].length === 0) {
+                const emptyRow = document.createElement('tr');
+                for (let i = 0; i < 6; i++) {
+                    const cell = document.createElement('td');
+                    cell.textContent = '';
+                    emptyRow.appendChild(cell);
+                }
+                lancamentosBody.appendChild(emptyRow);
+            }
+        }
+
         document.getElementById('d1101-main-table').addEventListener('click', function(e) {
             const row = e.target.closest('tr');
             if (!row) return;
@@ -1827,10 +2085,29 @@
             const accountCode = row.getAttribute('data-account');
             if (accountCode) {
                 selectedAccountForLancamentos = accountCode;
-                updateLancamentosDebito(accountCode);
-                updateLancamentosCredito(accountCode);
+                filterLancamentosByAccount(accountCode);
             }
         });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            buildAccountLancamentosMap();
+            // Limpar lançamentos ao carregar (deixar vazio até usuario selecionar)
+            const lancamentosBody = document.querySelector('.tabs-section table tbody');
+            if (lancamentosBody) {
+                lancamentosBody.innerHTML = '<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+            }
+        });
+
+        // Also run if page is already loaded
+        if (document.readyState !== 'loading') {
+            buildAccountLancamentosMap();
+            // Limpar lançamentos ao carregar (deixar vazio até usuario selecionar)
+            const lancamentosBody = document.querySelector('.tabs-section table tbody');
+            if (lancamentosBody) {
+                lancamentosBody.innerHTML = '<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+            }
+        }
 
         // Month slider functionality
         let selectedMonth = '03'; // March
@@ -1899,6 +2176,318 @@
                     }
                 });
             });
+        }
+
+        // Functionality to toggle Saldo Inicial and Saldo Final columns
+        function toggleColumnVisibility(columnIndex, isVisible) {
+            const table = document.getElementById('d1101-main-table');
+            const headerCells = table.querySelectorAll('thead th');
+            const rows = table.querySelectorAll('tbody tr');
+
+            // Toggle header
+            if (headerCells[columnIndex]) {
+                headerCells[columnIndex].style.display = isVisible ? '' : 'none';
+            }
+
+            // Toggle all cells in that column for each row
+            rows.forEach(row => {
+                // Skip separator rows
+                if (row.classList.contains('group-separator')) {
+                    return;
+                }
+
+                const cells = row.querySelectorAll('td');
+                if (cells[columnIndex]) {
+                    cells[columnIndex].style.display = isVisible ? '' : 'none';
+                }
+            });
+        }
+
+        // Get column indices
+        const table = document.getElementById('d1101-main-table');
+        const headerCells = table.querySelectorAll('thead th');
+        let saldoInicialIndex = -1;
+        let saldoFinalIndex = -1;
+
+        headerCells.forEach((th, index) => {
+            if (th.textContent.includes('Saldo Inicial')) {
+                saldoInicialIndex = index;
+            }
+            if (th.textContent.includes('Saldo Final')) {
+                saldoFinalIndex = index;
+            }
+        });
+
+        // Set initial state based on checkbox status
+        const exibirSaldosCheckbox = document.getElementById('exibirSaldos');
+
+        // Initial visibility
+        if (saldoInicialIndex !== -1) {
+            toggleColumnVisibility(saldoInicialIndex, exibirSaldosCheckbox.checked);
+        }
+        if (saldoFinalIndex !== -1) {
+            toggleColumnVisibility(saldoFinalIndex, exibirSaldosCheckbox.checked);
+        }
+
+        // Add event listener to grouped checkbox - controls both columns together
+        exibirSaldosCheckbox.addEventListener('change', function() {
+            if (saldoInicialIndex !== -1) {
+                toggleColumnVisibility(saldoInicialIndex, this.checked);
+            }
+            if (saldoFinalIndex !== -1) {
+                toggleColumnVisibility(saldoFinalIndex, this.checked);
+            }
+        });
+
+        // Function to parse PT-BR formatted number to float
+        function parseNumberPTBR(text) {
+            if (!text) return 0;
+            text = text.trim();
+            // Remove thousands separator (period) and replace decimal separator (comma) with period
+            text = text.replace(/\./g, '').replace(',', '.');
+            const num = parseFloat(text);
+            return isNaN(num) ? 0 : num;
+        }
+
+        // Function to format number value to PT-BR format
+        function formatNumberPTBRFromValue(value) {
+            const isNegative = value < 0;
+            value = Math.abs(value);
+
+            // Split to integer and decimal parts
+            const intPart = Math.floor(value);
+            const decPart = Math.round((value - intPart) * 100);
+
+            // Format integer part with thousands separator
+            const intPartStr = intPart.toString();
+            const parts = [];
+            for (let i = intPartStr.length; i > 0; i -= 3) {
+                const start = Math.max(0, i - 3);
+                parts.unshift(intPartStr.substring(start, i));
+            }
+            const formattedInt = parts.join('.');
+
+            // Format decimal part
+            const decPartStr = decPart.toString().padStart(2, '0');
+
+            const result = `${formattedInt},${decPartStr}`;
+            return isNegative ? `-${result}` : result;
+        }
+
+        // Function to format number in absolute value (module) - for Valor Apurado
+        function formatNumberPTBRAbsolute(value) {
+            value = Math.abs(value);
+
+            // Split to integer and decimal parts
+            const intPart = Math.floor(value);
+            const decPart = Math.round((value - intPart) * 100);
+
+            // Format integer part with thousands separator
+            const intPartStr = intPart.toString();
+            const parts = [];
+            for (let i = intPartStr.length; i > 0; i -= 3) {
+                const start = Math.max(0, i - 3);
+                parts.unshift(intPartStr.substring(start, i));
+            }
+            const formattedInt = parts.join('.');
+
+            // Format decimal part
+            const decPartStr = decPart.toString().padStart(2, '0');
+
+            return `${formattedInt},${decPartStr}`;
+        }
+
+        // Function to calculate Saldo Final and Valor Apurado for all rows
+        function calculateTotalizadores() {
+            const table = document.getElementById('d1101-main-table');
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const numberCells = row.querySelectorAll('td.number');
+
+                // Order of numeric columns:
+                // 0: Saldo Inicial
+                // 1: Débitos do Período
+                // 2: Ajuste Redução Débito
+                // 3: Créditos do Período
+                // 4: Ajuste Redução Crédito
+                // 5: Saldo Final (calculated)
+                // 6: Valor Apurado (calculated)
+
+                if (numberCells.length >= 7) {
+                    // Extract values
+                    const saldoInicial = parseNumberPTBR(numberCells[0].textContent);
+                    const debitosPeríodo = parseNumberPTBR(numberCells[1].textContent);
+                    const ajusteReducãoDebito = parseNumberPTBR(numberCells[2].textContent);
+                    const creditosPeríodo = parseNumberPTBR(numberCells[3].textContent);
+                    const ajusteReducãoCredito = parseNumberPTBR(numberCells[4].textContent);
+
+                    // Apply formula for Saldo Final (TOTALIZADOR)
+                    // Saldo Final = Saldo Inicial + Débitos do Período - Créditos do Período
+                    const saldoFinal = saldoInicial + debitosPeríodo - creditosPeríodo;
+
+                    // Apply formula for Valor Apurado (TOTALIZADOR)
+                    // Valor Apurado = Débitos do Período - Ajuste de Redução Débito - Créditos do Período + Ajuste de Redução do Crédito
+                    const valorApurado = debitosPeríodo - ajusteReducãoDebito - creditosPeríodo + ajusteReducãoCredito;
+
+                    // Update both cells
+                    numberCells[5].textContent = formatNumberPTBRFromValue(saldoFinal);
+                    // Display Valor Apurado in absolute value, but store the original value for D/C column
+                    numberCells[6].textContent = formatNumberPTBRAbsolute(valorApurado);
+                    // Store the actual calculated value in a data attribute for D/C column to use
+                    row.setAttribute('data-valor-apurado', valorApurado);
+                }
+            });
+        }
+
+        // Function to validate that result accounts (3.x and 4.x) never have negative values
+        function validateResultAccountsNotNegative() {
+            const table = document.getElementById('d1101-main-table');
+            const rows = table.querySelectorAll('tbody tr');
+
+            let violations = [];
+
+            rows.forEach(row => {
+                const accountCode = row.getAttribute('data-account');
+
+                // Check if it's a result account (3.x = Receita or 4.x = Despesa)
+                if (!accountCode || (!accountCode.startsWith('3.') && !accountCode.startsWith('4.'))) {
+                    return;
+                }
+
+                const numberCells = row.querySelectorAll('td.number');
+
+                // Saldo Final is at index 5
+                if (numberCells.length >= 6) {
+                    const saldoFinalText = numberCells[5].textContent.trim();
+                    // Remove parentheses if present
+                    const cleanValue = saldoFinalText.replace(/[()]/g, '');
+                    const saldoFinal = parseNumberPTBR(cleanValue);
+
+                    if (saldoFinal < 0) {
+                        violations.push({
+                            account: accountCode,
+                            value: saldoFinalText,
+                            message: `Conta de resultado ${accountCode} não pode ter valor negativo: ${saldoFinalText}`
+                        });
+                    }
+                }
+            });
+
+            return violations;
+        }
+
+        // Function to toggle negative sign display on specific columns
+        function toggleSinalNegativoDisplay(mostrarSinal) {
+            const table = document.getElementById('d1101-main-table');
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                // Skip separator rows
+                if (row.classList.contains('group-separator')) {
+                    return;
+                }
+
+                const numberCells = row.querySelectorAll('td.number');
+
+                if (numberCells.length >= 5) {
+                    // Índice 2: Ajuste Redução Débito
+                    const ajusteDebitoCell = numberCells[2];
+                    const ajusteDebitoValue = ajusteDebitoCell.textContent.trim();
+
+                    // Índice 4: Ajuste Redução Crédito
+                    const ajusteCreditoCell = numberCells[4];
+                    const ajusteCreditoValue = ajusteCreditoCell.textContent.trim();
+
+                    if (mostrarSinal) {
+                        // Add parentheses if not already there
+                        if (ajusteDebitoValue !== '0,00' && !ajusteDebitoValue.startsWith('(')) {
+                            ajusteDebitoCell.textContent = '(' + ajusteDebitoValue + ')';
+                        }
+                        if (ajusteCreditoValue !== '0,00' && !ajusteCreditoValue.startsWith('(')) {
+                            ajusteCreditoCell.textContent = '(' + ajusteCreditoValue + ')';
+                        }
+                    } else {
+                        // Remove parentheses
+                        if (ajusteDebitoValue.startsWith('(') && ajusteDebitoValue.endsWith(')')) {
+                            ajusteDebitoCell.textContent = ajusteDebitoValue.substring(1, ajusteDebitoValue.length - 1);
+                        }
+                        if (ajusteCreditoValue.startsWith('(') && ajusteCreditoValue.endsWith(')')) {
+                            ajusteCreditoCell.textContent = ajusteCreditoValue.substring(1, ajusteCreditoValue.length - 1);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to update D/C column based on Valor Apurado
+        function updateDCColumn() {
+            const table = document.getElementById('d1101-main-table');
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                // Skip separator rows
+                if (row.classList.contains('group-separator')) {
+                    return;
+                }
+
+                // Get the actual calculated value from the data attribute
+                const valorApuradoAttribute = row.getAttribute('data-valor-apurado');
+
+                if (valorApuradoAttribute !== null) {
+                    const valorApurado = parseFloat(valorApuradoAttribute);
+
+                    // Find or create the D/C cell
+                    let dcCell = row.cells[12]; // D/C should be at position 12 (0-indexed)
+                    if (!dcCell) {
+                        dcCell = document.createElement('td');
+                        row.appendChild(dcCell);
+                    }
+
+                    // Determine D or C based on the actual calculated value
+                    if (valorApurado > 0) {
+                        dcCell.textContent = 'D';
+                        dcCell.style.textAlign = 'center';
+                    } else if (valorApurado < 0) {
+                        dcCell.textContent = 'C';
+                        dcCell.style.textAlign = 'center';
+                    } else {
+                        dcCell.textContent = '-';
+                        dcCell.style.textAlign = 'center';
+                    }
+                }
+            });
+        }
+
+        // Event listener for "Exibir Sinal Negativo" checkbox
+        document.addEventListener('DOMContentLoaded', function() {
+            const exibirSinalNegativoCheckbox = document.getElementById('exibirSinalNegativo');
+            if (exibirSinalNegativoCheckbox) {
+                exibirSinalNegativoCheckbox.addEventListener('change', function() {
+                    toggleSinalNegativoDisplay(this.checked);
+                });
+            }
+        });
+
+        // Calculate Saldo Final and Valor Apurado on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateTotalizadores();
+            updateDCColumn();
+            // Validate result accounts after calculation
+            validateResultAccountsNotNegative();
+        });
+
+        // Also calculate if page is already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                calculateTotalizadores();
+                updateDCColumn();
+                validateResultAccountsNotNegative();
+            });
+        } else {
+            calculateTotalizadores();
+            updateDCColumn();
+            validateResultAccountsNotNegative();
         }
     </script>
 </body>
