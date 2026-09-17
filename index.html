@@ -148,6 +148,7 @@
             flex: 1;
             flex-direction: column;
             overflow: hidden;
+            gap: 0;
         }
 
         .event-screen.active {
@@ -382,6 +383,7 @@
             flex-direction: column;
             overflow: hidden;
             width: 75%;
+            border-bottom: 1px solid #999999;
         }
 
         .table-title {
@@ -390,6 +392,24 @@
             font-size: 11px;
             font-weight: bold;
             border-bottom: 1px solid #999999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-title-button {
+            padding: 4px 10px;
+            border: 1px solid #999999;
+            background-color: #F0F0F0;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: normal;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+
+        .table-title-button:hover {
+            background-color: #E0E0E0;
         }
 
         .table-search-wrapper {
@@ -419,6 +439,8 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
+            table-layout: auto;
+            min-width: fit-content;
         }
 
         table thead {
@@ -429,17 +451,20 @@
         }
 
         table th {
-            padding: 6px 8px;
+            padding: 3px 4px;
             text-align: left;
             border: 1px solid #999999;
             font-weight: bold;
             white-space: nowrap;
+            height: 20px;
         }
 
         table td {
-            padding: 4px 8px;
+            padding: 2px 4px;
             border: 1px solid #CCCCCC;
             text-align: left;
+            white-space: nowrap;
+            height: 20px;
         }
 
         table tr:nth-child(even) {
@@ -453,15 +478,17 @@
         table td.number {
             text-align: right;
             font-family: 'Courier New', monospace;
+            min-width: 110px;
         }
 
         /* TABS */
         .tabs-section {
             background-color: #FFFFFF;
-            border-top: 1px solid #999999;
-            min-height: 80px;
+            height: 200px;
             display: flex;
             flex-direction: column;
+            width: 75%;
+            flex-shrink: 0;
         }
 
         .tabs-header {
@@ -469,6 +496,27 @@
             gap: 0;
             background-color: #E8E8E8;
             border-bottom: 1px solid #999999;
+            align-items: center;
+        }
+
+        .tabs-header-spacer {
+            flex: 1;
+        }
+
+        .tabs-header-button {
+            padding: 6px 12px;
+            border: 1px solid #999999;
+            background-color: #F0F0F0;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: normal;
+            border-radius: 2px;
+            margin-right: 12px;
+            white-space: nowrap;
+        }
+
+        .tabs-header-button:hover {
+            background-color: #E0E0E0;
         }
 
         .tab {
@@ -496,9 +544,10 @@
 
         .tab-content {
             display: none;
-            padding: 10px 12px;
+            padding: 8px 0;
             flex: 1;
             overflow-y: auto;
+            width: 100%;
         }
 
         .tab-content.active {
@@ -523,7 +572,7 @@
         .grid-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
+            margin-top: 0;
             font-size: 11px;
         }
 
@@ -633,6 +682,384 @@
         .group-separator td {
             padding: 4px;
         }
+
+        /* MODAL STYLES */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: #4A4A7A;
+            border: 1px solid #999999;
+            width: 90%;
+            max-width: 900px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background-color: #4A4A7A;
+            color: #FFFFFF;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #999999;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: #FFFFFF;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close-btn:hover {
+            color: #CCCCCC;
+        }
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .modal-filters {
+            background-color: #E8E8E8;
+            padding: 10px 15px;
+            border-bottom: 1px solid #999999;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .modal-filter-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .modal-filter-group label {
+            font-size: 11px;
+            font-weight: normal;
+            white-space: nowrap;
+        }
+
+        .modal-filter-group select,
+        .modal-filter-group input {
+            padding: 4px 6px;
+            border: 1px solid #999999;
+            font-size: 11px;
+            background-color: #FFFFFF;
+        }
+
+        .modal-filter-group input {
+            width: 100px;
+        }
+
+        .modal-filter-group select[style*="width"] {
+            width: 300px !important;
+        }
+
+        .contas-dropdown {
+            position: relative;
+            width: 300px;
+        }
+
+        .contas-dropdown-btn {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #999999;
+            font-size: 11px;
+            background-color: #FFFFFF;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .contas-dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #FFFFFF;
+            border: 1px solid #999999;
+            border-top: none;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .contas-dropdown-list.active {
+            display: block;
+        }
+
+        .contas-dropdown-header {
+            display: flex;
+            background-color: #D3D3D3;
+            border-bottom: 1px solid #999999;
+            font-weight: bold;
+            font-size: 11px;
+            position: sticky;
+            top: 0;
+        }
+
+        .contas-dropdown-header div {
+            padding: 4px 8px;
+            border-right: 1px solid #999999;
+            display: flex;
+            align-items: center;
+        }
+
+        .contas-dropdown-header div:nth-child(1) {
+            width: 50px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .contas-dropdown-header div:nth-child(2) {
+            width: 120px;
+            min-width: 120px;
+        }
+
+        .contas-dropdown-header div:nth-child(3) {
+            flex: 1;
+        }
+
+        .contas-dropdown-header div:last-child {
+            border-right: none;
+        }
+
+        .contas-dropdown-item {
+            display: flex;
+            padding: 4px 8px;
+            border-bottom: 1px solid #E8E8E8;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .contas-dropdown-item:hover {
+            background-color: #E8F4FF;
+        }
+
+        .contas-dropdown-item div {
+            padding: 0 4px;
+            border-right: 1px solid #E8E8E8;
+            display: flex;
+            align-items: center;
+        }
+
+        .contas-dropdown-item div:last-child {
+            border-right: none;
+            flex: 1;
+        }
+
+        .contas-dropdown-item div:nth-child(1) {
+            width: 50px;
+            text-align: center;
+            justify-content: center;
+            padding: 2px 4px;
+            height: 20px;
+        }
+
+        .contas-dropdown-item div:nth-child(2) {
+            width: 120px;
+            min-width: 120px;
+        }
+
+        .contas-dropdown-item div:nth-child(3) {
+            flex: 1;
+        }
+
+        .contas-dropdown-item input[type="checkbox"] {
+            cursor: pointer;
+            accent-color: #0066CC;
+            width: 16px;
+            height: 16px;
+            margin: 0;
+        }
+
+        .modal-month-buttons {
+            display: flex;
+            gap: 3px;
+        }
+
+        .modal-month-btn {
+            min-width: 30px;
+            padding: 4px 6px;
+            border: 1px solid #999999;
+            background-color: #D3D3D3;
+            cursor: pointer;
+            font-size: 10px;
+            text-align: center;
+            border-radius: 2px;
+        }
+
+        .modal-month-btn:hover {
+            background-color: #C0C0C0;
+        }
+
+        .modal-month-btn.active {
+            background-color: #0066CC;
+            color: #FFFFFF;
+            border-color: #0066CC;
+        }
+
+        .modal-search-btn {
+            padding: 4px 12px;
+            border: 1px solid #999999;
+            background-color: #F0F0F0;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 2px;
+        }
+
+        .modal-search-btn:hover {
+            background-color: #E0E0E0;
+        }
+
+        .modal-tabs {
+            display: flex;
+            background-color: #E8E8E8;
+            border-bottom: 1px solid #999999;
+            padding: 0 15px;
+        }
+
+        .modal-tab {
+            padding: 8px 16px;
+            background-color: #D3D3D3;
+            border: 1px solid #999999;
+            border-bottom: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 0;
+            margin-bottom: -1px;
+        }
+
+        .modal-tab:hover {
+            background-color: #C0C0C0;
+        }
+
+        .modal-tab.active {
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #FFFFFF;
+            position: relative;
+            z-index: 1;
+        }
+
+        .modal-table-wrapper {
+            flex: 1;
+            overflow: auto;
+            background-color: #FFFFFF;
+        }
+
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .modal-table thead {
+            background-color: #D3D3D3;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .modal-table th {
+            padding: 6px 8px;
+            text-align: left;
+            border: 1px solid #999999;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .modal-table td {
+            padding: 4px 8px;
+            border: 1px solid #CCCCCC;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .modal-table tr:nth-child(even) {
+            background-color: #F9F9F9;
+        }
+
+        .modal-table tr:hover {
+            background-color: #E8F4FF;
+        }
+
+        .modal-table td.checkbox-col {
+            text-align: center;
+        }
+
+        .modal-footer {
+            background-color: #E8E8E8;
+            padding: 10px 15px;
+            border-top: 1px solid #999999;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-footer-btn {
+            padding: 6px 16px;
+            border: 1px solid #999999;
+            background-color: #F0F0F0;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 2px;
+            min-width: 70px;
+        }
+
+        .modal-footer-btn:hover {
+            background-color: #E0E0E0;
+        }
+
+        .modal-footer-btn.confirm {
+            background-color: #4A90E2;
+            color: #FFFFFF;
+            border-color: #4A90E2;
+        }
+
+        .modal-footer-btn.confirm:hover {
+            background-color: #357ABD;
+        }
+
+        .modal-group-info {
+            background-color: #E8E8E8;
+            padding: 8px 15px;
+            border-top: 1px solid #999999;
+            font-size: 10px;
+            color: #333333;
+        }
     </style>
 </head>
 <body>
@@ -642,42 +1069,21 @@
             <h1>DeRE - Eventos Mensais</h1>
         </div>
 
-        <!-- TOOLBAR -->
-        <div class="toolbar">
-            <button>📁 Abrir</button>
-            <button>💾 Salvar</button>
-            <button>🖨️ Imprimir</button>
-            <button>📊 Exportar</button>
-            <select>
-                <option>Ferramentas</option>
-                <option>Configurações</option>
-                <option>Preferências</option>
-            </select>
-            <select>
-                <option>Opções</option>
-                <option>Filtros avançados</option>
-                <option>Validações</option>
-            </select>
-            <button>↻ Atualizar</button>
-        </div>
 
         <div class="content">
             <!-- SIDEBAR -->
             <div class="sidebar">
-                <div class="sidebar-title">Estrutura de Eventos</div>
+                <div class="sidebar-title">Eventos Periódicos</div>
 
                 <div class="tree-item active" data-event="d1101">
-                    <div class="tree-icon">📊</div>
                     <span>D-1101 Balancete Mensal</span>
                 </div>
 
                 <div class="tree-item" data-event="d1106">
-                    <div class="tree-icon">💰</div>
                     <span>D-1106 Aplicações Financeiras</span>
                 </div>
 
                 <div class="tree-item" data-event="d1121">
-                    <div class="tree-icon">📉</div>
                     <span>D-1121 Deduções Utilizadas</span>
                 </div>
             </div>
@@ -712,39 +1118,37 @@
                             <div class="filter-button-container">
                                 <button id="filter-btn">🔍 Filtrar</button>
                                 <button id="process-btn-shared">⚙️ Processar</button>
-                                <div class="frequency-field">
-                                    <label>Frequência de Encerramento:</label>
-                                    <div class="frequency-value">Trimestral</div>
-                                    <div class="info-icon" title="Essa informação será buscada do cadastro da empresa, aba Parâmetros Contábeis, campo Frequência de Encerramento Contábil">i</div>
+                                <button id="generate-btn">Gerar evento DeRE</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 20px; align-items: center; margin-top: 10px;">
+                        <div class="custom-dropdown" style="position: relative; display: inline-block;">
+                            <button id="opcoes-btn" style="padding: 4px 12px; border: 1px solid #999999; background-color: #F0F0F0; cursor: pointer; font-size: 11px; font-weight: normal;">Opções ▼</button>
+                            <div id="opcoes-menu" class="dropdown-content" style="display: none; position: absolute; background-color: #FFFFFF; min-width: 280px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); padding: 12px; z-index: 9999; border: 1px solid #999999; border-radius: 3px; top: 100%; font-size: 11px;">
+                                <div style="margin-bottom: 12px;">
+                                    <div style="font-weight: bold; margin-bottom: 8px;">Exibição</div>
+                                    <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                                        <input type="checkbox" id="exibirContas1" style="margin-right: 8px; cursor: pointer;">
+                                        <label for="exibirContas1" style="margin: 0; cursor: pointer;">Contas Zeradas</label>
+                                    </div>
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="checkbox" id="exibirSaldos" style="margin-right: 8px; cursor: pointer;">
+                                        <label for="exibirSaldos" style="margin: 0; cursor: pointer;">Saldo Inicial / Saldo Final</label>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="frequency-field">
+                            <label>Frequência de Encerramento:</label>
+                            <div class="frequency-value">Trimestral</div>
+                            <div class="info-icon" title="Essa informação será buscada do cadastro da empresa, aba Parâmetros Contábeis, campo Frequência de Encerramento Contábil">i</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- SCREEN D-1101: BALANCETE MENSAL -->
                 <div class="event-screen active" id="screen-d1101">
-                    <div class="filter-section">
-                        <div class="filter-row">
-                            <fieldset style="border: 1px solid #999999; padding: 10px; border-radius: 3px; min-width: 400px;">
-                                <legend style="font-size: 11px; font-weight: bold; padding: 0 8px; margin-left: -8px;">Exibir</legend>
-                                <div style="display: flex; gap: 20px;">
-                                    <div class="checkbox-group">
-                                        <input type="checkbox" id="exibirContas1">
-                                        <label for="exibirContas1">Contas Zeradas</label>
-                                    </div>
-                                    <div class="checkbox-group">
-                                        <input type="checkbox" id="exibirSaldos">
-                                        <label for="exibirSaldos">Saldo Inicial / Saldo Final</label>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <div class="checkbox-group" style="margin-left: 20px; display: flex; align-items: center;">
-                                <input type="checkbox" id="exibirSinalNegativo">
-                                <label for="exibirSinalNegativo" style="margin: 0; margin-left: 8px;">Exibir Sinal Negativo</label>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="table-section">
                         <div class="table-title" id="d1101-title">Registro D - 1101 - Balancete Mensal - Período Março/2026</div>
@@ -757,705 +1161,661 @@
                             <table class="main-table" id="d1101-main-table">
                                 <thead>
                                     <tr>
-                                        <th>Código reduzido da Conta</th>
-                                        <th>Conta Contábil</th>
+                                                                                <th>Conta Contábil</th>
                                         <th>Descrição</th>
                                         <th>Cod Trib</th>
                                         <th>Conta Desmembrada</th>
                                         <th>Saldo Inicial</th>
                                         <th>Débitos do Período</th>
-                                        <th>Ajuste Redução Débito</th>
                                         <th>Créditos do Período</th>
-                                        <th>Ajuste Redução Crédito</th>
                                         <th>Saldo Final</th>
+                                        <th>Ajuste Redução Débito</th>
+                                        <th>Ajuste Redução Crédito</th>
                                         <th>Vlr. Apurado DeRE</th>
-                                        <th>D/C</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr class="group-separator">
-                                        <td colspan="13">─ ATIVO ─</td>
+                                        <td colspan="12">─ ATIVO ─</td>
                                     </tr>
                                     <tr data-account="1.01.001">
-                                        <td>101001</td>
+                                        
                                         <td>1.01.001</td>
                                         <td>Caixa - Moeda Nacional</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" checked disabled disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="1.02">
-                                        <td>102</td>
+                                        
                                         <td>1.02</td>
                                         <td>Banco A - Conta Corrente</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">3.000,00</td>
-                                        <td class="number">7.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">5.000,00</td>
-
-                                        <td class="number">6.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="1.03">
-                                        <td>103</td>
+                                        
                                         <td>1.03</td>
                                         <td>Banco B - Conta Poupança</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">9.000,00</td>
-                                        <td class="number">7.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">14.000,00</td>
-
-                                        <td class="number">5.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="1.04">
-                                        <td>104</td>
+                                        
                                         <td>1.04</td>
                                         <td>Banco C - Investimentos</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">10.000,00</td>
-                                        <td class="number">9.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">11.000,00</td>
-                                    
-                                        <td class="number">1.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="1.05">
-                                        <td>105</td>
+                                        
                                         <td>1.05</td>
                                         <td>Clientes - Pessoa Jurídica</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">10.000,00</td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">14.000,00</td>
-
-                                        <td class="number">4.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="1.06">
-                                        <td>106</td>
+                                        
                                         <td>1.06</td>
                                         <td>Clientes - Pessoa Física</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">6.000,00</td>
-                                        <td class="number">10.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">8.000,00</td>
-
-                                        <td class="number">2.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="1.07">
-                                        <td>107</td>
+                                        
                                         <td>1.07</td>
                                         <td>Provisão Devedores Duvidosos</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">9.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">9.000,00</td>
-
-                                        <td class="number">5.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="1.08">
-                                        <td>108</td>
+                                        
                                         <td>1.08</td>
                                         <td>Estoques - Produtos Acabados</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">5.000,00</td>
-                                        <td class="number">10.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">7.000,00</td>
-
-                                        <td class="number">2.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="1.09">
-                                        <td>109</td>
+                                        
                                         <td>1.09</td>
                                         <td>Despesas Antecipadas - Seguros</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="1.10">
-                                        <td>110</td>
+                                        
                                         <td>1.10</td>
                                         <td>Despesas Antecipadas - Aluguéis</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr class="group-separator">
-                                        <td colspan="13">─ PASSIVO E PATRIMÔNIO LÍQUIDO ─</td>
+                                        <td colspan="12">─ PASSIVO E PATRIMÔNIO LÍQUIDO ─</td>
                                     </tr>
                                     <tr data-account="2.01">
-                                        <td>201</td>
+                                        
                                         <td>2.01</td>
                                         <td>Imobilizado - Máquinas e Equipamentos</td>
                                         <td>110113001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">3.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">7.000,00</td>
-                                        <td class="number">2.000,00</td>
-                                        <td class="number">4.000,00</td>
-
-                                        <td class="number">2.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.02.001">
-                                        <td>202001</td>
+                                        
                                         <td>2.02.001</td>
                                         <td>Depreciação Acumulada - Máquinas</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" checked disabled disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.03">
-                                        <td>203</td>
+                                        
                                         <td>2.03</td>
                                         <td>Imobilizado - Móveis e Utensílios</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">7.000,00</td>
-                                        <td class="number">5.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">10.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">2.000,00</td>
-
-                                        <td class="number">5.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.04">
-                                        <td>204</td>
+                                        
                                         <td>2.04</td>
                                         <td>Depreciação Acumulada - Móveis</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.05">
-                                        <td>205</td>
+                                        
                                         <td>2.05</td>
                                         <td>Intangível - Software</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">6.000,00</td>
-                                        <td class="number">10.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">12.000,00</td>
-
-                                        <td class="number">6.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.06">
-                                        <td>206</td>
+                                        
                                         <td>2.06</td>
                                         <td>Amortização Acumulada - Software</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">1.000,00</td>
-                                        <td class="number">2.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">3.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">1.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.07">
-                                        <td>207</td>
+                                        
                                         <td>2.07</td>
                                         <td>Fornecedores - Nacionais</td>
                                         <td>110113001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.08">
-                                        <td>208</td>
+                                        
                                         <td>2.08</td>
                                         <td>Fornecedores - Importação</td>
                                         <td>110113001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.09">
-                                        <td>209</td>
+                                        
                                         <td>2.09</td>
                                         <td>Salários a Pagar</td>
                                         <td>110113001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.10">
-                                        <td>210</td>
+                                        
                                         <td>2.10</td>
                                         <td>INSS a Recolher</td>
                                         <td>110112003</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">6.000,00</td>
-                                        <td class="number">6.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">7.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">5.000,00</td>
-
-                                        <td class="number">1.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.11">
-                                        <td>211</td>
+                                        
                                         <td>2.11</td>
                                         <td>IRRF a Recolher</td>
                                         <td>110112003</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">1.000,00</td>
-                                        <td class="number">7.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">3.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">5.000,00</td>
-
-                                        <td class="number">4.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.12">
-                                        <td>212</td>
+                                        
                                         <td>2.12</td>
                                         <td>Impostos a Pagar - ICMS</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">3.000,00</td>
-                                        <td class="number">9.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">11.000,00</td>
-
-                                        <td class="number">8.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.13">
-                                        <td>213</td>
+                                        
                                         <td>2.13</td>
                                         <td>Impostos a Pagar - PIS</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.14">
-                                        <td>214</td>
+                                        
                                         <td>2.14</td>
                                         <td>Capital Social - Integralizado</td>
                                         <td>110211401</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">4.000,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.15">
-                                        <td>215</td>
+                                        
                                         <td>2.15</td>
                                         <td>Reserva Legal</td>
                                         <td>110211401</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">1.000,00</td>
-                                        <td class="number">6.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">6.000,00</td>
-
-                                        <td class="number">5.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="2.16">
-                                        <td>216</td>
+                                        
                                         <td>2.16</td>
                                         <td>Lucros/Prejuízos Acumulados</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">5.000,00</td>
-                                        <td class="number">2.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">6.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.000,00</td>
-
-                                        <td class="number">4.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr class="group-separator">
-                                        <td colspan="13">─ RECEITAS ─</td>
+                                        <td colspan="12">─ RECEITAS ─</td>
                                     </tr>
                                     <tr data-account="3.01.001">
-                                        <td>301001</td>
+                                        
                                         <td>3.01.001</td>
                                         <td>Receita de Serviços</td>
                                         <td>110812001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" checked disabled disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="3.02">
-                                        <td>302</td>
+                                        
                                         <td>3.02</td>
                                         <td>Receita de Consultoria</td>
                                         <td>110812001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">7.000,00</td>
-                                        <td class="number">2.000,00</td>
-                                        <td class="number">1.000,00</td>
-
-                                        <td class="number">5.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="3.03">
-                                        <td>303</td>
+                                        
                                         <td>3.03</td>
                                         <td>Receita de Manutenção</td>
                                         <td>110812001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">10.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">5.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">5.000,00</td>
-
-                                        <td class="number">5.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="3.04">
-                                        <td>304</td>
+                                        
                                         <td>3.04</td>
                                         <td>Receita Financeira - Juros</td>
                                         <td>110812004</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">1.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">7.000,00</td>
-
-                                        <td class="number">1.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr class="group-separator">
-                                        <td colspan="13">─ DESPESAS ─</td>
+                                        <td colspan="12">─ DESPESAS ─</td>
                                     </tr>
                                     <tr data-account="4.01">
-                                        <td>401</td>
+                                        
                                         <td>4.01</td>
                                         <td>CMV - Custo de Produtos Vendidos</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.02">
-                                        <td>402</td>
+                                        
                                         <td>4.02</td>
                                         <td>Custo de Serviços Prestados</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.03">
-                                        <td>403</td>
+                                        
                                         <td>4.03</td>
                                         <td>Despesa com Salários</td>
                                         <td>110211611</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.04">
-                                        <td>404</td>
+                                        
                                         <td>4.04</td>
                                         <td>Despesa com Encargos Sociais</td>
                                         <td>110211611</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">3.000,00</td>
-                                        <td class="number">10.000,00</td>
-                                        <td class="number">3.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">13.000,00</td>
-
-                                        <td class="number">7.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.05">
-                                        <td>405</td>
+                                        
                                         <td>4.05</td>
                                         <td>Despesa de Aluguel</td>
                                         <td>110212101</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">12.000,00</td>
-
-                                        <td class="number">8.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.06">
-                                        <td>406</td>
+                                        
                                         <td>4.06</td>
                                         <td>Despesa de Utilidades</td>
                                         <td>110212101</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">7.000,00</td>
-                                        <td class="number">1.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">8.000,00</td>
-
-                                        <td class="number">1.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.07">
-                                        <td>407</td>
+                                        
                                         <td>4.07</td>
                                         <td>Despesa de Telefone e Internet</td>
                                         <td>110212101</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">8.000,00</td>
-                                        <td class="number">1.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">9.000,00</td>
-
-                                        <td class="number">1.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.08">
-                                        <td>408</td>
+                                        
                                         <td>4.08</td>
                                         <td>Despesa de Depreciação</td>
                                         <td>110211611</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">8.000,00</td>
-
-                                        <td class="number">4.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="9.3.02.01">
-                                        <td>930201</td>
+                                        
                                         <td>9.3.02.01</td>
                                         <td>Despesa de Amortização</td>
                                         <td>110211611</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.09">
-                                        <td>409</td>
+                                        
                                         <td>4.09</td>
                                         <td>Despesa Financeira - Juros</td>
                                         <td>110212101</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">4.000,00</td>
-                                        <td class="number">2.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">6.000,00</td>
-
-                                        <td class="number">2.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.10">
-                                        <td>410</td>
+                                        
                                         <td>4.10</td>
                                         <td>Despesa Financeira - Banco</td>
                                         <td>110112001</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">10.000,00</td>
-                                        <td class="number">2.000,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">12.000,00</td>
-
-                                        <td class="number">2.000,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                     <tr data-account="4.11">
-                                        <td>411</td>
+                                        
                                         <td>4.11</td>
                                         <td>Outras Despesas Operacionais</td>
                                         <td>110212101</td>
                                         <td><input type="checkbox" class="conta-desmembrada-flag" disabled></td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">0,00</td>
-
-                                        <td class="number">0,00</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number">0,00 D</td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>
@@ -1463,6 +1823,10 @@
                     </div>
 
                     <div class="tabs-section">
+                        <div class="table-title">
+                            <span>Informações Auxiliares</span>
+                            <button class="table-title-button">Vincular Lançamentos Contábeis</button>
+                        </div>
                         <div class="tabs-header">
                             <div class="tab tab-1101 active">Lançamentos de Ajuste</div>
                         </div>
@@ -1479,50 +1843,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>000001</td>
-                                        <td>2025-03-15</td>
-                                        <td>Redutor de Débito</td>
-                                        <td class="number">3.000,00</td>
-                                        <td>Ajuste Redução Débito - 1.02</td>
-                                        <td>9.9.01.01</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>000002</td>
-                                        <td>2025-03-15</td>
-                                        <td>Redutor de Crédito</td>
-                                        <td class="number">2.000,00</td>
-                                        <td>Ajuste Redução Crédito - 2.01</td>
-                                        <td>9.9.02.01</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>000003</td>
-                                        <td>2025-03-15</td>
-                                        <td>Redutor de Crédito</td>
-                                        <td class="number">1.000,00</td>
-                                        <td>Ajuste Redução Crédito - 4.05</td>
-                                        <td>9.9.02.01</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>000004</td>
-                                        <td>2025-03-20</td>
-                                        <td>Redutor de Crédito</td>
-                                        <td class="number">2.000,00</td>
-                                        <td>Ajuste Redução Crédito - 3.02</td>
-                                        <td>9.9.02.01</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>000005</td>
-                                        <td>2025-03-20</td>
-                                        <td>Redutor de Débito</td>
-                                        <td class="number">3.000,00</td>
-                                        <td>Ajuste Redução Débito - 4.04</td>
-                                        <td>9.9.01.01</td>
-                                    </tr></tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -1563,52 +1884,52 @@
                                 </thead>
                                 <tbody>
                                     <tr data-account="1.1.01.01">
-                                        <td>1101</td>
+                                        
                                         <td>1.1.01.01</td>
                                         <td>Caixa - Moeda Nacional</td>
-                                        <td class="number">46.701,82</td>
-                                        <td class="number">2.871,95</td>
-                                        <td class="number">0,00</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
                                         <td class="number">2.275,04</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">47.298,73</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        
                                     </tr>
                                     <tr data-account="1.02">
-                                        <td>102</td>
+                                        
                                         <td>1.02</td>
                                         <td>Banco A - Conta Corrente</td>
-                                        <td class="number">116.639,80</td>
-                                        <td class="number">890,12</td>
-                                        <td class="number">0,00</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
                                         <td class="number">3.592,04</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">113.937,88</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        
                                     </tr>
                                     <tr data-account="1.03">
-                                        <td>103</td>
+                                        
                                         <td>1.03</td>
                                         <td>Banco B - Conta Poupança</td>
-                                        <td class="number">106.017,45</td>
-                                        <td class="number">171,50</td>
-                                        <td class="number">0,00</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
                                         <td class="number">2.710,98</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">103.477,97</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        
                                     </tr>
                                     <tr data-account="1.04">
-                                        <td>104</td>
+                                        
                                         <td>1.04</td>
                                         <td>Banco C - Investimentos</td>
-                                        <td class="number">74.678,02</td>
-                                        <td class="number">2.882,34</td>
-                                        <td class="number">0,00</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
                                         <td class="number">4.263,60</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">73.296,76</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>
@@ -1683,16 +2004,16 @@
                                 </thead>
                                 <tbody>
                                     <tr data-account="9.3.02.01">
-                                        <td>930201</td>
+                                        
                                         <td>9.3.02.01</td>
                                         <td>Despesa de Amortização</td>
-                                        <td class="number">52.135,81</td>
-                                        <td class="number">1.061,84</td>
-                                        <td class="number">0,00</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
                                         <td class="number">2.326,22</td>
-                                        <td class="number">0,00</td>
-                                        <td class="number">50.871,43</td>
-                                        <td>-</td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        <td class="number"><input type="text" class="cell-input" value="0,00" style="width: 100%; border: 1px solid #999999; padding: 2px; font-family: 'Courier New', monospace; text-align: right;"></td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>
@@ -2095,7 +2416,7 @@
             // Limpar lançamentos ao carregar (deixar vazio até usuario selecionar)
             const lancamentosBody = document.querySelector('.tabs-section table tbody');
             if (lancamentosBody) {
-                lancamentosBody.innerHTML = '<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+                lancamentosBody.innerHTML = '<tr><td></td><td></td><td></td><td></td><td></td></tr>';
             }
         });
 
@@ -2105,7 +2426,7 @@
             // Limpar lançamentos ao carregar (deixar vazio até usuario selecionar)
             const lancamentosBody = document.querySelector('.tabs-section table tbody');
             if (lancamentosBody) {
-                lancamentosBody.innerHTML = '<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+                lancamentosBody.innerHTML = '<tr><td></td><td></td><td></td><td></td><td></td></tr>';
             }
         }
 
@@ -2155,6 +2476,24 @@
             console.log(`Processando: Período ${selectedYear}-${selectedMonth}`);
             alert(`Processando eventos...\nPeríodo: ${selectedYear}-${selectedMonth}`);
         });
+
+        // Handle Opções dropdown toggle
+        const opcoesBtn = document.getElementById('opcoes-btn');
+        const opcoesMenu = document.getElementById('opcoes-menu');
+
+        if (opcoesBtn && opcoesMenu) {
+            opcoesBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                opcoesMenu.style.display = opcoesMenu.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.custom-dropdown')) {
+                    opcoesMenu.style.display = 'none';
+                }
+            });
+        }
 
         // Search functionality for D-1101 table
         const searchInput = document.getElementById('search-d1101');
@@ -2243,8 +2582,8 @@
         function parseNumberPTBR(text) {
             if (!text) return 0;
             text = text.trim();
-            // Remove thousands separator (period) and replace decimal separator (comma) with period
-            text = text.replace(/\./g, '').replace(',', '.');
+            // Remove parentheses, thousands separator (period) and replace decimal separator (comma) with period
+            text = text.replace(/[()]/g, '').replace(/\./g, '').replace(',', '.');
             const num = parseFloat(text);
             return isNaN(num) ? 0 : num;
         }
@@ -2297,6 +2636,31 @@
             return `${formattedInt},${decPartStr}`;
         }
 
+        // Function to get account nature (D for debit accounts, C for credit accounts)
+        function getNaturezaConta(accountCode) {
+            // Retorna 'D' para contas devedoras (Ativo e Despesa)
+            // Retorna 'C' para contas credoras (Passivo, PL e Receita)
+            const firstDigit = accountCode.charAt(0);
+            if (firstDigit === '1' || firstDigit === '4') {
+                return 'D'; // Ativo ou Despesa
+            } else if (firstDigit === '2' || firstDigit === '3') {
+                return 'C'; // Passivo/PL ou Receita
+            }
+            return '-';
+        }
+
+        // Function to format number with D/C indicator based on account nature
+        function formatNumberWithIndicator(value, accountCode) {
+            // Formata o número e adiciona o indicador D/C baseado na natureza da conta
+            const natureza = getNaturezaConta(accountCode);
+            const formatted = formatNumberPTBRAbsolute(value);
+
+            if (natureza !== '-') {
+                return formatted + ' ' + natureza;
+            }
+            return formatted;
+        }
+
         // Function to calculate Saldo Final and Valor Apurado for all rows
         function calculateTotalizadores() {
             const table = document.getElementById('d1101-main-table');
@@ -2304,6 +2668,7 @@
 
             rows.forEach(row => {
                 const numberCells = row.querySelectorAll('td.number');
+                const accountCode = row.getAttribute('data-account');
 
                 // Order of numeric columns:
                 // 0: Saldo Inicial
@@ -2314,26 +2679,89 @@
                 // 5: Saldo Final (calculated)
                 // 6: Valor Apurado (calculated)
 
-                if (numberCells.length >= 7) {
-                    // Extract values
-                    const saldoInicial = parseNumberPTBR(numberCells[0].textContent);
-                    const debitosPeríodo = parseNumberPTBR(numberCells[1].textContent);
-                    const ajusteReducãoDebito = parseNumberPTBR(numberCells[2].textContent);
-                    const creditosPeríodo = parseNumberPTBR(numberCells[3].textContent);
-                    const ajusteReducãoCredito = parseNumberPTBR(numberCells[4].textContent);
+                if (numberCells.length >= 7 && accountCode) {
+                    // Order of numeric columns:
+                    // 0: Saldo Inicial
+                    // 1: Débitos do Período
+                    // 2: Créditos do Período
+                    // 3: Saldo Final (calculated)
+                    // 4: Ajuste Redução Débito
+                    // 5: Ajuste Redução Crédito
+                    // 6: Valor Apurado (calculated)
 
-                    // Apply formula for Saldo Final (TOTALIZADOR)
-                    // Saldo Final = Saldo Inicial + Débitos do Período - Créditos do Período
-                    const saldoFinal = saldoInicial + debitosPeríodo - creditosPeríodo;
+                    // Extract values - check if cell has input (editable) or text (calculated)
+                    let saldoInicial = 0;
+                    let debitosPeríodo = 0;
+                    let creditosPeríodo = 0;
+                    let ajusteReducãoDebito = 0;
+                    let ajusteReducãoCredito = 0;
+
+                    // Get Saldo Inicial (cell 0)
+                    const saldoInicialInput = numberCells[0].querySelector('input');
+                    if (saldoInicialInput) {
+                        saldoInicial = parseNumberPTBR(saldoInicialInput.value);
+                    } else {
+                        saldoInicial = parseNumberPTBR(numberCells[0].textContent);
+                    }
+
+                    // Get Débitos do Período (cell 1)
+                    const debitosInput = numberCells[1].querySelector('input');
+                    if (debitosInput) {
+                        debitosPeríodo = parseNumberPTBR(debitosInput.value);
+                    } else {
+                        debitosPeríodo = parseNumberPTBR(numberCells[1].textContent);
+                    }
+
+                    // Get Créditos do Período (cell 2)
+                    const creditosInput = numberCells[2].querySelector('input');
+                    if (creditosInput) {
+                        creditosPeríodo = parseNumberPTBR(creditosInput.value);
+                    } else {
+                        creditosPeríodo = parseNumberPTBR(numberCells[2].textContent);
+                    }
+
+                    // Get Ajuste Redução Débito (cell 4)
+                    const ajusteDebitoInput = numberCells[4].querySelector('input');
+                    if (ajusteDebitoInput) {
+                        ajusteReducãoDebito = parseNumberPTBR(ajusteDebitoInput.value);
+                    } else {
+                        ajusteReducãoDebito = parseNumberPTBR(numberCells[4].textContent);
+                    }
+
+                    // Get Ajuste Redução Crédito (cell 5)
+                    const ajusteCreditoInput = numberCells[5].querySelector('input');
+                    if (ajusteCreditoInput) {
+                        ajusteReducãoCredito = parseNumberPTBR(ajusteCreditoInput.value);
+                    } else {
+                        ajusteReducãoCredito = parseNumberPTBR(numberCells[5].textContent);
+                    }
+
+                    // Calculate Saldo Final based on account type
+                    // Para Contas do Ativo e de Despesas: Saldo Final = Saldo Inicial + Lançamentos a Debito - Lançamentos a Credito
+                    // Para Contas de Passivo, PL e Receitas: Saldo Final = Saldo Inicial - Lançamentos a Debito + Lançamentos a Credito
+                    let saldoFinal = 0;
+                    const firstDigit = accountCode.charAt(0);
+
+                    if (firstDigit === '1' || firstDigit === '4') {
+                        // Ativo (1.x) ou Despesa (4.x) - Devedoras
+                        // Saldo Final = Saldo Inicial + Débitos - Créditos
+                        saldoFinal = saldoInicial + debitosPeríodo - creditosPeríodo;
+                    } else if (firstDigit === '2' || firstDigit === '3') {
+                        // Passivo/PL (2.x) ou Receita (3.x) - Credoras
+                        // Saldo Final = Saldo Inicial - Débitos + Créditos
+                        saldoFinal = saldoInicial - debitosPeríodo + creditosPeríodo;
+                    }
 
                     // Apply formula for Valor Apurado (TOTALIZADOR)
                     // Valor Apurado = Débitos do Período - Ajuste de Redução Débito - Créditos do Período + Ajuste de Redução do Crédito
                     const valorApurado = debitosPeríodo - ajusteReducãoDebito - creditosPeríodo + ajusteReducãoCredito;
 
-                    // Update both cells
-                    numberCells[5].textContent = formatNumberPTBRFromValue(saldoFinal);
-                    // Display Valor Apurado in absolute value, but store the original value for D/C column
-                    numberCells[6].textContent = formatNumberPTBRAbsolute(valorApurado);
+                    // Update Saldo Final with D/C indicator (always calculated, not editable)
+                    numberCells[3].textContent = formatNumberWithIndicator(saldoFinal, accountCode);
+
+                    // Display Valor Apurado in absolute value with D/C indicator
+                    numberCells[6].textContent = formatNumberWithIndicator(Math.abs(valorApurado), accountCode);
+
                     // Store the actual calculated value in a data attribute for D/C column to use
                     row.setAttribute('data-valor-apurado', valorApurado);
                 }
@@ -2357,12 +2785,17 @@
 
                 const numberCells = row.querySelectorAll('td.number');
 
-                // Saldo Final is at index 5
-                if (numberCells.length >= 6) {
-                    const saldoFinalText = numberCells[5].textContent.trim();
-                    // Remove parentheses if present
-                    const cleanValue = saldoFinalText.replace(/[()]/g, '');
-                    const saldoFinal = parseNumberPTBR(cleanValue);
+                // Saldo Final is at index 3
+                if (numberCells.length >= 4) {
+                    let saldoFinalText = '';
+                    const saldoFinalCell = numberCells[3];
+
+                    // Saldo Final is always calculated (not editable)
+                    saldoFinalText = saldoFinalCell.textContent.trim();
+                    // Remove D/C indicator if present
+                    saldoFinalText = saldoFinalText.replace(/\s+[DC]$/, '');
+
+                    const saldoFinal = parseNumberPTBR(saldoFinalText);
 
                     if (saldoFinal < 0) {
                         violations.push({
@@ -2390,13 +2823,13 @@
 
                 const numberCells = row.querySelectorAll('td.number');
 
-                if (numberCells.length >= 5) {
-                    // Índice 2: Ajuste Redução Débito
-                    const ajusteDebitoCell = numberCells[2];
+                if (numberCells.length >= 6) {
+                    // Índice 4: Ajuste Redução Débito
+                    const ajusteDebitoCell = numberCells[4];
                     const ajusteDebitoValue = ajusteDebitoCell.textContent.trim();
 
-                    // Índice 4: Ajuste Redução Crédito
-                    const ajusteCreditoCell = numberCells[4];
+                    // Índice 5: Ajuste Redução Crédito
+                    const ajusteCreditoCell = numberCells[5];
                     const ajusteCreditoValue = ajusteCreditoCell.textContent.trim();
 
                     if (mostrarSinal) {
@@ -2420,59 +2853,67 @@
             });
         }
 
-        // Function to update D/C column based on Valor Apurado
-        function updateDCColumn() {
-            const table = document.getElementById('d1101-main-table');
-            const rows = table.querySelectorAll('tbody tr');
+        // Function to update D/C column based on Valor Apurado (DEPRECATED - D/C column removed)
+        // function updateDCColumn() {
+        //     const table = document.getElementById('d1101-main-table');
+        //     const rows = table.querySelectorAll('tbody tr');
+        //
+        //     rows.forEach(row => {
+        //         // Skip separator rows
+        //         if (row.classList.contains('group-separator')) {
+        //             return;
+        //         }
+        //
+        //         // Get the actual calculated value from the data attribute
+        //         const valorApuradoAttribute = row.getAttribute('data-valor-apurado');
+        //
+        //         if (valorApuradoAttribute !== null) {
+        //             const valorApurado = parseFloat(valorApuradoAttribute);
+        //
+        //             // Find or create the D/C cell
+        //             let dcCell = row.cells[11]; // D/C should be at position 11 (0-indexed)
+        //             if (!dcCell) {
+        //                 dcCell = document.createElement('td');
+        //                 row.appendChild(dcCell);
+        //             }
+        //
+        //             // Determine D or C based on the actual calculated value
+        //             if (valorApurado > 0) {
+        //                 dcCell.textContent = 'D';
+        //                 dcCell.style.textAlign = 'center';
+        //             } else if (valorApurado < 0) {
+        //                 dcCell.textContent = 'C';
+        //                 dcCell.style.textAlign = 'center';
+        //             } else {
+        //                 dcCell.textContent = '-';
+        //                 dcCell.style.textAlign = 'center';
+        //             }
+        //         }
+        //     });
+        // }
 
-            rows.forEach(row => {
-                // Skip separator rows
-                if (row.classList.contains('group-separator')) {
-                    return;
-                }
-
-                // Get the actual calculated value from the data attribute
-                const valorApuradoAttribute = row.getAttribute('data-valor-apurado');
-
-                if (valorApuradoAttribute !== null) {
-                    const valorApurado = parseFloat(valorApuradoAttribute);
-
-                    // Find or create the D/C cell
-                    let dcCell = row.cells[12]; // D/C should be at position 12 (0-indexed)
-                    if (!dcCell) {
-                        dcCell = document.createElement('td');
-                        row.appendChild(dcCell);
-                    }
-
-                    // Determine D or C based on the actual calculated value
-                    if (valorApurado > 0) {
-                        dcCell.textContent = 'D';
-                        dcCell.style.textAlign = 'center';
-                    } else if (valorApurado < 0) {
-                        dcCell.textContent = 'C';
-                        dcCell.style.textAlign = 'center';
-                    } else {
-                        dcCell.textContent = '-';
-                        dcCell.style.textAlign = 'center';
-                    }
-                }
-            });
-        }
-
-        // Event listener for "Exibir Sinal Negativo" checkbox
+        // Add event listeners to editable cells to recalculate when values change
         document.addEventListener('DOMContentLoaded', function() {
-            const exibirSinalNegativoCheckbox = document.getElementById('exibirSinalNegativo');
-            if (exibirSinalNegativoCheckbox) {
-                exibirSinalNegativoCheckbox.addEventListener('change', function() {
-                    toggleSinalNegativoDisplay(this.checked);
+            const cellInputs = document.querySelectorAll('.cell-input');
+            cellInputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    // Recalculate when user leaves the cell
+                    calculateTotalizadores();
+                    validateResultAccountsNotNegative();
                 });
-            }
+                input.addEventListener('keyup', function(e) {
+                    // Allow Enter to trigger calculation
+                    if (e.key === 'Enter') {
+                        calculateTotalizadores();
+                        validateResultAccountsNotNegative();
+                    }
+                });
+            });
         });
 
         // Calculate Saldo Final and Valor Apurado on page load
         document.addEventListener('DOMContentLoaded', function() {
             calculateTotalizadores();
-            updateDCColumn();
             // Validate result accounts after calculation
             validateResultAccountsNotNegative();
         });
@@ -2481,14 +2922,275 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 calculateTotalizadores();
-                updateDCColumn();
                 validateResultAccountsNotNegative();
             });
         } else {
             calculateTotalizadores();
-            updateDCColumn();
             validateResultAccountsNotNegative();
         }
+
+        // Modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Contas dropdown
+            const contasDropdownBtn = document.querySelector('.contas-dropdown-btn');
+            const contasDropdownList = document.querySelector('.contas-dropdown-list');
+            const contasDropdownItems = document.querySelectorAll('.contas-dropdown-item');
+
+            if (contasDropdownBtn) {
+                contasDropdownBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    contasDropdownList.classList.toggle('active');
+                });
+
+                contasDropdownItems.forEach(item => {
+                    const checkbox = item.querySelector('input[type="checkbox"]');
+                    item.addEventListener('click', function(e) {
+                        if (e.target !== checkbox) {
+                            e.preventDefault();
+                            checkbox.checked = !checkbox.checked;
+                        }
+                    });
+                    checkbox.addEventListener('change', function(e) {
+                        e.stopPropagation();
+                    });
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.contas-dropdown')) {
+                        contasDropdownList.classList.remove('active');
+                    }
+                });
+            }
+
+            const vincullarBtn = document.querySelector('.table-title-button');
+            const modalOverlay = document.getElementById('modal-vincular-lancamentos');
+            const modalCloseBtn = document.querySelector('.modal-close-btn');
+            const modalConfirmBtn = document.querySelector('.modal-footer-btn.confirm');
+            const modalCancelBtn = document.querySelectorAll('.modal-footer-btn:not(.confirm)')[0];
+
+            if (vincullarBtn) {
+                vincullarBtn.addEventListener('click', function() {
+                    if (modalOverlay) {
+                        modalOverlay.classList.add('active');
+                    }
+                });
+            }
+
+            if (modalCloseBtn) {
+                modalCloseBtn.addEventListener('click', function() {
+                    if (modalOverlay) {
+                        modalOverlay.classList.remove('active');
+                    }
+                });
+            }
+
+            if (modalCancelBtn) {
+                modalCancelBtn.addEventListener('click', function() {
+                    if (modalOverlay) {
+                        modalOverlay.classList.remove('active');
+                    }
+                });
+            }
+
+            if (modalConfirmBtn) {
+                modalConfirmBtn.addEventListener('click', function() {
+                    if (modalOverlay) {
+                        modalOverlay.classList.remove('active');
+                    }
+                });
+            }
+
+            // Close modal when clicking on overlay
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            }
+        });
     </script>
+
+    <!-- MODAL: VINCULAR LANÇAMENTOS CONTÁBEIS -->
+    <div class="modal-overlay" id="modal-vincular-lancamentos">
+        <div class="modal">
+            <div class="modal-header">
+                <span>Vincular Lançamento Contábil</span>
+                <button class="modal-close-btn">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-filters">
+                    <div class="modal-month-buttons">
+                        <button class="modal-month-btn">Jan</button>
+                        <button class="modal-month-btn">Fev</button>
+                        <button class="modal-month-btn">Mar</button>
+                        <button class="modal-month-btn">Abr</button>
+                        <button class="modal-month-btn">Mai</button>
+                        <button class="modal-month-btn">Jun</button>
+                        <button class="modal-month-btn">Jul</button>
+                        <button class="modal-month-btn">Ago</button>
+                        <button class="modal-month-btn">Set</button>
+                        <button class="modal-month-btn">Out</button>
+                        <button class="modal-month-btn">Nov</button>
+                        <button class="modal-month-btn">Dez</button>
+                        <button class="modal-month-btn" style="margin-left: 5px; background-color: #0066CC; color: white;">Todos</button>
+                    </div>
+                    <div class="modal-filter-group">
+                        <label>Período</label>
+                        <input type="date" value="2026-01-01">
+                        <span>à</span>
+                        <input type="date" value="2026-12-31">
+                    </div>
+                </div>
+                <div class="modal-filters" style="padding: 8px 15px; gap: 10px; align-items: flex-end;">
+                    <div class="modal-filter-group">
+                        <label>Conta Contábil</label>
+                        <div class="contas-dropdown">
+                            <button class="contas-dropdown-btn">Buscando em ...</button>
+                            <div class="contas-dropdown-list">
+                                <div class="contas-dropdown-header">
+                                    <div style="width: 50px;">Selecione</div>
+                                    <div style="width: 120px;">Código</div>
+                                    <div>Descrição</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.01.001">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.01.001</div>
+                                    <div>Caixa</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.02">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.02</div>
+                                    <div>Banco A - Conta Corrente</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.03">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.03</div>
+                                    <div>Banco B - Conta Poupança</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.04">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.04</div>
+                                    <div>Banco C - Investimentos</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.05">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.05</div>
+                                    <div>Clientes - Pessoa Jurídica</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.06">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.06</div>
+                                    <div>Clientes - Pessoa Física</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.07">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.07</div>
+                                    <div>Provisão Devedores Duvidosos</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.08">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.08</div>
+                                    <div>Estoques - Produtos Acabados</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.09">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.09</div>
+                                    <div>Despesas Antecipadas - Seguros</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="1.10">
+                                    <div><input type="checkbox"></div>
+                                    <div>1.1.10</div>
+                                    <div>Despesas Antecipadas - Aluguéis</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.01">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.1.01</div>
+                                    <div>Imobilizado - Máquinas e Equipamentos</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.02.001">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.1.02.001</div>
+                                    <div>Depreciação Acumulada - Máquinas</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.03">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.1.03</div>
+                                    <div>Imobilizado - Móveis e Utensílios</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.04">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.1.04</div>
+                                    <div>Depreciação Acumulada - Móveis</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.05">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.1.05</div>
+                                    <div>Intangível - Software</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.06">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.1.06</div>
+                                    <div>Amortização Acumulada - Software</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.07">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.2.01</div>
+                                    <div>Fornecedores - Nacionais</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.08">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.2.02</div>
+                                    <div>Fornecedores - Importação</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.09">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.2.03</div>
+                                    <div>Salários a Pagar</div>
+                                </div>
+                                <div class="contas-dropdown-item" data-code="2.10">
+                                    <div><input type="checkbox"></div>
+                                    <div>2.2.04</div>
+                                    <div>INSS a Recolher</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-filter-group">
+                        <label>Nº Lançamento</label>
+                        <input type="text" placeholder="">
+                    </div>
+                    <button class="modal-search-btn" style="margin-left: auto;">Buscar Lançamentos</button>
+                </div>
+                <div class="modal-tabs">
+                    <div class="modal-tab active">Lançamentos Contábeis</div>
+                    <div class="modal-tab">Marcar Todos</div>
+                </div>
+                <div class="modal-table-wrapper">
+                    <table class="modal-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">Selecionar</th>
+                                <th>Nº Lançamento</th>
+                                <th>Data</th>
+                                <th>Valor Total</th>
+                                <th>Conta Contábil</th>
+                                <th>Valor</th>
+                                <th>Des</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dados de lançamentos serão carregados aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-footer-btn">Sair</button>
+                <button class="modal-footer-btn confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
