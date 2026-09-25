@@ -802,22 +802,153 @@
             text-align: left;
         }
 
-        .contas-dropdown-list {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: #FFFFFF;
-            border: 1px solid #999999;
-            border-top: none;
-            max-height: 300px;
-            overflow-y: auto;
-            z-index: 1000;
+        .contas-modal-overlay {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .contas-dropdown-list.active {
-            display: block;
+        .contas-modal-overlay.active {
+            display: flex;
+        }
+
+        .contas-modal {
+            background-color: #4A4A7A;
+            border: 1px solid #999999;
+            width: 90%;
+            max-width: 800px;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .contas-modal-header {
+            background-color: #4A4A7A;
+            color: #FFFFFF;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #999999;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .contas-modal-close-btn {
+            background: none;
+            border: none;
+            color: #FFFFFF;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contas-modal-close-btn:hover {
+            color: #CCCCCC;
+        }
+
+        .contas-modal-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contas-modal-table-wrapper {
+            flex: 1;
+            overflow: auto;
+            background-color: #FFFFFF;
+        }
+
+        .contas-modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .contas-modal-table thead {
+            background-color: #D3D3D3;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .contas-modal-table th {
+            padding: 6px 8px;
+            text-align: left;
+            border: 1px solid #999999;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .contas-modal-table td {
+            padding: 4px 8px;
+            border: 1px solid #CCCCCC;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .contas-modal-table tr:nth-child(even) {
+            background-color: #F9F9F9;
+        }
+
+        .contas-modal-table tr:hover {
+            background-color: #E8F4FF;
+        }
+
+        .contas-modal-table td:first-child {
+            text-align: center;
+        }
+
+        .contas-modal-table input[type="checkbox"] {
+            cursor: pointer;
+            accent-color: #0066CC;
+        }
+
+        .contas-modal-footer {
+            background-color: #E8E8E8;
+            padding: 10px 15px;
+            border-top: 1px solid #999999;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .contas-modal-btn {
+            padding: 6px 16px;
+            border: 1px solid #999999;
+            background-color: #F0F0F0;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 2px;
+            min-width: 70px;
+        }
+
+        .contas-modal-btn:hover {
+            background-color: #E0E0E0;
+        }
+
+        .contas-modal-btn.confirm {
+            background-color: #4A90E2;
+            color: #FFFFFF;
+            border-color: #4A90E2;
+        }
+
+        .contas-modal-btn.confirm:hover {
+            background-color: #357ABD;
         }
 
         .contas-dropdown-header {
@@ -942,6 +1073,25 @@
 
         .modal-search-btn:hover {
             background-color: #E0E0E0;
+        }
+
+        .modal-contas-dropdown {
+            padding: 6px 8px;
+            border: 1px solid #999999;
+            background-color: #FFFFFF;
+            font-size: 11px;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .modal-contas-dropdown:hover {
+            background-color: #F5F5F5;
+        }
+
+        .modal-contas-dropdown:focus {
+            outline: none;
+            border: 1px solid #0066CC;
+            background-color: #FFFFFF;
         }
 
         .modal-tabs {
@@ -1118,7 +1268,6 @@
                             <div class="filter-button-container">
                                 <button id="filter-btn">🔍 Filtrar</button>
                                 <button id="process-btn-shared">⚙️ Processar</button>
-                                <button id="generate-btn">Gerar evento DeRE</button>
                             </div>
                         </div>
                     </div>
@@ -1151,7 +1300,7 @@
                 <div class="event-screen active" id="screen-d1101">
 
                     <div class="table-section">
-                        <div class="table-title" id="d1101-title">Registro D - 1101 - Balancete Mensal - Período Março/2026</div>
+                        <div class="table-title" id="d1101-title">Evento D - 1101 - Balancete Mensal - Período Março/2026</div>
 
                         <div class="table-search-wrapper">
                             <input type="text" id="search-d1101" placeholder="Pesquisar conta...">
@@ -2439,7 +2588,7 @@
             const monthName = monthNames[selectedMonth];
             const titleElement = document.getElementById('d1101-title');
             if (titleElement) {
-                titleElement.textContent = `Registro D - 1101 - Balancete Mensal - Período ${monthName}/${selectedYear}`;
+                titleElement.textContent = `Evento D - 1101 - Balancete Mensal - Período ${monthName}/${selectedYear}`;
             }
         }
 
@@ -3009,6 +3158,90 @@
                     }
                 });
             }
+
+            // CONTAS MODAL HANDLERS
+            const contasDropdown = document.getElementById('contas-dropdown');
+            const contasModalOverlay = document.getElementById('contas-modal-overlay');
+            const contasModalCloseBtn = document.getElementById('contas-modal-close-btn');
+            const contasModalConfirmBtn = document.getElementById('contas-modal-confirm-btn');
+            const contasModalCancelBtn = document.getElementById('contas-modal-cancel-btn');
+            const contasCheckboxes = document.querySelectorAll('.contas-checkbox');
+
+            // Open contas modal when dropdown is clicked
+            if (contasDropdown && contasModalOverlay) {
+                contasDropdown.addEventListener('click', function() {
+                    contasModalOverlay.classList.add('active');
+                });
+
+                // Prevent default dropdown behavior
+                contasDropdown.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                });
+
+                contasDropdown.addEventListener('change', function(e) {
+                    if (e.target.value) {
+                        contasModalOverlay.classList.add('active');
+                    }
+                });
+            }
+
+            // Close contas modal via close button
+            if (contasModalCloseBtn && contasModalOverlay) {
+                contasModalCloseBtn.addEventListener('click', function() {
+                    contasModalOverlay.classList.remove('active');
+                });
+            }
+
+            // Close contas modal via cancel button
+            if (contasModalCancelBtn && contasModalOverlay) {
+                contasModalCancelBtn.addEventListener('click', function() {
+                    contasModalOverlay.classList.remove('active');
+                });
+            }
+
+            // Confirm selected contas
+            if (contasModalConfirmBtn && contasModalOverlay) {
+                contasModalConfirmBtn.addEventListener('click', function() {
+                    // Get selected accounts
+                    const selectedContas = [];
+                    contasCheckboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            selectedContas.push(checkbox.value);
+                        }
+                    });
+
+                    console.log('Contas selecionadas:', selectedContas);
+
+                    // Update dropdown with selected accounts
+                    if (contasDropdown && selectedContas.length > 0) {
+                        const displayText = selectedContas.length === 1
+                            ? selectedContas[0]
+                            : selectedContas.length + ' contas selecionadas';
+                        contasDropdown.value = displayText;
+                        // Store selected values in data attribute
+                        contasDropdown.setAttribute('data-selected', selectedContas.join(','));
+                    }
+
+                    // Close modal
+                    contasModalOverlay.classList.remove('active');
+                });
+            }
+
+            // Close contas modal when clicking on overlay
+            if (contasModalOverlay) {
+                contasModalOverlay.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            }
+
+            // Handle checkbox changes in contas modal
+            contasCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    console.log('Conta', this.value, 'selecionada:', this.checked);
+                });
+            });
         });
     </script>
 
@@ -3045,119 +3278,6 @@
                 </div>
                 <div class="modal-filters" style="padding: 8px 15px; gap: 10px; align-items: flex-end;">
                     <div class="modal-filter-group">
-                        <label>Conta Contábil</label>
-                        <div class="contas-dropdown">
-                            <button class="contas-dropdown-btn">Buscando em ...</button>
-                            <div class="contas-dropdown-list">
-                                <div class="contas-dropdown-header">
-                                    <div style="width: 50px;">Selecione</div>
-                                    <div style="width: 120px;">Código</div>
-                                    <div>Descrição</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.01.001">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.01.001</div>
-                                    <div>Caixa</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.02">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.02</div>
-                                    <div>Banco A - Conta Corrente</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.03">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.03</div>
-                                    <div>Banco B - Conta Poupança</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.04">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.04</div>
-                                    <div>Banco C - Investimentos</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.05">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.05</div>
-                                    <div>Clientes - Pessoa Jurídica</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.06">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.06</div>
-                                    <div>Clientes - Pessoa Física</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.07">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.07</div>
-                                    <div>Provisão Devedores Duvidosos</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.08">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.08</div>
-                                    <div>Estoques - Produtos Acabados</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.09">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.09</div>
-                                    <div>Despesas Antecipadas - Seguros</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="1.10">
-                                    <div><input type="checkbox"></div>
-                                    <div>1.1.10</div>
-                                    <div>Despesas Antecipadas - Aluguéis</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.01">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.1.01</div>
-                                    <div>Imobilizado - Máquinas e Equipamentos</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.02.001">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.1.02.001</div>
-                                    <div>Depreciação Acumulada - Máquinas</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.03">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.1.03</div>
-                                    <div>Imobilizado - Móveis e Utensílios</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.04">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.1.04</div>
-                                    <div>Depreciação Acumulada - Móveis</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.05">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.1.05</div>
-                                    <div>Intangível - Software</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.06">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.1.06</div>
-                                    <div>Amortização Acumulada - Software</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.07">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.2.01</div>
-                                    <div>Fornecedores - Nacionais</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.08">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.2.02</div>
-                                    <div>Fornecedores - Importação</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.09">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.2.03</div>
-                                    <div>Salários a Pagar</div>
-                                </div>
-                                <div class="contas-dropdown-item" data-code="2.10">
-                                    <div><input type="checkbox"></div>
-                                    <div>2.2.04</div>
-                                    <div>INSS a Recolher</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-filter-group">
                         <label>Nº Lançamento</label>
                         <input type="text" placeholder="">
                     </div>
@@ -3174,10 +3294,9 @@
                                 <th style="width: 40px;">Selecionar</th>
                                 <th>Nº Lançamento</th>
                                 <th>Data</th>
-                                <th>Valor Total</th>
-                                <th>Conta Contábil</th>
                                 <th>Valor</th>
-                                <th>Des</th>
+                                <th>Contrapartida</th>
+                                <th>Histórico Contábil</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -3192,5 +3311,240 @@
             </div>
         </div>
     </div>
+
+    <!-- MODAL: Seleção de Conta Contábil -->
+    <div class="contas-modal-overlay" id="contas-modal-overlay">
+        <div class="contas-modal">
+            <div class="contas-modal-header">
+                <span>Conta Contábil</span>
+                <button class="contas-modal-close-btn" id="contas-modal-close-btn">×</button>
+            </div>
+            <div class="contas-modal-content">
+                <div class="contas-modal-table-wrapper">
+                    <table class="contas-modal-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Selecione</th>
+                                <th style="width: 100px;">Código</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.01"></td>
+                                <td>1.01</td>
+                                <td>Caixa e Bancos</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.02"></td>
+                                <td>1.02</td>
+                                <td>Contas a Receber</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.03"></td>
+                                <td>1.03</td>
+                                <td>Estoques</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.04"></td>
+                                <td>1.04</td>
+                                <td>Imobilizado - Máquinas</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.05"></td>
+                                <td>1.05</td>
+                                <td>Depreciação Acumulada - Máquinas</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.06"></td>
+                                <td>1.06</td>
+                                <td>Imobilizado - Móveis</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.07"></td>
+                                <td>1.07</td>
+                                <td>Depreciação Acumulada - Móveis</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.08"></td>
+                                <td>1.08</td>
+                                <td>Intangível - Software</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.09"></td>
+                                <td>1.09</td>
+                                <td>Amortização Acumulada - Software</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="1.10"></td>
+                                <td>1.10</td>
+                                <td>Outros Ativos</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.01"></td>
+                                <td>2.01</td>
+                                <td>Contas a Pagar - Nacionais</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.02"></td>
+                                <td>2.02</td>
+                                <td>Contas a Pagar - Importação</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.03"></td>
+                                <td>2.03</td>
+                                <td>Imobilizado - Máquinas</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.04"></td>
+                                <td>2.04</td>
+                                <td>Depreciação Acumulada - Máquinas</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.05"></td>
+                                <td>2.05</td>
+                                <td>Intangível - Software</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.06"></td>
+                                <td>2.06</td>
+                                <td>Amortização Acumulada - Software</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.07"></td>
+                                <td>2.07</td>
+                                <td>Fornecedores - Nacionais</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.08"></td>
+                                <td>2.08</td>
+                                <td>Fornecedores - Importação</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.09"></td>
+                                <td>2.09</td>
+                                <td>Salários a Pagar</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.10"></td>
+                                <td>2.10</td>
+                                <td>Encargos Sociais a Pagar</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.11"></td>
+                                <td>2.11</td>
+                                <td>ICMS a Pagar</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.12"></td>
+                                <td>2.12</td>
+                                <td>IPI a Pagar</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.13"></td>
+                                <td>2.13</td>
+                                <td>IR a Pagar</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.14"></td>
+                                <td>2.14</td>
+                                <td>CSLL a Pagar</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.15"></td>
+                                <td>2.15</td>
+                                <td>Capital Social</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="2.16"></td>
+                                <td>2.16</td>
+                                <td>Lucros Retidos</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="3.01"></td>
+                                <td>3.01</td>
+                                <td>Receita de Vendas - Produtos</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="3.02"></td>
+                                <td>3.02</td>
+                                <td>Receita de Vendas - Serviços</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="3.03"></td>
+                                <td>3.03</td>
+                                <td>Deduções de Vendas</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="3.04"></td>
+                                <td>3.04</td>
+                                <td>Outras Receitas</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.01"></td>
+                                <td>4.01</td>
+                                <td>Custo da Mercadoria Vendida</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.02"></td>
+                                <td>4.02</td>
+                                <td>Custo de Serviços Prestados</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.03"></td>
+                                <td>4.03</td>
+                                <td>Salários e Encargos</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.04"></td>
+                                <td>4.04</td>
+                                <td>Aluguel e Condomínio</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.05"></td>
+                                <td>4.05</td>
+                                <td>Utilidades (Água, Luz, Telefone)</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.06"></td>
+                                <td>4.06</td>
+                                <td>Depreciação</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.07"></td>
+                                <td>4.07</td>
+                                <td>Despesas Administrativas</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.08"></td>
+                                <td>4.08</td>
+                                <td>Despesas de Vendas</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.09"></td>
+                                <td>4.09</td>
+                                <td>Despesas Financeiras</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.10"></td>
+                                <td>4.10</td>
+                                <td>Impostos e Taxas</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="contas-checkbox" value="4.11"></td>
+                                <td>4.11</td>
+                                <td>Outras Despesas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="contas-modal-footer">
+                <button class="contas-modal-btn" id="contas-modal-cancel-btn">Cancelar</button>
+                <button class="contas-modal-btn confirm" id="contas-modal-confirm-btn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
