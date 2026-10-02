@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>DeRE Eventos Mensais</title>
 <style>
 /* Layout: padrão de tela NG — abas, barra de ferramentas, quadro Parâmetro, árvore | painel (grid + informações auxiliares), status */
@@ -99,6 +100,10 @@ button, input, select { font: inherit; color: inherit; }
 .btn { border: 1px solid var(--line-strong); background: var(--chrome); padding: 2px 10px; cursor: pointer; }
 .btn:hover { background: var(--hover); }
 .push-right { margin-left: auto; }
+.linha-inteira { flex-basis: 100%; }
+#screen-d1106 .filter-group label { min-width: 84px; }
+.filter-group input[type=text] { height: 19px; width: 300px; border: 1px solid var(--line-strong); padding: 0 3px; }
+tr.oculta-filtro { display: none; }
 
 /* grid */
 .table-section { flex: 1; display: flex; flex-direction: column; min-height: 0; }
@@ -118,6 +123,10 @@ button, input, select { font: inherit; color: inherit; }
 .conta-desmembrada-flag { margin: 0; width: 13px; height: 13px; }
 .main-table td:has(input.conta-desmembrada-flag) { text-align: center; }
 .group-separator td { background: var(--group) !important; font-weight: bold; }
+.table-wrapper.desabilitado { background: var(--chrome); }
+.table-wrapper.desabilitado table, .table-wrapper.desabilitado .cell-input { color: var(--ink-soft); }
+.table-wrapper.desabilitado td, .table-wrapper.desabilitado th, .table-wrapper.desabilitado tbody tr:hover td { background: var(--chrome); }
+.table-wrapper.desabilitado tbody tr { cursor: not-allowed; }
 tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 
 /* painel de informações auxiliares (abas inferiores) */
@@ -192,7 +201,7 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 
   <div class="toolbar">
     <span class="chip">DeRE - Eventos Mensais</span>
-    <button class="tb" disabled aria-label="Salvar"><svg class="ico" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="none" stroke="#666"/><rect x="5" y="2" width="6" height="4" fill="#999"/><rect x="4" y="9" width="8" height="5" fill="#ddd" stroke="#666"/></svg></button>
+    <button class="tb" id="btn-salvar" disabled aria-label="Salvar" title="Salvar"><svg class="ico" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="none" stroke="#666"/><rect x="5" y="2" width="6" height="4" fill="#999"/><rect x="4" y="9" width="8" height="5" fill="#ddd" stroke="#666"/></svg></button>
     <span class="sep"></span>
     <div class="custom-dropdown">
       <button class="tb caret" id="opcoes-btn">Opções</button>
@@ -280,8 +289,8 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                   <th>Débitos do Período</th>
                   <th>Créditos do Período</th>
                   <th>Saldo Final</th>
-                  <th>Ajuste Redução Débito</th>
-                  <th>Ajuste Redução Crédito</th>
+                  <th>Ajuste Débito</th>
+                  <th>Ajuste Crédito</th>
                   <th>Vlr. Apurado DeRE</th>
                 </tr>
               </thead>
@@ -897,6 +906,10 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
           </div>
           <label class="chk" for="d1106-sem-valores"><input type="checkbox" id="d1106-sem-valores"> Evento D - 1106 sem valores de Aplicações Vinculadas à Reserva Técnica</label>
           <button class="btn push-right">Filtrar</button>
+          <div class="filter-group linha-inteira">
+            <label for="d1106-filtro">Filtro</label>
+            <input type="text" id="d1106-filtro" placeholder="Conta, número ou descrição do ativo">
+          </div>
         </div>
         <div class="table-section">
           <div class="table-title">Registro - Aplicações Financeiras (Período 2025-03)</div>
@@ -1108,6 +1121,49 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
     clearTimeout(avisoTimer);
     avisoTimer = setTimeout(function () { el.remove(); }, 2600);
   }
+  // D-1106: "sem valores de Aplicações Vinculadas à Reserva Técnica" desabilita o grid do evento
+  (function () {
+    var chk = document.getElementById('d1106-sem-valores');
+    var grid = document.querySelector('#screen-d1106 .table-wrapper');
+    chk.addEventListener('change', function () {
+      grid.classList.toggle('desabilitado', chk.checked);
+      grid.querySelectorAll('input').forEach(function (i) { i.disabled = chk.checked; });
+    });
+  })();
+  // D-1106: Conta Contábil e "sem valores" são guardados por período (mês/ano); cada mês tem os seus
+  (function () {
+    var filtrosD1106PorPeriodo = {};
+    var conta = document.getElementById('d1106-conta');
+    var chk = document.getElementById('d1106-sem-valores');
+    var ano = document.getElementById('year-select');
+    var periodoAtual = ano.value + '-03';
+    function trocarPeriodo(novo) {
+      filtrosD1106PorPeriodo[periodoAtual] = { conta: conta.value, semValores: chk.checked };
+      periodoAtual = novo;
+      var f = filtrosD1106PorPeriodo[novo] || { conta: '', semValores: false };
+      conta.value = f.conta;
+      chk.checked = f.semValores;
+      chk.dispatchEvent(new Event('change'));
+    }
+    document.querySelectorAll('.month-btn').forEach(function (b) {
+      b.addEventListener('click', function () { trocarPeriodo(ano.value + '-' + b.getAttribute('data-month')); });
+    });
+    ano.addEventListener('change', function () { trocarPeriodo(ano.value + '-' + periodoAtual.split('-')[1]); });
+  })();
+  // Salvar: habilitado quando o usuário marca/desmarca o checkbox do D-1106; ao salvar volta a desabilitar
+  (function () {
+    var salvar = document.getElementById('btn-salvar');
+    document.getElementById('d1106-sem-valores').addEventListener('click', function () { salvar.disabled = false; });
+    salvar.addEventListener('click', function () { salvar.disabled = true; mostrarAviso('Alterações salvas'); });
+  })();
+  // D-1106: filtro por texto nas linhas do grid (conta, número ou descrição do ativo)
+  document.getElementById('d1106-filtro').addEventListener('input', function () {
+    var termo = this.value.trim().toLowerCase();
+    document.querySelectorAll('#screen-d1106 .table-wrapper tbody tr').forEach(function (row) {
+      var texto = [0, 1, 2].map(function (i) { return row.cells[i] ? row.cells[i].textContent : ''; }).join(' ').toLowerCase();
+      row.classList.toggle('oculta-filtro', termo !== '' && texto.indexOf(termo) === -1);
+    });
+  });
   // Expandir / recolher pastas da árvore
   document.querySelectorAll('.tree .tgl:not(.blank)').forEach(function (b) {
     b.addEventListener('click', function () {
@@ -2422,3 +2478,5 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
             </div>
         </div>
     </div>
+
+</body></html>
