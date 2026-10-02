@@ -1835,7 +1835,18 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 
                     // Apply formula for Valor Apurado (TOTALIZADOR)
                     // Valor Apurado = Débitos do Período - Ajuste de Redução Débito - Créditos do Período + Ajuste de Redução do Crédito
-                    const valorApurado = debitosPeríodo - ajusteReducãoDebito - creditosPeríodo + ajusteReducãoCredito;
+                    // Natureza débito: Débitos do Período - Ajuste Débito + Ajuste Crédito
+                    // Natureza crédito: Créditos do Período - Ajuste Crédito + Ajuste Débito
+                    // Sem natureza definida: mantém a fórmula anterior
+                    const natureza = getNaturezaConta(accountCode);
+                    let valorApurado;
+                    if (natureza === 'D') {
+                        valorApurado = debitosPeríodo - ajusteReducãoDebito + ajusteReducãoCredito;
+                    } else if (natureza === 'C') {
+                        valorApurado = creditosPeríodo - ajusteReducãoCredito + ajusteReducãoDebito;
+                    } else {
+                        valorApurado = debitosPeríodo - ajusteReducãoDebito - creditosPeríodo + ajusteReducãoCredito;
+                    }
 
                     // Update Saldo Final with D/C indicator (always calculated, not editable)
                     numberCells[3].textContent = formatNumberWithIndicator(saldoFinal, accountCode);
