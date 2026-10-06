@@ -134,6 +134,8 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 .tabs-section .table-title { display: flex; align-items: flex-end; justify-content: space-between; padding: 0; background: var(--chrome); border-bottom: 1px solid var(--line); font-size: 12px; }
 .tabs-section .table-title span { background: var(--title); color: var(--title-ink); padding: 5px 8px; min-width: 165px; }
 .table-title-button { border: 1px solid var(--line-strong); background: var(--surface); padding: 2px 10px; margin: 0 6px 3px; cursor: pointer; font-weight: normal; }
+.title-buttons { display: flex; }
+.title-buttons .table-title-button + .table-title-button { margin-left: 0; }
 .table-title-button:hover { background: var(--hover); }
 .tabs-header { display: flex; padding: 3px 4px 0; border-bottom: 1px solid var(--line); background: var(--surface); }
 .tab { border: 1px solid var(--line); border-bottom: 0; background: var(--chrome); padding: 3px 6px; margin-right: 2px; cursor: pointer; font-size: 12.5px; }
@@ -147,6 +149,7 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 .grid-table th, .grid-table td { border: 1px solid var(--line); padding: 0 4px; height: 16px; white-space: nowrap; text-align: left; }
 .grid-table th { font-weight: bold; position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--line-strong); }
 .grid-table td.number { text-align: right; }
+.aba-vazia { margin: 0; padding: 14px; color: var(--ink-soft); }
 .grid-table td.vazio { text-align: center; color: var(--ink-soft); height: 40px; }
 
 /* status */
@@ -861,10 +864,11 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
         <div class="tabs-section">
           <div class="table-title">
             <span>Informações Auxiliares</span>
-            <button class="table-title-button">Vincular Lançamentos Contábeis</button>
+            <div class="title-buttons"><button class="table-title-button">Vincular Lançamentos de Ajustes</button><button class="table-title-button" id="btn-lanc-desmembramento">Lançamentos de Desmembramento</button></div>
           </div>
           <div class="tabs-header">
             <div class="tab tab-1101 active">Lançamentos de Ajuste</div>
+            <div class="tab tab-1101">Lançamentos de Desmembramento</div>
           </div>
           <div class="tab-content active">
             <table class="grid-table">
@@ -879,6 +883,22 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                 </tr>
               </thead>
               <tbody>
+              </tbody>
+            </table>
+          </div>
+          <div class="tab-content">
+            <table class="grid-table" id="grid-lanc-desmembramento">
+              <thead>
+                <tr>
+                  <th>Nº Lançamento</th>
+                  <th>Data</th>
+                  <th>Valor</th>
+                  <th>Contrapartida</th>
+                  <th>Histórico Contábil</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="5" class="vazio">Nenhum lançamento de desmembramento</td></tr>
               </tbody>
             </table>
           </div>
@@ -941,13 +961,11 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                     </tr>
                                     <tr data-account="1.02">
                                         <td>1.1.1.01.001</td>
                                         <td>002</td>
                                         <td>Banco A - Conta Corrente</td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
@@ -967,7 +985,6 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                     </tr>
                                     <tr data-account="1.04">
                                         <td>1.1.1.02.001</td>
@@ -980,41 +997,9 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                     </tr>
               </tbody>
             </table>
-          </div>
-        </div>
-        <div class="tabs-section">
-          <div class="table-title"><span>Informações Auxiliares</span></div>
-          <div class="tabs-header">
-            <div class="tab tab-1106 active">Detalhes da Aplicação</div>
-            <div class="tab tab-1106">Histórico de Movimentações</div>
-            <div class="tab tab-1106">Rentabilidade</div>
-          </div>
-          <div class="tab-content active">
-            <div class="tab-data">
-              <p><strong>Aplicação Selecionada:</strong> APP001</p>
-              <p><strong>Instituição Financeira:</strong> Banco do Brasil</p>
-              <p><strong>Data de Aquisição:</strong> 2025-01-10</p>
-              <p><strong>Data de Vencimento:</strong> 2026-01-10</p>
-              <p><strong>Taxa de Juros:</strong> 10,5% a.a.</p>
-            </div>
-          </div>
-          <div class="tab-content">
-            <div class="tab-data">
-              <p><strong>Movimentação 1:</strong> 2025-03-01 - Investimento de R$ 10.000,00</p>
-              <p><strong>Movimentação 2:</strong> 2025-03-15 - Rendimento de R$ 1.250,00</p>
-              <p><strong>Saldo Atual:</strong> R$ 61.250,00</p>
-            </div>
-          </div>
-          <div class="tab-content">
-            <div class="tab-data">
-              <p><strong>Rentabilidade Acumulada:</strong> 2,5%</p>
-              <p><strong>Rentabilidade Mensal:</strong> 0,85%</p>
-              <p><strong>Rentabilidade Esperada (a.a.):</strong> 10,5%</p>
-            </div>
           </div>
         </div>
       </div>
@@ -1163,6 +1148,16 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
       var texto = [0, 1, 2].map(function (i) { return row.cells[i] ? row.cells[i].textContent : ''; }).join(' ').toLowerCase();
       row.classList.toggle('oculta-filtro', termo !== '' && texto.indexOf(termo) === -1);
     });
+  });
+  // Lançamentos de Desmembramento: janela própria (cópia da janela Vincular)
+  document.getElementById('btn-lanc-desmembramento').addEventListener('click', function () {
+    document.getElementById('modal-lancamentos-desmembramento').classList.add('active');
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    var janela = document.getElementById('modal-lancamentos-desmembramento');
+    var fechar = function () { janela.classList.remove('active'); };
+    janela.querySelectorAll('.modal-close-btn, .modal-footer-btn').forEach(function (b) { b.addEventListener('click', fechar); });
+    janela.addEventListener('click', function (e) { if (e.target === janela) fechar(); });
   });
   // Expandir / recolher pastas da árvore
   document.querySelectorAll('.tree .tgl:not(.blank)').forEach(function (b) {
@@ -2193,7 +2188,74 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
     <div class="modal-overlay" id="modal-vincular-lancamentos">
         <div class="modal">
             <div class="modal-header">
-                <span>Vincular Lançamento Contábil</span>
+                <span>Vincular Lançamento Contábil de Ajuste</span>
+                <button class="modal-close-btn">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-filters">
+                    <div class="modal-month-buttons">
+                        <button class="modal-month-btn">Jan</button>
+                        <button class="modal-month-btn">Fev</button>
+                        <button class="modal-month-btn">Mar</button>
+                        <button class="modal-month-btn">Abr</button>
+                        <button class="modal-month-btn">Mai</button>
+                        <button class="modal-month-btn">Jun</button>
+                        <button class="modal-month-btn">Jul</button>
+                        <button class="modal-month-btn">Ago</button>
+                        <button class="modal-month-btn">Set</button>
+                        <button class="modal-month-btn">Out</button>
+                        <button class="modal-month-btn">Nov</button>
+                        <button class="modal-month-btn">Dez</button>
+                        <button class="modal-month-btn active">Todos</button>
+                    </div>
+                    <div class="modal-filter-group">
+                        <label>Período</label>
+                        <input type="date" value="2026-01-01">
+                        <span>à</span>
+                        <input type="date" value="2026-12-31">
+                    </div>
+                </div>
+                <div class="modal-filters">
+                    <div class="modal-filter-group">
+                        <label>Nº Lançamento</label>
+                        <input type="text" placeholder="">
+                    </div>
+                    <button class="modal-search-btn push-right">Buscar Lançamentos</button>
+                </div>
+                <div class="modal-tabs">
+                    <div class="modal-tab active">Lançamentos Contábeis</div>
+                    <div class="modal-tab">Marcar Todos</div>
+                </div>
+                <div class="modal-table-wrapper">
+                    <table class="modal-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">Selecionar</th>
+                                <th>Nº Lançamento</th>
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>Contrapartida</th>
+                                <th>Histórico Contábil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dados de lançamentos serão carregados aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-footer-btn">Sair</button>
+                <button class="modal-footer-btn confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: LANÇAMENTOS DE DESMEMBRAMENTO (cópia da janela Vincular) -->
+    <div class="modal-overlay" id="modal-lancamentos-desmembramento">
+        <div class="modal">
+            <div class="modal-header">
+                <span>Vincular Lançamentos de Desmembramento</span>
                 <button class="modal-close-btn">×</button>
             </div>
             <div class="modal-content">
