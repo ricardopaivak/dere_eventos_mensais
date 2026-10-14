@@ -106,8 +106,15 @@ button, input, select { font: inherit; color: inherit; }
 .linha-inteira { flex-basis: 100%; }
 #screen-d1106 .filter-group label { min-width: 84px; }
 .filter-group input[type=text] { height: 19px; width: 300px; border: 1px solid var(--line-strong); padding: 0 3px; }
-tr.oculta-filtro { display: none; }
-.oculta-conta th:first-child, .oculta-conta td:first-child { display: none; }
+tr.oculta-filtro, tr.oculta-aplicacao { display: none; }
+.ms-wrap { position: relative; }
+.ms-btn { height: 19px; min-width: 260px; max-width: 360px; text-align: left; border: 1px solid var(--line-strong); background: var(--surface); padding: 0 18px 0 3px; cursor: pointer; position: relative; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ms-btn::after { content: ""; position: absolute; right: 5px; top: 7px; border: 3px solid transparent; border-top: 4px solid var(--ink); }
+.ms-lista { position: absolute; top: 100%; left: 0; z-index: 40; min-width: 100%; background: var(--surface); border: 1px solid var(--line-strong); box-shadow: 2px 2px 4px rgba(0,0,0,.2); padding: 3px 0; max-height: 220px; overflow: auto; }
+.ms-lista label { display: flex; align-items: center; gap: 6px; padding: 3px 8px; white-space: nowrap; cursor: pointer; }
+.ms-lista label:hover { background: var(--select); }
+.ms-lista input { margin: 0; }
+#screen-d1106 .multi-select label { min-width: 0; }
 
 /* grid */
 .table-section { flex: 1; display: flex; flex-direction: column; min-height: 0; }
@@ -918,6 +925,9 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
       <!-- EVENTO D-1106: APLICAÇÕES FINANCEIRAS -->
       <div class="event-screen" id="screen-d1106">
         <div class="filter-section">
+          <div class="linha-inteira">
+  <span class="chk"><label class="chk" for="d1106-sem-valores"><input type="checkbox" id="d1106-sem-valores"> Evento D - 1106 sem valores de Aplicações Vinculadas à Reserva Técnica</label> <button type="button" class="tip-icon" id="tip-d1106-sem-valores" aria-label="Ajuda" data-tip="Essa opção deve ser utilizada nos casos onde não existam informações de aplicações financeiras a declarar para esse período.">i</button></span>
+          </div>
           <div class="filter-group">
             <label for="d1106-conta">Conta Contábil</label>
             <select id="d1106-conta">
@@ -934,12 +944,14 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
               <option value="1.1.1.07.001">1.1.1.07.001 - Aplicações Financeiras em Fase de Liquidação</option>
             </select>
           </div>
-          <span class="chk"><label class="chk" for="d1106-sem-valores"><input type="checkbox" id="d1106-sem-valores"> Evento D - 1106 sem valores de Aplicações Vinculadas à Reserva Técnica</label> <button type="button" class="tip-icon" id="tip-d1106-sem-valores" aria-label="Ajuda" data-tip="Essa opção deve ser utilizada nos casos onde não existam informações de aplicações financeiras a declarar para esse período.">i</button></span>
-          <button class="btn push-right">Filtrar</button>
-          <div class="filter-group linha-inteira">
-            <label></label>
-            <label class="chk" for="d1106-exibir-conta"><input type="checkbox" id="d1106-exibir-conta"> Exibir conta contábil</label>
+          <div class="filter-group multi-select" id="d1106-aplicacoes">
+            <label>Aplicação Financeira</label>
+            <div class="ms-wrap">
+              <button type="button" class="ms-btn" id="d1106-aplicacoes-btn" aria-haspopup="true" aria-expanded="false">Todas as aplicações</button>
+              <div class="ms-lista" id="d1106-aplicacoes-lista" hidden></div>
+            </div>
           </div>
+          <button class="btn push-right">Filtrar</button>
           <div class="filter-group linha-inteira">
             <label for="d1106-filtro">Filtro</label>
             <input type="text" id="d1106-filtro" placeholder="Conta, número ou descrição do ativo">
@@ -1268,14 +1280,36 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
     });
     janela.addEventListener('click', function (e) { if (e.target === janela) fechar(); });
   });
-  // D-1106: "Exibir conta contábil" desmarcado ao abrir; desmarcado oculta a coluna Conta Contábil do grid
+  // D-1106: filtro Aplicação Financeira (seleção múltipla); nenhuma marcada = todas
   (function () {
-    var chk = document.getElementById('d1106-exibir-conta');
-    var tabela = document.querySelector('#screen-d1106 .table-section table');
-    chk.checked = false;
-    function aplicar() { tabela.classList.toggle('oculta-conta', !chk.checked); }
-    chk.addEventListener('change', aplicar);
-    aplicar();
+    var box = document.getElementById('d1106-aplicacoes');
+    var btn = document.getElementById('d1106-aplicacoes-btn');
+    var lista = document.getElementById('d1106-aplicacoes-lista');
+    var linhas = Array.prototype.slice.call(document.querySelectorAll('#d1106-main-table tbody tr'));
+    linhas.forEach(function (r, i) {
+      var rotulo = r.cells[1].textContent.trim() + ' - ' + r.cells[2].textContent.trim();
+      var l = document.createElement('label');
+      var c = document.createElement('input');
+      c.type = 'checkbox'; c.value = String(i);
+      l.appendChild(c); l.appendChild(document.createTextNode(rotulo));
+      lista.appendChild(l);
+    });
+    function aplicar() {
+      var marcadas = Array.prototype.map.call(lista.querySelectorAll('input:checked'), function (c) { return +c.value; });
+      linhas.forEach(function (r, i) { r.classList.toggle('oculta-aplicacao', marcadas.length > 0 && marcadas.indexOf(i) === -1); });
+      btn.textContent = !marcadas.length ? 'Todas as aplicações'
+        : marcadas.length === 1 ? lista.querySelectorAll('label')[marcadas[0]].textContent
+        : marcadas.length + ' aplicações selecionadas';
+    }
+    lista.addEventListener('change', aplicar);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      lista.hidden = !lista.hidden;
+      btn.setAttribute('aria-expanded', String(!lista.hidden));
+    });
+    document.addEventListener('click', function (e) {
+      if (!box.contains(e.target)) { lista.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    });
   })();
   // D-1106: colunas calculadas
   //   Valor do Saldo Final = Saldo Inicial + Variação Mensal - Principal Líquido Resgatado
