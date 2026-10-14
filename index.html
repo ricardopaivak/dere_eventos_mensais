@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>DeRE Eventos Mensais</title>
 <style>
 /* Layout: padrão de tela NG — abas, barra de ferramentas, quadro Parâmetro, árvore | painel (grid + informações auxiliares), status */
@@ -70,6 +70,9 @@ button, input, select { font: inherit; color: inherit; }
 .info-icon { display: inline-grid; place-items: center; width: 13px; height: 13px; border-radius: 50%; background: var(--title); color: var(--title-ink); font: bold 10px/1 Georgia, serif; cursor: help; position: relative; }
 .info-icon:hover::after { content: "Essa informação será buscada do cadastro da empresa,\Aaba Parâmetros Contábeis, campo\AFrequência de Encerramento Contábil"; position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%); background: var(--tip); color: var(--title-ink); padding: 7px 9px; font: 11px/1.35 var(--ui); white-space: pre; z-index: 60; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
 
+.tip-icon { display: inline-grid; place-items: center; width: 13px; height: 13px; padding: 0; border: 0; border-radius: 50%; background: var(--title); color: var(--title-ink); font: bold 10px/1 Georgia, serif; cursor: help; position: relative; }
+.tip-icon:hover::after, .tip-icon.aberto::after { content: attr(data-tip); position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%); width: 280px; background: var(--tip); color: var(--title-ink); padding: 7px 9px; font: 11px/1.35 var(--ui); text-align: left; white-space: normal; z-index: 60; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+
 /* área principal */
 .main { flex: 1; display: grid; grid-template-columns: 244px 1fr; gap: 6px; padding: 4px; min-height: 0; }
 .tree { background: var(--surface); border: 1px solid var(--line); overflow: auto; padding: 4px 2px; white-space: nowrap; }
@@ -104,6 +107,7 @@ button, input, select { font: inherit; color: inherit; }
 #screen-d1106 .filter-group label { min-width: 84px; }
 .filter-group input[type=text] { height: 19px; width: 300px; border: 1px solid var(--line-strong); padding: 0 3px; }
 tr.oculta-filtro { display: none; }
+.oculta-conta th:first-child, .oculta-conta td:first-child { display: none; }
 
 /* grid */
 .table-section { flex: 1; display: flex; flex-direction: column; min-height: 0; }
@@ -167,6 +171,12 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 .modal-filter-group { display: flex; gap: 6px; align-items: center; }
 .modal-filter-group input { height: 19px; border: 1px solid var(--line-strong); padding: 0 3px; }
 .modal-filter-group input[type=text] { width: 110px; }
+.conta-vinculada { flex-direction: column; align-items: flex-start; gap: 6px; }
+.tipo-valor { height: 18px; border: 1px solid var(--line-strong); background: var(--surface); width: 100%; min-width: 210px; }
+.modal-table td.number { text-align: right; }
+.modal-table td.dc { text-align: center; }
+.conta-vinculada label { min-width: 100px; }
+#d1106-modal-ativo, #d1106-modal-conta { width: 460px; background: var(--chrome); color: var(--ink); }
 .modal-month-buttons { display: flex; border: 1px solid var(--line-strong); }
 .modal-month-btn { min-width: 34px; padding: 2px 4px; border: 0; border-right: 1px solid var(--line); background: var(--surface); cursor: pointer; }
 .modal-month-btn:last-child { border-right: 0; }
@@ -924,8 +934,12 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
               <option value="1.1.1.07.001">1.1.1.07.001 - Aplicações Financeiras em Fase de Liquidação</option>
             </select>
           </div>
-          <label class="chk" for="d1106-sem-valores"><input type="checkbox" id="d1106-sem-valores"> Evento D - 1106 sem valores de Aplicações Vinculadas à Reserva Técnica</label>
+          <span class="chk"><label class="chk" for="d1106-sem-valores"><input type="checkbox" id="d1106-sem-valores"> Evento D - 1106 sem valores de Aplicações Vinculadas à Reserva Técnica</label> <button type="button" class="tip-icon" id="tip-d1106-sem-valores" aria-label="Ajuda" data-tip="Essa opção deve ser utilizada nos casos onde não existam informações de aplicações financeiras a declarar para esse período.">i</button></span>
           <button class="btn push-right">Filtrar</button>
+          <div class="filter-group linha-inteira">
+            <label></label>
+            <label class="chk" for="d1106-exibir-conta"><input type="checkbox" id="d1106-exibir-conta"> Exibir conta contábil</label>
+          </div>
           <div class="filter-group linha-inteira">
             <label for="d1106-filtro">Filtro</label>
             <input type="text" id="d1106-filtro" placeholder="Conta, número ou descrição do ativo">
@@ -934,18 +948,18 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
         <div class="table-section">
           <div class="table-title">Registro - Aplicações Financeiras (Período 2025-03)</div>
           <div class="table-wrapper">
-            <table>
+            <table class="main-table" id="d1106-main-table">
               <thead>
                 <tr>
                   <th>Conta Contábil</th>
-                  <th>Numero do Ativo</th>
+                  <th>Código</th>
                   <th>Descrição do Ativo</th>
                   <th>Valor do Saldo Inicial</th>
-                  <th>Valor Rend. Rec.</th>
-                  <th>Valor de Variação Mensal</th>
-                  <th>Valor do Princ. Líqui. Resgatado</th>
-                  <th>Valor Rend. Líq. Resgatado</th>
-                  <th>Valor Saldo Final</th>
+                  <th>Valor Rendimento Periódico Recebido</th>
+                  <th>Valor da Variação Mensal</th>
+                  <th>Valor do Principal Líquido Resgatado</th>
+                  <th>Valor do Rendimento Líquido Resgatado</th>
+                  <th>Valor do Saldo Final</th>
                   <th>Valor Apurado DeRE</th>
                 </tr>
               </thead>
@@ -959,8 +973,8 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
+                                        <td class="number calc">0,00</td>
+                                        <td class="number calc">0,00</td>
                                     </tr>
                                     <tr data-account="1.02">
                                         <td>1.1.1.01.001</td>
@@ -971,8 +985,8 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
+                                        <td class="number calc">0,00</td>
+                                        <td class="number calc">0,00</td>
                                     </tr>
                                     <tr data-account="1.03">
                                         <td>1.1.1.01.002</td>
@@ -983,8 +997,8 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
+                                        <td class="number calc">0,00</td>
+                                        <td class="number calc">0,00</td>
                                     </tr>
                                     <tr data-account="1.04">
                                         <td>1.1.1.02.001</td>
@@ -995,9 +1009,35 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
                                         <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
+                                        <td class="number calc">0,00</td>
+                                        <td class="number calc">0,00</td>
                                     </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tabs-section">
+          <div class="table-title">
+            <span>Informações Auxiliares</span>
+            <div class="title-buttons"><button class="table-title-button" id="btn-vincular-ajustes-d1106">Vincular Lançamentos Financeiros</button></div>
+          </div>
+          <div class="tabs-header">
+            <div class="tab tab-1106 active">Lançamentos Aplicações Financeiras</div>
+          </div>
+          <div class="tab-content active">
+            <table class="grid-table" id="grid-lanc-ajuste-d1106">
+              <thead>
+                <tr>
+                  <th>Num. Lançamento</th>
+                  <th>Data</th>
+                  <th>Tipo do Valor</th>
+                  <th>Valor</th>
+                  <th>Histórico</th>
+                  <th>Contrapartida</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="6" class="vazio">Nenhum lançamento de ajuste</td></tr>
               </tbody>
             </table>
           </div>
@@ -1158,6 +1198,125 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
     var fechar = function () { janela.classList.remove('active'); };
     janela.querySelectorAll('.modal-close-btn, .modal-footer-btn').forEach(function (b) { b.addEventListener('click', fechar); });
     janela.addEventListener('click', function (e) { if (e.target === janela) fechar(); });
+  });
+  // Tooltip do D-1106: abre/fecha ao clicar (além do passar o mouse); fecha ao clicar fora
+  (function () {
+    var tip = document.getElementById('tip-d1106-sem-valores');
+    tip.addEventListener('click', function (e) { e.stopPropagation(); tip.classList.toggle('aberto'); });
+    document.addEventListener('click', function () { tip.classList.remove('aberto'); });
+  })();
+  // D-1106: Vincular Lançamentos de Ajustes abre a janela própria do D-1106
+  document.getElementById('btn-vincular-ajustes-d1106').addEventListener('click', function () {
+    // Conta Contábil da aplicação selecionada; descrição vem da lista de contas do filtro
+    var campo = document.getElementById('d1106-modal-conta');
+    var sel = document.querySelector('#d1106-main-table tbody tr.selected');
+    document.getElementById('d1106-modal-ativo').value = sel ? sel.cells[2].textContent.trim() : 'Nenhuma aplicação selecionada no grid';
+    if (!sel) {
+      campo.value = 'Nenhuma aplicação selecionada no grid';
+    } else {
+      var conta = sel.cells[0].textContent.trim();
+      var opt = Array.prototype.find.call(document.getElementById('d1106-conta').options, function (op) { return op.value === conta; });
+      campo.value = opt ? opt.textContent.trim() : conta + ' - descrição não cadastrada';
+    }
+    var tipos = {};
+    (sel ? (vinculosD1106[chaveAplicacao(sel)] || []) : []).forEach(function (l) { tipos[l.num] = l.tipo; });
+    document.querySelectorAll('#modal-vincular-ajustes-d1106 .modal-table tbody tr').forEach(function (r) {
+      var s = r.querySelector('select.tipo-valor');
+      if (s) s.value = tipos[r.cells[0].textContent.trim()] || '';
+    });
+    document.getElementById('modal-vincular-ajustes-d1106').classList.add('active');
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    var janela = document.getElementById('modal-vincular-ajustes-d1106');
+    var fechar = function () { janela.classList.remove('active'); };
+    janela.querySelectorAll('.modal-close-btn, .modal-footer-btn:not(.confirm)').forEach(function (b) { b.addEventListener('click', fechar); });
+    // Confirmar: leva para a aba só os lançamentos com Tipo do Valor preenchido
+    janela.querySelector('.modal-footer-btn.confirm').addEventListener('click', function () {
+      var linhas = Array.prototype.filter.call(janela.querySelectorAll('.modal-table tbody tr'), function (r) {
+        var s = r.querySelector('select.tipo-valor'); return s && s.value;
+      });
+      if (!linhas.length) { mostrarAviso('Preencha o Tipo do Valor de pelo menos um lançamento'); return; }
+      var aplicacao = document.querySelector('#d1106-main-table tbody tr.selected');
+      if (!aplicacao) { mostrarAviso('Selecione uma aplicação no grid do D-1106'); return; }
+      // Soma os valores por Tipo do Valor e leva para a coluna correspondente da aplicação selecionada
+      var colunaPorTipo = {
+        'Rendimento Periódico Recebido': 4,
+        'Variação Mensal': 5,
+        'Principal Líquido Resgatado': 6,
+        'Rendimento Líquido Resgatado': 7
+      };
+      var num = function (t) { var n = parseFloat(String(t).replace(/\./g, '').replace(',', '.')); return isNaN(n) ? 0 : n; };
+      var totais = {};
+      linhas.forEach(function (r) {
+        var tipo = r.querySelector('select.tipo-valor').value;
+        // Variação Mensal: débito aumenta o saldo da aplicação (positivo), crédito reduz (negativo)
+        var sinal = (tipo === 'Variação Mensal' && r.cells[3].textContent.trim() === 'C') ? -1 : 1;
+        totais[tipo] = (totais[tipo] || 0) + sinal * num(r.cells[2].textContent);
+      });
+      Object.keys(colunaPorTipo).forEach(function (tipo) {
+        var input = aplicacao.cells[colunaPorTipo[tipo]].querySelector('input');
+        if (input) input.value = (totais[tipo] || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      });
+      vinculosD1106[chaveAplicacao(aplicacao)] = linhas.map(function (r) {
+        var c = function (i) { return r.cells[i].textContent.trim(); };
+        return { num: c(0), data: c(1), tipo: r.querySelector('select.tipo-valor').value, valor: c(2), dc: c(3), historico: c(5), contrapartida: c(4) };
+      });
+      renderVinculosD1106();
+      calcularD1106();
+      fechar();
+      mostrarAviso(linhas.length + ' lançamento(s) vinculado(s)');
+    });
+    janela.addEventListener('click', function (e) { if (e.target === janela) fechar(); });
+  });
+  // D-1106: "Exibir conta contábil" desmarcado ao abrir; desmarcado oculta a coluna Conta Contábil do grid
+  (function () {
+    var chk = document.getElementById('d1106-exibir-conta');
+    var tabela = document.querySelector('#screen-d1106 .table-section table');
+    chk.checked = false;
+    function aplicar() { tabela.classList.toggle('oculta-conta', !chk.checked); }
+    chk.addEventListener('change', aplicar);
+    aplicar();
+  })();
+  // D-1106: colunas calculadas
+  //   Valor do Saldo Final = Saldo Inicial + Variação Mensal - Principal Líquido Resgatado
+  //   Valor Apurado DeRE  = Rendimento Periódico Recebido + Rendimento Líquido Resgatado
+  function calcularD1106() {
+    var num = function (t) { var n = parseFloat(String(t).replace(/[.]/g, '').replace(',', '.')); return isNaN(n) ? 0 : n; };
+    var fmt = function (n) { return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+    document.querySelectorAll('#d1106-main-table tbody tr').forEach(function (r) {
+      var v = function (i) { var inp = r.cells[i].querySelector('input'); return num(inp ? inp.value : r.cells[i].textContent); };
+      r.cells[8].textContent = fmt(v(3) + v(5) - v(6));
+      r.cells[9].textContent = fmt(v(4) + v(7));
+    });
+  }
+  document.getElementById('d1106-main-table').addEventListener('change', calcularD1106);
+  document.getElementById('d1106-main-table').addEventListener('keyup', function (e) { if (e.key === 'Enter') calcularD1106(); });
+  calcularD1106();
+
+  // D-1106: lançamentos vinculados guardados por aplicação; a aba mostra os da aplicação selecionada
+  var vinculosD1106 = {};
+  function chaveAplicacao(row) { return row.cells[0].textContent.trim() + '|' + row.cells[1].textContent.trim(); }
+  function renderVinculosD1106() {
+    var corpo = document.querySelector('#grid-lanc-ajuste-d1106 tbody');
+    var sel = document.querySelector('#d1106-main-table tbody tr.selected');
+    if (!sel) { corpo.innerHTML = '<tr><td colspan="6" class="vazio">Selecione uma aplicação no grid</td></tr>'; return; }
+    var lista = vinculosD1106[chaveAplicacao(sel)] || [];
+    if (!lista.length) { corpo.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum lançamento vinculado a esta aplicação</td></tr>'; return; }
+    var esc = function (t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
+    corpo.innerHTML = lista.map(function (l) {
+      return '<tr><td>' + esc(l.num) + '</td><td>' + esc(l.data) + '</td><td>' + esc(l.tipo) + '</td><td class="number">' + esc(l.valor) + ' ' + esc(l.dc || '') +
+        '</td><td>' + esc(l.historico) + '</td><td>' + esc(l.contrapartida) + '</td></tr>';
+    }).join('');
+  }
+  renderVinculosD1106();
+
+  // D-1106: seleção da aplicação no grid
+  document.getElementById('d1106-main-table').addEventListener('click', function (e) {
+    var row = e.target.closest('tbody tr');
+    if (!row || this.closest('.desabilitado')) return;
+    this.querySelectorAll('tbody tr.selected').forEach(function (r) { r.classList.remove('selected'); });
+    row.classList.add('selected');
+    renderVinculosD1106();
   });
   // Expandir / recolher pastas da árvore
   document.querySelectorAll('.tree .tgl:not(.blank)').forEach(function (b) {
@@ -2245,8 +2404,89 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-footer-btn">Sair</button>
                 <button class="modal-footer-btn confirm">Confirmar</button>
+                <button class="modal-footer-btn">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: D-1106 VINCULAR LANÇAMENTOS DE AJUSTE (cópia independente) -->
+    <div class="modal-overlay" id="modal-vincular-ajustes-d1106">
+        <div class="modal">
+            <div class="modal-header">
+                <span>Vincular Lançamentos Financeiros</span>
+                <button class="modal-close-btn">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-filters">
+                    <div class="modal-month-buttons">
+                        <button class="modal-month-btn">Jan</button>
+                        <button class="modal-month-btn">Fev</button>
+                        <button class="modal-month-btn">Mar</button>
+                        <button class="modal-month-btn">Abr</button>
+                        <button class="modal-month-btn">Mai</button>
+                        <button class="modal-month-btn">Jun</button>
+                        <button class="modal-month-btn">Jul</button>
+                        <button class="modal-month-btn">Ago</button>
+                        <button class="modal-month-btn">Set</button>
+                        <button class="modal-month-btn">Out</button>
+                        <button class="modal-month-btn">Nov</button>
+                        <button class="modal-month-btn">Dez</button>
+                        <button class="modal-month-btn active">Todos</button>
+                    </div>
+                    <div class="modal-filter-group">
+                        <label>Período</label>
+                        <input type="date" value="2026-01-01">
+                        <span>à</span>
+                        <input type="date" value="2026-12-31">
+                    </div>
+                </div>
+                <div class="modal-filters conta-vinculada">
+                    <div class="modal-filter-group">
+                        <label for="d1106-modal-ativo">Ativo Financeiro:</label>
+                        <input type="text" id="d1106-modal-ativo" readonly>
+                    </div>
+                    <div class="modal-filter-group">
+                        <label for="d1106-modal-conta">Conta Contábil:</label>
+                        <input type="text" id="d1106-modal-conta" readonly>
+                    </div>
+                </div>
+                <div class="modal-filters">
+                    <div class="modal-filter-group">
+                        <label>Nº Lançamento</label>
+                        <input type="text" placeholder="">
+                    </div>
+                    <button class="modal-search-btn push-right">Buscar Lançamentos</button>
+                </div>
+                <div class="modal-tabs">
+                    <div class="modal-tab active">Lançamentos Contábeis</div>
+                </div>
+                <div class="modal-table-wrapper">
+                    <table class="modal-table">
+                        <thead>
+                            <tr>
+                                <th>Nº Lançamento</th>
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>D/C</th>
+                                <th>Contrapartida</th>
+                                <th>Histórico Contábil</th>
+                                <th>Tipo do Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Lançamentos de exemplo -->
+                            <tr><td>101</td><td>05/03/2026</td><td class="number">1.250,00</td><td class="dc">D</td><td>3.04</td><td>Rendimento de aplicação CDB</td><td><select class="tipo-valor" aria-label="Tipo do Valor"><option value="" selected disabled>Selecione</option><option>Rendimento Periódico Recebido</option><option>Variação Mensal</option><option>Principal Líquido Resgatado</option><option>Rendimento Líquido Resgatado</option></select></td></tr>
+                            <tr><td>102</td><td>15/03/2026</td><td class="number">10.000,00</td><td class="dc">C</td><td>1.02</td><td>Resgate de aplicação renda fixa</td><td><select class="tipo-valor" aria-label="Tipo do Valor"><option value="" selected disabled>Selecione</option><option>Rendimento Periódico Recebido</option><option>Variação Mensal</option><option>Principal Líquido Resgatado</option><option>Rendimento Líquido Resgatado</option></select></td></tr>
+                            <tr><td>103</td><td>31/03/2026</td><td class="number">385,40</td><td class="dc">D</td><td>3.04</td><td>Atualização mensal de fundo de investimento</td><td><select class="tipo-valor" aria-label="Tipo do Valor"><option value="" selected disabled>Selecione</option><option>Rendimento Periódico Recebido</option><option>Variação Mensal</option><option>Principal Líquido Resgatado</option><option>Rendimento Líquido Resgatado</option></select></td></tr>
+                            <tr><td>104</td><td>31/03/2026</td><td class="number">120,00</td><td class="dc">C</td><td>4.09</td><td>Desvalorização de cotas de fundo multimercado</td><td><select class="tipo-valor" aria-label="Tipo do Valor"><option value="" selected disabled>Selecione</option><option>Rendimento Periódico Recebido</option><option>Variação Mensal</option><option>Principal Líquido Resgatado</option><option>Rendimento Líquido Resgatado</option></select></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-footer-btn confirm">Confirmar</button>
+                <button class="modal-footer-btn">Sair</button>
             </div>
         </div>
     </div>
@@ -2312,8 +2552,8 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-footer-btn">Sair</button>
                 <button class="modal-footer-btn confirm">Confirmar</button>
+                <button class="modal-footer-btn">Sair</button>
             </div>
         </div>
     </div>
@@ -2546,8 +2786,8 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                 </div>
             </div>
             <div class="contas-modal-footer">
-                <button class="contas-modal-btn" id="contas-modal-cancel-btn">Cancelar</button>
                 <button class="contas-modal-btn confirm" id="contas-modal-confirm-btn">Confirmar</button>
+                <button class="contas-modal-btn" id="contas-modal-cancel-btn">Cancelar</button>
             </div>
         </div>
     </div>
