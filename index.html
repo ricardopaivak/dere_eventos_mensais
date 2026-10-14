@@ -106,7 +106,7 @@ button, input, select { font: inherit; color: inherit; }
 .linha-inteira { flex-basis: 100%; }
 #screen-d1106 .filter-group label { min-width: 84px; }
 .filter-group input[type=text] { height: 19px; width: 300px; border: 1px solid var(--line-strong); padding: 0 3px; }
-tr.oculta-filtro, tr.oculta-aplicacao { display: none; }
+tr.oculta-filtro, tr.oculta-aplicacao, tr.oculta-conta-filtro { display: none; }
 .ms-wrap { position: relative; }
 .ms-btn { height: 19px; min-width: 260px; max-width: 360px; text-align: left; border: 1px solid var(--line-strong); background: var(--surface); padding: 0 18px 0 3px; cursor: pointer; position: relative; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ms-btn::after { content: ""; position: absolute; right: 5px; top: 7px; border: 3px solid transparent; border-top: 4px solid var(--ink); }
@@ -929,8 +929,13 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
   <span class="chk"><label class="chk" for="d1106-sem-valores"><input type="checkbox" id="d1106-sem-valores"> Evento D - 1106 sem valores de Aplicações Vinculadas à Reserva Técnica</label> <button type="button" class="tip-icon" id="tip-d1106-sem-valores" aria-label="Ajuda" data-tip="Essa opção deve ser utilizada nos casos onde não existam informações de aplicações financeiras a declarar para esse período.">i</button></span>
           </div>
           <div class="filter-group">
-            <label for="d1106-conta">Conta Contábil</label>
-            <select id="d1106-conta">
+            <label>Conta Contábil</label>
+            <div class="ms-wrap multi-select" id="d1106-contas">
+              <button type="button" class="ms-btn" id="d1106-contas-btn" aria-haspopup="true" aria-expanded="false">Todas as contas</button>
+              <div class="ms-lista" id="d1106-contas-lista" hidden></div>
+            </div>
+            <!-- lista de contas (fonte das opções e das descrições) -->
+            <select id="d1106-conta" hidden>
               <option value="">-- Selecionar Conta --</option>
               <option value="1.1.1.01.001">1.1.1.01.001 - Aplicações Financeiras Renda Fixa</option>
               <option value="1.1.1.01.002">1.1.1.01.002 - Aplicações Financeiras Renda Variável</option>
@@ -1167,18 +1172,54 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
       grid.querySelectorAll('input').forEach(function (i) { i.disabled = chk.checked; });
     });
   })();
+  // D-1106: filtro Conta Contábil (seleção múltipla); nenhuma marcada = todas
+  var contasD1106 = (function () {
+    var box = document.getElementById('d1106-contas');
+    var btn = document.getElementById('d1106-contas-btn');
+    var lista = document.getElementById('d1106-contas-lista');
+    Array.prototype.forEach.call(document.getElementById('d1106-conta').options, function (op) {
+      if (!op.value) return;
+      var l = document.createElement('label');
+      var c = document.createElement('input');
+      c.type = 'checkbox'; c.value = op.value;
+      l.appendChild(c); l.appendChild(document.createTextNode(op.textContent.trim()));
+      lista.appendChild(l);
+    });
+    var caixas = function () { return Array.prototype.slice.call(lista.querySelectorAll('input')); };
+    function get() { return caixas().filter(function (c) { return c.checked; }).map(function (c) { return c.value; }); }
+    function aplicar() {
+      var marcadas = get();
+      document.querySelectorAll('#d1106-main-table tbody tr').forEach(function (r) {
+        r.classList.toggle('oculta-conta-filtro', marcadas.length > 0 && marcadas.indexOf(r.cells[0].textContent.trim()) === -1);
+      });
+      btn.textContent = !marcadas.length ? 'Todas as contas'
+        : marcadas.length === 1 ? lista.querySelector('input[value="' + marcadas[0] + '"]').parentNode.textContent
+        : marcadas.length + ' contas selecionadas';
+    }
+    function set(valores) { caixas().forEach(function (c) { c.checked = valores.indexOf(c.value) !== -1; }); aplicar(); }
+    lista.addEventListener('change', aplicar);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      lista.hidden = !lista.hidden;
+      btn.setAttribute('aria-expanded', String(!lista.hidden));
+    });
+    document.addEventListener('click', function (e) {
+      if (!box.contains(e.target)) { lista.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    });
+    return { get: get, set: set };
+  })();
   // D-1106: Conta Contábil e "sem valores" são guardados por período (mês/ano); cada mês tem os seus
   (function () {
     var filtrosD1106PorPeriodo = {};
-    var conta = document.getElementById('d1106-conta');
+    var contasMS = contasD1106;
     var chk = document.getElementById('d1106-sem-valores');
     var ano = document.getElementById('year-select');
     var periodoAtual = ano.value + '-03';
     function trocarPeriodo(novo) {
-      filtrosD1106PorPeriodo[periodoAtual] = { conta: conta.value, semValores: chk.checked };
+      filtrosD1106PorPeriodo[periodoAtual] = { contas: contasMS.get(), semValores: chk.checked };
       periodoAtual = novo;
-      var f = filtrosD1106PorPeriodo[novo] || { conta: '', semValores: false };
-      conta.value = f.conta;
+      var f = filtrosD1106PorPeriodo[novo] || { contas: [], semValores: false };
+      contasMS.set(f.contas);
       chk.checked = f.semValores;
       chk.dispatchEvent(new Event('change'));
     }
