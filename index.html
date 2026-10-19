@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>DeRE Eventos Mensais</title>
 <style>
 /* Layout: padrão de tela NG — abas, barra de ferramentas, quadro Parâmetro, árvore | painel (grid + informações auxiliares), status */
@@ -73,6 +72,11 @@ button, input, select { font: inherit; color: inherit; }
 .tip-icon { display: inline-grid; place-items: center; width: 13px; height: 13px; padding: 0; border: 0; border-radius: 50%; background: var(--title); color: var(--title-ink); font: bold 10px/1 Georgia, serif; cursor: help; position: relative; }
 .tip-icon:hover::after, .tip-icon.aberto::after { content: attr(data-tip); position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%); width: 280px; background: var(--tip); color: var(--title-ink); padding: 7px 9px; font: 11px/1.35 var(--ui); text-align: left; white-space: normal; z-index: 60; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
 
+.tip-col { vertical-align: -2px; margin-left: 3px; }
+.tip-col:hover::after, .tip-col.aberto::after { bottom: auto; top: 140%; left: auto; right: -6px; transform: none; font-weight: normal; }
+
+.tip-aba:hover::after, .tip-aba.aberto::after { top: auto; bottom: 140%; right: auto; left: -8px; width: 400px; white-space: pre-line; }
+
 /* área principal */
 .main { flex: 1; display: grid; grid-template-columns: 244px 1fr; gap: 6px; padding: 4px; min-height: 0; }
 .tree { background: var(--surface); border: 1px solid var(--line); overflow: auto; padding: 4px 2px; white-space: nowrap; }
@@ -106,7 +110,8 @@ button, input, select { font: inherit; color: inherit; }
 .linha-inteira { flex-basis: 100%; }
 #screen-d1106 .filter-group label { min-width: 84px; }
 .filter-group input[type=text] { height: 19px; width: 300px; border: 1px solid var(--line-strong); padding: 0 3px; }
-tr.oculta-filtro, tr.oculta-aplicacao, tr.oculta-conta-filtro { display: none; }
+tr.oculta-filtro, tr.oculta-aplicacao, tr.oculta-conta-filtro, tr.oculta-pesquisa-1121, tr.oculta-com-tipo, tr.oculta-parametro { display: none; }
+#d1121-colunas-btn { height: 19px; padding: 0 10px; }
 .ms-wrap { position: relative; }
 .ms-btn { height: 19px; min-width: 260px; max-width: 360px; text-align: left; border: 1px solid var(--line-strong); background: var(--surface); padding: 0 18px 0 3px; cursor: pointer; position: relative; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ms-btn::after { content: ""; position: absolute; right: 5px; top: 7px; border: 3px solid transparent; border-top: 4px solid var(--ink); }
@@ -130,6 +135,7 @@ tr.oculta-filtro, tr.oculta-aplicacao, tr.oculta-conta-filtro { display: none; }
 .main-table tbody tr { cursor: default; }
 .main-table tbody tr.selected td { background: var(--select); font-weight: bold; }
 .cell-input { width: 100%; border: 0; background: transparent; text-align: right; padding: 0; height: 14px; font-variant-numeric: tabular-nums; }
+.cell-input.txt { text-align: left; min-width: 90px; }
 .cell-input:focus { outline: 1px solid var(--ink); outline-offset: 0; background: var(--surface); }
 .conta-desmembrada-flag { margin: 0; width: 13px; height: 13px; }
 .main-table td:has(input.conta-desmembrada-flag) { text-align: center; }
@@ -139,6 +145,16 @@ tr.oculta-filtro, tr.oculta-aplicacao, tr.oculta-conta-filtro { display: none; }
 .table-wrapper.desabilitado td, .table-wrapper.desabilitado th, .table-wrapper.desabilitado tbody tr:hover td { background: var(--chrome); }
 .table-wrapper.desabilitado tbody tr { cursor: not-allowed; }
 tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
+
+/* abas do grid do meio */
+.mid-tabs { display: flex; padding: 3px 4px 0; margin: 0 2px; border-bottom: 1px solid var(--line); }
+.mid-tab { border: 1px solid var(--line); border-bottom: 0; background: var(--chrome); padding: 3px 6px; margin-right: 2px; cursor: pointer; font-size: 12.5px; }
+.mid-tab.active { background: var(--surface); font-weight: bold; position: relative; top: 1px; }
+.mid-pane { display: none; flex: 1; min-height: 0; flex-direction: column; }
+.mid-pane.active { display: flex; }
+.mid-pane .table-wrapper { border-top: 0; }
+.pane-acoes { padding: 5px 4px; margin: 0 2px; display: flex; gap: 6px; }
+.table-wrapper td.vazio { text-align: center; color: var(--ink-soft); height: 40px; }
 
 /* painel de informações auxiliares (abas inferiores) */
 .tabs-section { flex: none; height: 196px; display: flex; flex-direction: column; border-top: 1px solid var(--line-strong); }
@@ -172,6 +188,26 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 .modal, .contas-modal { background: var(--chrome); border: 1px solid var(--line-strong); width: 100%; max-width: 900px; height: 80vh; display: flex; flex-direction: column; box-shadow: 3px 3px 10px rgba(0,0,0,.35); }
 .contas-modal { max-width: 700px; height: 70vh; }
 .modal-header, .contas-modal-header { background: var(--title); color: var(--title-ink); padding: 5px 8px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+.modal.modal-pequena { max-width: 720px; height: auto; min-height: 240px; }
+.modal-pequena .modal-content { background: var(--surface); }
+.modal-abas { margin: 0; padding-top: 6px; }
+.modal-periodo { margin: 6px 8px 0; }
+.modal-periodo legend { font-size: 12px; }
+.mp-linha { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.mp-linha + .mp-linha { margin-top: 6px; }
+.mp-linha > label:first-child { min-width: 104px; text-align: right; }
+.mp-linha .mp-dir { margin-left: 12px; }
+.mp-linha input, .mp-linha select { height: 19px; border: 1px solid var(--line-strong); background: var(--surface); }
+.mp-linha select { width: 200px; }
+.mp-linha .ms-btn { width: 200px; min-width: 0; }
+.mp-linha .ms-lista { min-width: 260px; }
+.mp-linha select.mp-largo { width: 440px; max-width: 100%; }
+.mp-linha .btn { height: 19px; padding: 0 10px; }
+.modal-grid { max-height: 260px; min-height: 120px; margin: 0 2px 4px; border-top: 0; }
+.modal-grid td.number { text-align: right; }
+.modal-grid td.checkbox-col { text-align: center; }
+.modal-grid .cell-input { min-width: 100px; }
+.modal-grid select.tipo-atividade { height: 18px; width: 260px; border: 1px solid var(--line-strong); background: var(--surface); }
 .modal-close-btn, .contas-modal-close-btn { background: none; border: 0; color: var(--title-ink); font: bold 15px/1 var(--ui); cursor: pointer; padding: 0 4px; }
 .modal-content, .contas-modal-content { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .modal-filters { padding: 6px 10px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -1063,79 +1099,93 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 
       <!-- EVENTO D-1121: DEDUÇÕES UTILIZADAS -->
       <div class="event-screen" id="screen-d1121">
-        <div class="filter-section">
-          <div class="filter-group">
-            <label for="d1121-tipo">Tipo de Dedução</label>
-            <select id="d1121-tipo">
-              <option value="">-- Todos --</option>
-              <option value="01">Despesas Operacionais</option>
-              <option value="02">Depreciação</option>
-              <option value="03">Amortização</option>
-              <option value="04">Provisões</option>
-            </select>
-          </div>
-          <button class="btn push-right">Filtrar</button>
-        </div>
         <div class="table-section">
           <div class="table-title">Registro - Deduções Utilizadas na Apuração (Período 2025-03)</div>
-          <div class="table-wrapper">
-            <table>
+          <div class="table-search-wrapper">
+            <label for="search-d1121">Pesquisar</label>
+            <input type="text" id="search-d1121" placeholder="Texto em qualquer coluna">
+            <div class="ms-wrap" id="d1121-colunas">
+              <button type="button" class="btn" id="d1121-colunas-btn" aria-haspopup="true" aria-expanded="false">Ocultar/Exibir Colunas</button>
+              <div class="ms-lista" id="d1121-colunas-lista" hidden></div>
+            </div>
+          </div>
+          <div class="mid-tabs" role="tablist">
+            <button type="button" class="mid-tab active" role="tab" aria-selected="true">Ativos Imobiliários</button>
+            <button type="button" class="mid-tab" role="tab" aria-selected="false">Deduções Notas Fiscais</button>
+          </div>
+          <div class="mid-pane active">
+            <div class="table-wrapper">
+            <table id="d1121-ativos-table">
               <thead>
                 <tr>
-                  <th>Cód.</th>
-                  <th>Descrição</th>
-                  <th>Tipo</th>
-                  <th>Valor da Dedução</th>
-                  <th>Base de Cálculo</th>
-                  <th>% Aplicado</th>
-                  <th>Valor Líquido</th>
+                  <th>Código</th>
+                  <th>Descrição do Imóvel</th>
+                  <th>Filial</th>
+                  <th>Vendedor (Alienante)</th>
+                  <th>CPF</th>
+                  <th>Data da Aquisição</th>
+                  <th>Valor da Aquisição</th>
+                  <th>Tipo da Atividade</th>
+                  <th>Conta Contábil</th>
+                  <th>Valor da Dedução Total <button type="button" class="tip-icon tip-col" aria-label="Ajuda" data-tip="Esse campo deve ser preenchido com o valor total da dedução gerada pela operação.">i</button></th>
+                  <th>Valor da Dedução no Período <button type="button" class="tip-icon tip-col" aria-label="Ajuda" data-tip="Esse campo deve ser preenchido com o valor da dedução que será aproveitada no período atual.">i</button></th>
                 </tr>
               </thead>
               <tbody>
-                                    <tr data-account="9.3.02.01">
-                                        <td>9.3.02.01</td>
-                                        <td>Despesa de Amortização</td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number">2.326,22</td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                        <td class="number"><input type="text" class="cell-input" value="0,00"></td>
-                                    </tr>
+                <tr><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td></tr>
+                <tr><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td></tr>
+                <tr><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+          <div class="mid-pane">
+          <div class="pane-acoes"><button type="button" class="btn" id="btn-preencher-atividade">Preencher Tipo de Atividade em Massa</button></div>
+          <div class="table-wrapper">
+            <table class="main-table" id="d1121-notas-table">
+              <thead>
+                <tr>
+                  <th>Data de Emissão</th>
+                  <th>Nº da Nota Fiscal</th>
+                  <th>Valor Contábil</th>
+                  <th>Valor Total Dedutível</th>
+                  <th>Valor da Dedução no Período</th>
+                  <th>Tipo de Atividade</th>
+                  <th>Modelo NFe</th>
+                  <th>Chave da Nota Fiscal</th>
+                  <th>Conta Contábil</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><input type="text" class="cell-input txt" value="05/03/2026"></td><td><input type="text" class="cell-input txt" value="1523"></td><td class="number"><input type="text" class="cell-input" value="12.500,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value="55"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td></tr>
+                <tr><td><input type="text" class="cell-input txt" value="12/03/2026"></td><td><input type="text" class="cell-input txt" value="1547"></td><td class="number"><input type="text" class="cell-input" value="3.180,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value="55"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td></tr>
+                <tr><td><input type="text" class="cell-input txt" value="20/03/2026"></td><td><input type="text" class="cell-input txt" value="88"></td><td class="number"><input type="text" class="cell-input" value="950,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value="65"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td></tr>
               </tbody>
             </table>
           </div>
-        </div>
-        <div class="tabs-section">
-          <div class="table-title"><span>Informações Auxiliares</span></div>
-          <div class="tabs-header">
-            <div class="tab tab-1121 active">Análise de Deduções</div>
-            <div class="tab tab-1121">Conformidade Fiscal</div>
-            <div class="tab tab-1121">Justificativas</div>
-          </div>
-          <div class="tab-content active">
-            <div class="tab-data">
-              <p><strong>Total de Deduções:</strong> R$ 295.000,00</p>
-              <p><strong>Base de Cálculo:</strong> R$ 825.000,00</p>
-              <p><strong>% do Total de Deduções:</strong> 35,76%</p>
-              <p><strong>Maior Dedução:</strong> Salários e Encargos (R$ 150.000,00)</p>
+          <div class="tabs-section">
+            <div class="table-title"><span>Informações Auxiliares</span></div>
+            <div class="tabs-header">
+              <div class="tab tab-1121 active">Itens dos Documentos Fiscais <button type="button" class="tip-icon tip-col tip-aba" aria-label="Ajuda" data-tip="O preenchimento dos itens é obrigatório apenas:&#10;&#10;• No mês de emissão da nota: para os modelos 01 – DeRE, 03 – NF-e, 04 – NFC-e e 05 – NF-e ABI (o modelo 02 – NFS-e não é obrigatório), quando só parte do valor da nota for dedutível ou quando a dedução for controlada por item.&#10;&#10;• Nos meses seguintes: para os itens que tiverem dedução no mês, se a nota foi informada com itens no mês de emissão.">i</button></div>
+            </div>
+            <div class="tab-content active">
+              <table class="grid-table" id="d1121-itens-table">
+                <thead>
+                  <tr>
+                    <th>Nº do Item</th>
+                    <th>Mercadoria/Serviços</th>
+                    <th>Valor Contábil</th>
+                    <th>Valor Total Dedutível</th>
+                    <th>Valor da Dedução no Período</th>
+                    <th>Tipo de Atividade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td colspan="6" class="vazio">Selecione uma nota fiscal no grid</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
-          <div class="tab-content">
-            <div class="tab-data">
-              <p><strong>Status de Conformidade:</strong> Conforme</p>
-              <p><strong>Validação Fiscal:</strong> Pendente análise</p>
-              <p><strong>Documentação Anexada:</strong> Sim</p>
-              <p><strong>Última Revisão:</strong> 2025-03-16</p>
-            </div>
-          </div>
-          <div class="tab-content">
-            <div class="tab-data">
-              <p><strong>Justificativa D-001:</strong> Folha de pagamento conforme RAIS/CAGED</p>
-              <p><strong>Justificativa D-002:</strong> Depreciação conforme NPC 27 - CPC 27</p>
-              <p><strong>Justificativa D-003:</strong> Software registrado e licenciado</p>
-              <p><strong>Justificativa D-004:</strong> Provisão constituída conforme CLT</p>
-            </div>
           </div>
         </div>
       </div>
@@ -1392,6 +1442,358 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
     this.querySelectorAll('tbody tr.selected').forEach(function (r) { r.classList.remove('selected'); });
     row.classList.add('selected');
     renderVinculosD1106();
+  });
+  // Abas do grid do meio (D-1121)
+  document.querySelectorAll('.mid-tabs').forEach(function (barra) {
+    var abas = Array.prototype.slice.call(barra.querySelectorAll('.mid-tab'));
+    var paineis = Array.prototype.slice.call(barra.parentNode.querySelectorAll(':scope > .mid-pane'));
+    abas.forEach(function (aba, i) {
+      aba.addEventListener('click', function () {
+        abas.forEach(function (a, j) { a.classList.toggle('active', i === j); a.setAttribute('aria-selected', String(i === j)); });
+        paineis.forEach(function (p, j) { p.classList.toggle('active', i === j); });
+      });
+    });
+  });
+  // Tooltips dos títulos de coluna: abrem/fecham ao clicar (além do passar o mouse); fecham ao clicar fora
+  document.querySelectorAll('.tip-col').forEach(function (tip) {
+    tip.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var abrir = !tip.classList.contains('aberto');
+      document.querySelectorAll('.tip-col.aberto').forEach(function (t) { t.classList.remove('aberto'); });
+      tip.classList.toggle('aberto', abrir);
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.tip-col.aberto').forEach(function (t) { t.classList.remove('aberto'); });
+  });
+  // D-1121: pesquisa e Ocultar/Exibir Colunas, sempre sobre o grid da aba ativa
+  (function () {
+    var tela = document.getElementById('screen-d1121');
+    var busca = document.getElementById('search-d1121');
+    var box = document.getElementById('d1121-colunas');
+    var btn = document.getElementById('d1121-colunas-btn');
+    var lista = document.getElementById('d1121-colunas-lista');
+    var ocultas = new WeakMap(); // tabela -> conjunto de índices de colunas ocultas
+    function tabelaAtiva() { return tela.querySelector('.mid-pane.active table'); }
+    function textoLinha(r) {
+      return Array.prototype.map.call(r.cells, function (c) {
+        var i = c.querySelector('input'); return i ? i.value : c.textContent;
+      }).join(' ').toLowerCase();
+    }
+    function pesquisar() {
+      var termo = busca.value.trim().toLowerCase();
+      tela.querySelectorAll('.mid-pane table tbody tr').forEach(function (r) {
+        r.classList.toggle('oculta-pesquisa-1121', termo !== '' && textoLinha(r).indexOf(termo) === -1);
+      });
+    }
+    function aplicarColunas(t) {
+      var set = ocultas.get(t) || [];
+      t.querySelectorAll('tr').forEach(function (r) {
+        Array.prototype.forEach.call(r.cells, function (c, i) { c.style.display = set.indexOf(i) !== -1 ? 'none' : ''; });
+      });
+    }
+    function montarLista() {
+      var t = tabelaAtiva(); lista.innerHTML = '';
+      if (!t) return;
+      var set = ocultas.get(t) || [];
+      Array.prototype.forEach.call(t.tHead.rows[0].cells, function (th, i) {
+        var l = document.createElement('label');
+        var c = document.createElement('input');
+        c.type = 'checkbox'; c.checked = set.indexOf(i) === -1; c.value = String(i);
+        l.appendChild(c); l.appendChild(document.createTextNode(th.firstChild.textContent.trim()));
+        lista.appendChild(l);
+      });
+    }
+    busca.addEventListener('input', pesquisar);
+    tela.addEventListener('input', function (e) { if (e.target.classList.contains('cell-input')) pesquisar(); });
+    lista.addEventListener('change', function () {
+      var t = tabelaAtiva(); if (!t) return;
+      var set = Array.prototype.filter.call(lista.querySelectorAll('input'), function (c) { return !c.checked; }).map(function (c) { return +c.value; });
+      ocultas.set(t, set); aplicarColunas(t);
+    });
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (lista.hidden) montarLista();
+      lista.hidden = !lista.hidden;
+      btn.setAttribute('aria-expanded', String(!lista.hidden));
+    });
+    document.addEventListener('click', function (e) {
+      if (!box.contains(e.target)) { lista.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    });
+    tela.querySelectorAll('.mid-tab').forEach(function (a) { a.addEventListener('click', function () { lista.hidden = true; }); });
+  })();
+  // D-1121: cada nota fiscal tem os seus itens (mercadorias/serviços); a aba mostra os da nota selecionada
+  (function () {
+    var notas = document.getElementById('d1121-notas-table');
+    var corpo = document.querySelector('#d1121-itens-table tbody');
+    // itens de exemplo por linha do grid de notas
+    var itensPorNota = [
+      [ { item: '1', merc: 'Notebook corporativo', contabil: '8.000,00', dedutivel: '0,00', deducao: '0,00' },
+        { item: '2', merc: 'Monitor 27 polegadas', contabil: '4.500,00', dedutivel: '0,00', deducao: '0,00' } ],
+      [ { item: '1', merc: 'Serviço de manutenção predial', contabil: '2.400,00', dedutivel: '0,00', deducao: '0,00' },
+        { item: '2', merc: 'Material elétrico', contabil: '530,00', dedutivel: '0,00', deducao: '0,00' },
+        { item: '3', merc: 'Lâmpadas LED', contabil: '250,00', dedutivel: '0,00', deducao: '0,00' } ],
+      [ { item: '1', merc: 'Material de escritório', contabil: '950,00', dedutivel: '0,00', deducao: '0,00' } ]
+    ];
+    var campos = ['item', 'merc', 'contabil', 'dedutivel', 'deducao', 'atividade'];
+    var atual = -1;
+    var esc = function (t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
+    function render() {
+      if (atual < 0) { corpo.innerHTML = '<tr><td colspan="6" class="vazio">Selecione uma nota fiscal no grid</td></tr>'; return; }
+      var lista = itensPorNota[atual] || (itensPorNota[atual] = []);
+      if (!lista.length) { corpo.innerHTML = '<tr><td colspan="6" class="vazio">Nenhuma mercadoria/serviço vinculado a esta nota</td></tr>'; return; }
+      corpo.innerHTML = lista.map(function (it, li) {
+        return '<tr data-i="' + li + '">' + campos.map(function (c, ci) {
+          var numero = ci >= 2 && ci <= 4;
+          return '<td' + (numero ? ' class="number"' : '') + '><input type="text" class="cell-input' + (numero ? '' : ' txt') + '" data-campo="' + c + '" value="' + esc(it[c] || '') + '"></td>';
+        }).join('') + '</tr>';
+      }).join('');
+    }
+    // edição dos itens fica guardada na nota
+    corpo.addEventListener('input', function (e) {
+      var inp = e.target; if (atual < 0 || !inp.dataset.campo) return;
+      itensPorNota[atual][+inp.closest('tr').dataset.i][inp.dataset.campo] = inp.value;
+    });
+    notas.addEventListener('click', function (e) {
+      var row = e.target.closest('tbody tr'); if (!row) return;
+      notas.querySelectorAll('tbody tr.selected').forEach(function (r) { r.classList.remove('selected'); });
+      row.classList.add('selected');
+      atual = Array.prototype.indexOf.call(row.parentNode.children, row);
+      render();
+    });
+    render();
+    window.itensD1121 = { atual: function () { return atual; }, lista: function () { return atual < 0 ? [] : (itensPorNota[atual] || []); }, daNota: function (n) { return itensPorNota[n] || (itensPorNota[n] = []); }, render: render };
+  })();
+  // D-1121: Preencher Tipo de Atividade abre a janela própria e carrega as notas do grid
+  // Fornecedor e Contrapartida (integração contábil) de exemplo, por número da nota
+  var dadosNotaD1121 = {
+    '1523': { fornecedor: 'Distribuidora Alfa Ltda', contrapartida: '2.07 - Fornecedores - Nacionais' },
+    '1547': { fornecedor: 'Gama Serviços Prediais Ltda', contrapartida: '2.07 - Fornecedores - Nacionais' },
+    '88':   { fornecedor: 'Papelaria Delta ME', contrapartida: '1.02 - Banco A - Conta Corrente' }
+  };
+  function carregarNotasAtividade() {
+    var esc = function (t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
+    var opcoes = Array.prototype.map.call(document.querySelectorAll('#atividade-tipo option'), function (op) {
+      return '<option value="' + esc(op.value || '') + '"' + (op.value ? '' : ' selected') + '>' + esc(op.value ? op.textContent : 'Selecione') + '</option>';
+    }).join('');
+    var linhas = Array.prototype.filter.call(document.querySelectorAll('#d1121-notas-table tbody tr'), function (r) {
+      return r.cells[1].querySelector('input').value.trim() !== '';
+    });
+    var corpo = document.querySelector('#atividade-notas-table tbody');
+    if (!linhas.length) { corpo.innerHTML = '<tr><td colspan="9" class="vazio">Nenhuma nota fiscal no grid</td></tr>'; return; }
+    corpo.innerHTML = linhas.map(function (r) {
+      var v = function (i) { return r.cells[i].querySelector('input').value.trim(); };
+      var nota = v(1), extra = dadosNotaD1121[nota] || { fornecedor: '', contrapartida: '' };
+      var contabil = v(2);
+      return '<tr><td class="checkbox-col"><input type="checkbox" class="sel-nota" aria-label="Selecionar nota ' + esc(nota) + '"></td><td>' + esc(v(0)) + '</td><td>' + esc(nota) + '</td><td>' + esc(extra.fornecedor) + '</td><td class="number">' + esc(contabil) + '</td>' +
+        '<td class="number"><input type="text" class="cell-input ded-total" value="' + esc(contabil) + '"></td>' +
+        '<td class="number"><input type="text" class="cell-input ded-periodo" value="' + esc(contabil) + '"></td>' +
+        '<td><select class="tipo-atividade" aria-label="Tipo de Atividade">' + opcoes + '</select></td>' +
+        '<td>' + esc(extra.contrapartida) + '</td></tr>';
+    }).join('');
+    // tipo já informado na nota (grid Deduções Notas Fiscais) volta selecionado
+    corpo.querySelectorAll('tr').forEach(function (r, k) {
+      var s = r.querySelector('select.tipo-atividade'); if (!s) return;
+      var atual = linhas[k].cells[5].querySelector('input').value.trim();
+      Array.prototype.forEach.call(s.options, function (op) { if (op.value && op.textContent === atual) s.value = op.value; });
+    });
+  }
+  // "Filtrar notas/itens sem Tipo de Atividade": mostra só as linhas com Tipo de Atividade em branco
+  function filtrarSemTipoAtividade() {
+    var chk = document.getElementById('atividade-sem-tipo');
+    document.querySelectorAll('#atividade-notas-table tbody tr, #atividade-itens-table tbody tr').forEach(function (r) {
+      var s = r.querySelector('select.tipo-atividade');
+      r.classList.toggle('oculta-com-tipo', !!(chk && chk.checked && s && s.value));
+    });
+  }
+  document.addEventListener('change', function (e) {
+    if (e.target.id === 'atividade-sem-tipo' || (e.target.classList && e.target.classList.contains('tipo-atividade'))) filtrarSemTipoAtividade();
+  });
+  // Valor da Dedução no Período acompanha o Valor Total Dedutível até ser alterado pelo usuário
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+    if (!t.closest || !t.closest('#atividade-notas-table')) return;
+    if (t.classList.contains('ded-periodo')) t.dataset.editado = '1';
+    if (t.classList.contains('ded-total')) {
+      var p = t.closest('tr').querySelector('.ded-periodo');
+      if (!p.dataset.editado) p.value = t.value;
+    }
+  });
+  // Todos os itens (mercadorias/serviços) das notas do grid Deduções Notas Fiscais
+  function carregarItensAtividade() {
+    var esc = function (t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
+    var opcoes = Array.prototype.map.call(document.querySelectorAll('#atividade-tipo option'), function (op) {
+      return '<option value="' + esc(op.value || '') + '">' + esc(op.value ? op.textContent : 'Selecione') + '</option>';
+    }).join('');
+    var corpo = document.querySelector('#atividade-itens-table tbody');
+    var html = [];
+    Array.prototype.forEach.call(document.querySelectorAll('#d1121-notas-table tbody tr'), function (nota, n) {
+      var v = function (i) { return nota.cells[i].querySelector('input').value.trim(); };
+      var num = v(1); if (!num) return;
+      var extra = dadosNotaD1121[num] || { fornecedor: '', contrapartida: '' };
+      window.itensD1121.daNota(n).forEach(function (it, i) {
+        var contabil = it.contabil || '0,00';
+        html.push('<tr data-n="' + n + '" data-i="' + i + '"><td class="checkbox-col"><input type="checkbox" class="sel-item" aria-label="Selecionar item ' + esc(it.item) + ' da nota ' + esc(num) + '"></td>' +
+          '<td>' + esc(v(0)) + '</td><td>' + esc(num) + '</td><td>' + esc(extra.fornecedor) + '</td><td>' + esc(it.merc) + '</td>' +
+          '<td class="number">' + esc(contabil) + '</td><td class="number">' + esc(contabil) + '</td><td class="number">' + esc(contabil) + '</td>' +
+          '<td><select class="tipo-atividade" aria-label="Tipo de Atividade">' + opcoes + '</select></td>' +
+          '<td>' + esc(extra.contrapartida) + '</td></tr>');
+      });
+    });
+    corpo.innerHTML = html.length ? html.join('') : '<tr><td colspan="10" class="vazio">Nenhuma mercadoria/serviço no período</td></tr>';
+    // tipo já informado no item volta selecionado
+    corpo.querySelectorAll('tr[data-i]').forEach(function (r) {
+      var atual = window.itensD1121.daNota(+r.dataset.n)[+r.dataset.i].atividade || '';
+      var s = r.querySelector('select');
+      Array.prototype.forEach.call(s.options, function (op) { if (op.value && op.textContent === atual) s.value = op.value; });
+    });
+  }
+  // Caixas de seleção múltipla do quadro Parâmetro (a <select multiple> fica oculta e guarda a seleção)
+  function multiSelecao(sel) {
+    var wrap = document.createElement('div'); wrap.className = 'ms-wrap';
+    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'ms-btn';
+    var lista = document.createElement('div'); lista.className = 'ms-lista'; lista.hidden = true;
+    wrap.appendChild(btn); wrap.appendChild(lista);
+    sel.parentNode.insertBefore(wrap, sel.nextSibling);
+    var lbl = document.querySelector('label[for="' + sel.id + '"]');
+    if (lbl) lbl.addEventListener('click', function (e) { e.preventDefault(); btn.click(); });
+    function rotulo() {
+      var m = Array.prototype.filter.call(sel.options, function (op) { return op.selected; });
+      btn.textContent = !m.length ? sel.dataset.todos : m.length === 1 ? m[0].textContent : m.length + ' selecionados';
+    }
+    function montar() {
+      lista.innerHTML = '';
+      Array.prototype.forEach.call(sel.options, function (op) {
+        var l = document.createElement('label'); var c = document.createElement('input');
+        c.type = 'checkbox'; c.checked = op.selected;
+        c.addEventListener('change', function () { op.selected = c.checked; rotulo(); sel.dispatchEvent(new Event('change')); });
+        l.appendChild(c); l.appendChild(document.createTextNode(op.textContent));
+        lista.appendChild(l);
+      });
+      if (!sel.options.length) lista.innerHTML = '<label>Nenhuma opção</label>';
+      rotulo();
+    }
+    btn.addEventListener('click', function (e) { e.stopPropagation(); lista.hidden = !lista.hidden; });
+    document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) lista.hidden = true; });
+    montar();
+    sel._ms = { refresh: montar };
+  }
+  // a janela fica no fim da página: monta as caixas depois que ela existir
+  document.addEventListener('DOMContentLoaded', function () {
+    ['atividade-fornecedor', 'atividade-contrapartida', 'atividade-nota'].forEach(function (id) {
+      var s = document.getElementById(id); if (s) multiSelecao(s);
+    });
+  });
+
+  // Nº Nota Fiscal: só as notas emitidas no mês/ano selecionado no Período de Apuração
+  function carregarListaNotasAtividade() {
+    var mesBtn = document.querySelector('.month-btn.active');
+    var mes = mesBtn ? mesBtn.getAttribute('data-month') : '';
+    var ano = document.getElementById('year-select').value;
+    var sel = document.getElementById('atividade-nota');
+    sel.innerHTML = '';
+    document.querySelectorAll('#d1121-notas-table tbody tr').forEach(function (r) {
+      var data = r.cells[0].querySelector('input').value.trim().split('/');
+      var num = r.cells[1].querySelector('input').value.trim();
+      if (!num || data.length !== 3 || data[1] !== mes || data[2] !== ano) return;
+      var op = document.createElement('option');
+      op.value = num; op.textContent = num;
+      sel.appendChild(op);
+    });
+    if (sel._ms) sel._ms.refresh();
+  }
+  document.getElementById('btn-preencher-atividade').addEventListener('click', function () {
+    carregarListaNotasAtividade();
+    carregarNotasAtividade();
+    carregarItensAtividade();
+    filtrarSemTipoAtividade();
+    document.getElementById('modal-preencher-atividade').classList.add('active');
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    var janela = document.getElementById('modal-preencher-atividade');
+    var fechar = function () { janela.classList.remove('active'); };
+    // Filtrar: aplica Data Início/Fim (data de emissão), Fornecedor, Contrapartida e Nº Nota Fiscal às duas abas
+    janela.querySelector('#atividade-pesquisar').addEventListener('click', function () {
+      var ini = janela.querySelector('#atividade-data-inicio').value;
+      var fim = janela.querySelector('#atividade-data-fim').value;
+      if (ini && fim && fim < ini) { mostrarAviso('A Data Fim não pode ser anterior à Data Início'); return; }
+      var marcados = function (id) {
+        return Array.prototype.filter.call(janela.querySelector('#' + id).options, function (op) { return op.selected; })
+          .map(function (op) { return op.value || op.textContent; });
+      };
+      var fornecedores = marcados('atividade-fornecedor');
+      var contrapartidas = marcados('atividade-contrapartida');
+      var notas = marcados('atividade-nota');
+      var iso = function (br) { var p = br.trim().split('/'); return p.length === 3 ? p[2] + '-' + p[1] + '-' + p[0] : ''; };
+      var visiveis = 0;
+      [['#atividade-notas-table', 8], ['#atividade-itens-table', 9]].forEach(function (g) {
+        janela.querySelectorAll(g[0] + ' tbody tr').forEach(function (r) {
+          if (r.cells.length < 4) return; // linha de mensagem
+          var data = iso(r.cells[1].textContent);
+          var ok = (!ini || data >= ini) && (!fim || data <= fim) &&
+            (!notas.length || notas.indexOf(r.cells[2].textContent.trim()) !== -1) &&
+            (!fornecedores.length || fornecedores.indexOf(r.cells[3].textContent.trim()) !== -1) &&
+            (!contrapartidas.length || contrapartidas.indexOf(r.cells[g[1]].textContent.trim()) !== -1);
+          r.classList.toggle('oculta-parametro', !ok);
+          if (ok) visiveis++;
+        });
+      });
+      filtrarSemTipoAtividade();
+      if (!visiveis) mostrarAviso('Nenhuma nota/item encontrado para os parâmetros informados');
+    });
+    // Processar: aplica o Tipo da Atividade escolhido no quadro às notas marcadas
+    janela.querySelector('#atividade-processar').addEventListener('click', function () {
+      var tipo = janela.querySelector('#atividade-tipo').value;
+      if (!tipo) { mostrarAviso('Selecione o Tipo da Atividade'); return; }
+      var porItem = janela.querySelector('.mid-pane.active #atividade-itens-table');
+      var marcadas = janela.querySelectorAll(porItem ? '#atividade-itens-table tbody input.sel-item:checked' : '#atividade-notas-table tbody input.sel-nota:checked');
+      if (!marcadas.length) { mostrarAviso(porItem ? 'Marque pelo menos um item fiscal' : 'Marque pelo menos uma nota fiscal'); return; }
+      marcadas.forEach(function (c) { c.closest('tr').querySelector('select.tipo-atividade').value = tipo; c.checked = false; });
+      filtrarSemTipoAtividade();
+      mostrarAviso('Tipo da Atividade aplicado a ' + marcadas.length + (porItem ? ' item(ns)' : ' nota(s)'));
+    });
+    // abas da janela
+    var abas = Array.prototype.slice.call(janela.querySelectorAll('.mid-tab'));
+    var paineis = Array.prototype.slice.call(janela.querySelectorAll('.mid-pane'));
+    abas.forEach(function (aba, i) {
+      aba.addEventListener('click', function () {
+        abas.forEach(function (a, j) { a.classList.toggle('active', i === j); a.setAttribute('aria-selected', String(i === j)); });
+        paineis.forEach(function (p, j) { p.classList.toggle('active', i === j); });
+      });
+    });
+    janela.querySelectorAll('.modal-close-btn, .modal-footer-btn:not(.confirm)').forEach(function (b) { b.addEventListener('click', fechar); });
+    // Confirmar: leva o Tipo de Atividade de cada nota para a coluna Tipo de Atividade do grid Deduções Notas Fiscais
+    janela.querySelector('.modal-footer-btn.confirm').addEventListener('click', function () {
+      var notas = document.querySelectorAll('#d1121-notas-table tbody tr');
+      var levadas = 0;
+      janela.querySelectorAll('#atividade-notas-table tbody tr').forEach(function (r) {
+        var sel = r.querySelector('select.tipo-atividade');
+        if (!sel || !sel.value) return;
+        var nota = r.cells[2].textContent.trim();
+        Array.prototype.forEach.call(notas, function (n) {
+          if (n.cells[1].querySelector('input').value.trim() === nota) {
+            n.cells[5].querySelector('input').value = sel.options[sel.selectedIndex].textContent;
+            levadas++;
+          }
+        });
+      });
+      // itens: leva para a coluna Tipo de Atividade de Itens dos Documentos Fiscais
+      var itensLevados = 0;
+      janela.querySelectorAll('#atividade-itens-table tbody tr[data-i]').forEach(function (r) {
+        var sel = r.querySelector('select.tipo-atividade');
+        var item = window.itensD1121.daNota(+r.dataset.n)[+r.dataset.i];
+        if (!sel.value || !item) return;
+        item.atividade = sel.options[sel.selectedIndex].textContent;
+        itensLevados++;
+      });
+      if (itensLevados && window.itensD1121) window.itensD1121.render();
+      fechar();
+      var partes = [];
+      if (levadas) partes.push(levadas + ' nota(s)');
+      if (itensLevados) partes.push(itensLevados + ' item(ns)');
+      mostrarAviso(partes.length ? 'Tipo de Atividade levado para ' + partes.join(' e ') : 'Nenhum Tipo de Atividade preenchido');
+    });
+    janela.addEventListener('click', function (e) { if (e.target === janela) fechar(); });
   });
   // Expandir / recolher pastas da árvore
   document.querySelectorAll('.tree .tgl:not(.blank)').forEach(function (b) {
@@ -2633,6 +3035,114 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
         </div>
     </div>
 
+    <!-- MODAL: D-1121 PREENCHER TIPO DE ATIVIDADE -->
+    <div class="modal-overlay" id="modal-preencher-atividade">
+        <div class="modal modal-pequena">
+            <div class="modal-header">
+                <span>Preencher Tipo de Atividade em Massa</span>
+                <button class="modal-close-btn" aria-label="Fechar">×</button>
+            </div>
+            <div class="modal-content">
+                <fieldset class="params modal-periodo">
+                    <legend>Parâmetro</legend>
+                    <div class="mp-linha">
+                        <label for="atividade-data-inicio">Data Início</label>
+                        <input type="date" id="atividade-data-inicio">
+                        <label for="atividade-data-fim" class="mp-dir">Data Fim</label>
+                        <input type="date" id="atividade-data-fim">
+                    </div>
+                    <div class="mp-linha">
+                        <label for="atividade-fornecedor">Fornecedor</label>
+                        <select id="atividade-fornecedor" multiple hidden data-todos="Todos">
+                            <option>Distribuidora Alfa Ltda</option>
+                            <option>Comercial Beta S.A.</option>
+                            <option>Gama Serviços Prediais Ltda</option>
+                            <option>Papelaria Delta ME</option>
+                        </select>
+                        <label for="atividade-contrapartida" class="mp-dir">Contrapartida</label>
+                        <select id="atividade-contrapartida" multiple hidden data-todos="Todas">
+                            <option>1.02 - Banco A - Conta Corrente</option>
+                            <option>1.05 - Clientes - Pessoa Jurídica</option>
+                            <option>2.07 - Fornecedores - Nacionais</option>
+                            <option>2.08 - Fornecedores - Importação</option>
+                        </select>
+                        <button type="button" class="btn" id="atividade-pesquisar">Filtrar</button>
+                    </div>
+                    <div class="mp-linha">
+                        <label for="atividade-nota">Nº Nota Fiscal</label>
+                        <select id="atividade-nota" multiple hidden data-todos="Todas">
+                        </select>
+                        <label class="chk mp-dir" for="atividade-sem-tipo"><input type="checkbox" id="atividade-sem-tipo"> Filtrar notas/itens sem Tipo de Atividade</label>
+                    </div>
+                    <div class="mp-linha">
+                        <label for="atividade-tipo">Tipo da Atividade</label>
+                        <select id="atividade-tipo" class="mp-largo">
+                            <option value="">-- Selecione --</option>
+                            <option>01 – Operações de Crédito, Câmbio, TVM, Securitização e Faturização</option>
+                            <option>06 – Arrendamentos</option>
+                            <option>08 – Administração de Consórcio</option>
+                            <option>11 – Seguros de Ramos Elementares e de Pessoas sem Cobertura por Sobrevivência, com exceção de Seguro Saúde</option>
+                            <option>13 – Seguros de Pessoas com Cobertura por Sobrevivência e Previdência Complementar Aberta</option>
+                            <option>14 – Capitalização</option>
+                            <option>20 – Planos de Assistência à Saúde</option>
+                            <option>30 – Concursos de Prognósticos</option>
+                        </select>
+                        <button type="button" class="btn" id="atividade-processar">Processar</button>
+                    </div>
+                </fieldset>
+                <div class="mid-tabs modal-abas" role="tablist">
+                    <button type="button" class="mid-tab active" role="tab" aria-selected="true">Preencher Tipo Atividade por Nota Fiscal</button>
+                    <button type="button" class="mid-tab" role="tab" aria-selected="false">Preencher Atividade por Item Fiscal</button>
+                </div>
+                <div class="mid-pane active">
+                    <div class="table-wrapper modal-grid">
+                        <table class="modal-table" id="atividade-notas-table">
+                            <thead>
+                                <tr>
+                                <th>Selecionar</th>
+                                <th>Data de Emissão</th>
+                                <th>Nº da Nota Fiscal</th>
+                                <th>Fornecedor</th>
+                                <th>Valor Contábil</th>
+                                <th>Valor Total Dedutível</th>
+                                <th>Valor da Dedução no Período</th>
+                                <th>Tipo de Atividade</th>
+                                <th>Contrapartida</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="mid-pane">
+                    <div class="table-wrapper modal-grid">
+                        <table class="modal-table" id="atividade-itens-table">
+                            <thead>
+                                <tr>
+                                <th>Selecionar</th>
+                                <th>Data de Emissão</th>
+                                <th>Nº da Nota Fiscal</th>
+                                <th>Fornecedor</th>
+                                <th>Mercadoria/Serviço</th>
+                                <th>Valor Contábil</th>
+                                <th>Valor Total Dedutível</th>
+                                <th>Valor da Dedução no Período</th>
+                                <th>Tipo de Atividade</th>
+                                <th>Contrapartida</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-footer-btn confirm">Confirmar</button>
+                <button class="modal-footer-btn">Sair</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: Seleção de Conta Contábil -->
     <div class="contas-modal-overlay" id="contas-modal-overlay">
         <div class="contas-modal">
@@ -2866,5 +3376,3 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
             </div>
         </div>
     </div>
-
-</body></html>
