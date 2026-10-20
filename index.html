@@ -46,7 +46,9 @@ button, input, select { font: inherit; color: inherit; }
 .caret::after { content: ""; border: 3px solid transparent; border-top: 4px solid var(--ink); margin-top: 3px; }
 .sep { width: 1px; height: 20px; background: var(--line); margin: 0 3px; }
 .ico { width: 16px; height: 16px; display: block; }
-.custom-dropdown { position: relative; }
+.custom-dropdown, .tools-dropdown { position: relative; }
+.menu-acao { display: flex; width: 100%; border: 0; background: none; text-align: left; font: inherit; }
+.oculta-col-x .col-x { display: none; }
 .menu { position: absolute; top: 100%; left: 0; z-index: 50; background: var(--surface); border: 1px solid var(--line-strong); box-shadow: 2px 2px 4px rgba(0,0,0,.2); min-width: 230px; padding: 6px 0; }
 .menu-group { padding: 2px 10px 4px; font-weight: bold; color: var(--ink-soft); }
 .menu-item { display: flex; align-items: center; gap: 6px; padding: 4px 18px; cursor: pointer; }
@@ -136,6 +138,8 @@ tr.oculta-filtro, tr.oculta-aplicacao, tr.oculta-conta-filtro, tr.oculta-pesquis
 .main-table tbody tr.selected td { background: var(--select); font-weight: bold; }
 .cell-input { width: 100%; border: 0; background: transparent; text-align: right; padding: 0; height: 14px; font-variant-numeric: tabular-nums; }
 .cell-input.txt { text-align: left; min-width: 90px; }
+.cell-input[readonly] { cursor: default; }
+.cell-input[readonly]:focus { outline: 0; background: transparent; }
 .cell-input:focus { outline: 1px solid var(--ink); outline-offset: 0; background: var(--surface); }
 .conta-desmembrada-flag { margin: 0; width: 13px; height: 13px; }
 .main-table td:has(input.conta-desmembrada-flag) { text-align: center; }
@@ -153,6 +157,10 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 .mid-pane { display: none; flex: 1; min-height: 0; flex-direction: column; }
 .mid-pane.active { display: flex; }
 .mid-pane .table-wrapper { border-top: 0; }
+#screen-d1121 > .table-section > .mid-tabs { display: none; } /* a escolha é feita pela árvore */
+.flag-digitado { margin: 0; cursor: pointer; }
+.cell-input.manual { font-style: italic; }
+.table-wrapper th.col-x, .table-wrapper td.col-x, .grid-table th.col-x, .grid-table td.col-x { width: 28px; min-width: 28px; text-align: center; }
 .pane-acoes { padding: 5px 4px; margin: 0 2px; display: flex; gap: 6px; }
 .table-wrapper td.vazio { text-align: center; color: var(--ink-soft); height: 40px; }
 
@@ -188,6 +196,9 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
 .modal, .contas-modal { background: var(--chrome); border: 1px solid var(--line-strong); width: 100%; max-width: 900px; height: 80vh; display: flex; flex-direction: column; box-shadow: 3px 3px 10px rgba(0,0,0,.35); }
 .contas-modal { max-width: 700px; height: 70vh; }
 .modal-header, .contas-modal-header { background: var(--title); color: var(--title-ink); padding: 5px 8px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+.modal.modal-pergunta { max-width: 480px; height: auto; }
+.pergunta-texto { background: var(--surface); padding: 14px 16px; display: grid; gap: 10px; }
+.pergunta-texto p { margin: 0; line-height: 1.4; }
 .modal.modal-pequena { max-width: 720px; height: auto; min-height: 240px; }
 .modal-pequena .modal-content { background: var(--surface); }
 .modal-abas { margin: 0; padding-top: 6px; }
@@ -259,12 +270,20 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
     <span class="chip">DeRE - Eventos Mensais</span>
     <button class="tb" id="btn-salvar" disabled aria-label="Salvar" title="Salvar"><svg class="ico" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="none" stroke="#666"/><rect x="5" y="2" width="6" height="4" fill="#999"/><rect x="4" y="9" width="8" height="5" fill="#ddd" stroke="#666"/></svg></button>
     <span class="sep"></span>
+    <div class="tools-dropdown">
+      <button class="tb caret" id="ferramentas-btn" aria-haspopup="true" aria-expanded="false">Ferramentas</button>
+      <div id="ferramentas-menu" class="menu" hidden>
+        <button type="button" class="menu-item menu-acao" id="limpar-valores">Limpar Valores</button>
+      </div>
+    </div>
+    <span class="sep"></span>
     <div class="custom-dropdown">
       <button class="tb caret" id="opcoes-btn">Opções</button>
       <div id="opcoes-menu" class="menu" style="display: none;">
         <div class="menu-group">Exibição</div>
         <label class="menu-item" for="exibirContas1"><input type="checkbox" id="exibirContas1"> Contas Zeradas</label>
         <label class="menu-item" for="exibirSaldos"><input type="checkbox" id="exibirSaldos"> Saldo Inicial / Saldo Final</label>
+        <label class="menu-item" for="exibirColunasX"><input type="checkbox" id="exibirColunasX" checked> Exibir Colunas de Indicação de valor editado [x]</label>
       </div>
     </div>
     <span class="sep"></span>
@@ -315,7 +334,13 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
               <ul>
                 <li><div class="node tree-item active" data-event="d1101"><span class="tgl blank"></span><span class="dico"></span><span class="lbl">D-1101 Balancete Mensal</span></div></li>
                 <li><div class="node tree-item" data-event="d1106"><span class="tgl blank"></span><span class="dico"></span><span class="lbl">D-1106 Aplicações Financeiras</span></div></li>
-                <li><div class="node tree-item" data-event="d1121"><span class="tgl blank"></span><span class="dico"></span><span class="lbl">D-1121 Deduções Utilizadas</span></div></li>
+                <li>
+                  <div class="node"><button class="tgl" aria-label="Recolher D-1121 Deduções Utilizadas">−</button><span class="fico"></span><span class="lbl">D-1121 Deduções Utilizadas</span></div>
+                  <ul>
+                    <li><div class="node tree-item" data-event="d1121" data-aba="0"><span class="tgl blank"></span><span class="dico"></span><span class="lbl">Ativos Imobiliários</span></div></li>
+                    <li><div class="node tree-item" data-event="d1121" data-aba="1"><span class="tgl blank"></span><span class="dico"></span><span class="lbl">Deduções Notas Fiscais</span></div></li>
+                  </ul>
+                </li>
               </ul>
             </li>
           </ul>
@@ -1127,14 +1152,16 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                   <th>Valor da Aquisição</th>
                   <th>Tipo da Atividade</th>
                   <th>Conta Contábil</th>
-                  <th>Valor da Dedução Total <button type="button" class="tip-icon tip-col" aria-label="Ajuda" data-tip="Esse campo deve ser preenchido com o valor total da dedução gerada pela operação.">i</button></th>
+                  <th>Valor Total Dedutível <button type="button" class="tip-icon tip-col" aria-label="Ajuda" data-tip="Esse campo deve ser preenchido com o valor total da dedução gerada pela operação.">i</button></th>
+                  <th class="col-x">[x]</th>
                   <th>Valor da Dedução no Período <button type="button" class="tip-icon tip-col" aria-label="Ajuda" data-tip="Esse campo deve ser preenchido com o valor da dedução que será aproveitada no período atual.">i</button></th>
+                  <th class="col-x">[x]</th>
                 </tr>
               </thead>
               <tbody>
-                <tr><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td></tr>
-                <tr><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td></tr>
-                <tr><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td></tr>
+                <tr><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td></tr>
+                <tr><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td></tr>
+                <tr><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td></tr>
               </tbody>
             </table>
             </div>
@@ -1149,7 +1176,9 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                   <th>Nº da Nota Fiscal</th>
                   <th>Valor Contábil</th>
                   <th>Valor Total Dedutível</th>
+                  <th class="col-x">[x]</th>
                   <th>Valor da Dedução no Período</th>
+                  <th class="col-x">[x]</th>
                   <th>Tipo de Atividade</th>
                   <th>Modelo NFe</th>
                   <th>Chave da Nota Fiscal</th>
@@ -1157,9 +1186,9 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                 </tr>
               </thead>
               <tbody>
-                <tr><td><input type="text" class="cell-input txt" value="05/03/2026"></td><td><input type="text" class="cell-input txt" value="1523"></td><td class="number"><input type="text" class="cell-input" value="12.500,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value="55"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td></tr>
-                <tr><td><input type="text" class="cell-input txt" value="12/03/2026"></td><td><input type="text" class="cell-input txt" value="1547"></td><td class="number"><input type="text" class="cell-input" value="3.180,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value="55"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td></tr>
-                <tr><td><input type="text" class="cell-input txt" value="20/03/2026"></td><td><input type="text" class="cell-input txt" value="88"></td><td class="number"><input type="text" class="cell-input" value="950,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value="65"></td><td><input type="text" class="cell-input txt" value=""></td><td><input type="text" class="cell-input txt" value=""></td></tr>
+                <tr><td><input type="text" readonly class="cell-input txt" value="05/03/2026"></td><td><input type="text" readonly class="cell-input txt" value="1523"></td><td class="number"><input type="text" readonly class="cell-input" value="12.500,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td><td><input type="text" readonly class="cell-input txt" value=""></td><td><input type="text" readonly class="cell-input txt" value="55"></td><td><input type="text" readonly class="cell-input txt" value=""></td><td><input type="text" readonly class="cell-input txt" value=""></td></tr>
+                <tr><td><input type="text" readonly class="cell-input txt" value="12/03/2026"></td><td><input type="text" readonly class="cell-input txt" value="1547"></td><td class="number"><input type="text" readonly class="cell-input" value="3.180,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td><td><input type="text" readonly class="cell-input txt" value=""></td><td><input type="text" readonly class="cell-input txt" value="55"></td><td><input type="text" readonly class="cell-input txt" value=""></td><td><input type="text" readonly class="cell-input txt" value=""></td></tr>
+                <tr><td><input type="text" readonly class="cell-input txt" value="20/03/2026"></td><td><input type="text" readonly class="cell-input txt" value="88"></td><td class="number"><input type="text" readonly class="cell-input" value="950,00"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td><td class="number"><input type="text" class="cell-input" value="0,00"></td><td class="col-x"><input type="checkbox" class="flag-digitado" aria-label="Manter valor digitado"></td><td><input type="text" readonly class="cell-input txt" value=""></td><td><input type="text" readonly class="cell-input txt" value="65"></td><td><input type="text" readonly class="cell-input txt" value=""></td><td><input type="text" readonly class="cell-input txt" value=""></td></tr>
               </tbody>
             </table>
           </div>
@@ -1176,12 +1205,14 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
                     <th>Mercadoria/Serviços</th>
                     <th>Valor Contábil</th>
                     <th>Valor Total Dedutível</th>
+                    <th class="col-x">[x]</th>
                     <th>Valor da Dedução no Período</th>
+                    <th class="col-x">[x]</th>
                     <th>Tipo de Atividade</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td colspan="6" class="vazio">Selecione uma nota fiscal no grid</td></tr>
+                  <tr><td colspan="8" class="vazio">Selecione uma nota fiscal no grid</td></tr>
                 </tbody>
               </table>
             </div>
@@ -1535,24 +1566,35 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
         { item: '3', merc: 'Lâmpadas LED', contabil: '250,00', dedutivel: '0,00', deducao: '0,00' } ],
       [ { item: '1', merc: 'Material de escritório', contabil: '950,00', dedutivel: '0,00', deducao: '0,00' } ]
     ];
-    var campos = ['item', 'merc', 'contabil', 'dedutivel', 'deducao', 'atividade'];
+    var campos = ['item', 'merc', 'contabil', 'dedutivel', 'x', 'deducao', 'x', 'atividade'];
     var atual = -1;
     var esc = function (t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
     function render() {
-      if (atual < 0) { corpo.innerHTML = '<tr><td colspan="6" class="vazio">Selecione uma nota fiscal no grid</td></tr>'; return; }
+      if (atual < 0) { corpo.innerHTML = '<tr><td colspan="8" class="vazio">Selecione uma nota fiscal no grid</td></tr>'; return; }
       var lista = itensPorNota[atual] || (itensPorNota[atual] = []);
-      if (!lista.length) { corpo.innerHTML = '<tr><td colspan="6" class="vazio">Nenhuma mercadoria/serviço vinculado a esta nota</td></tr>'; return; }
+      if (!lista.length) { corpo.innerHTML = '<tr><td colspan="8" class="vazio">Nenhuma mercadoria/serviço vinculado a esta nota</td></tr>'; return; }
       corpo.innerHTML = lista.map(function (it, li) {
         return '<tr data-i="' + li + '">' + campos.map(function (c, ci) {
-          var numero = ci >= 2 && ci <= 4;
-          return '<td' + (numero ? ' class="number"' : '') + '><input type="text" class="cell-input' + (numero ? '' : ' txt') + '" data-campo="' + c + '" value="' + esc(it[c] || '') + '"></td>';
+          if (c === 'x') {
+            var ref = campos[ci - 1] + 'Digitado';
+            return '<td class="col-x"><input type="checkbox" class="flag-digitado" data-ref="' + ref + '" aria-label="Manter valor digitado"' + (it[ref] ? ' checked' : '') + '></td>';
+          }
+          var numero = c === 'contabil' || c === 'dedutivel' || c === 'deducao';
+          return '<td' + (numero ? ' class="number"' : '') + '><input type="text"' + (c === 'dedutivel' || c === 'deducao' ? '' : ' readonly') + ' class="cell-input' + (numero ? '' : ' txt') + (it[c + 'Digitado'] ? ' manual' : '') + '" data-campo="' + c + '" value="' + esc(it[c] || '') + '"></td>';
         }).join('') + '</tr>';
       }).join('');
     }
     // edição dos itens fica guardada na nota
     corpo.addEventListener('input', function (e) {
       var inp = e.target; if (atual < 0 || !inp.dataset.campo) return;
-      itensPorNota[atual][+inp.closest('tr').dataset.i][inp.dataset.campo] = inp.value;
+      var item = itensPorNota[atual][+inp.closest('tr').dataset.i];
+      item[inp.dataset.campo] = inp.value;
+      if (inp.dataset.campo === 'dedutivel' || inp.dataset.campo === 'deducao') item[inp.dataset.campo + 'Digitado'] = true;
+    });
+    // [x] marcado/desmarcado pelo usuário fica guardado no item
+    corpo.addEventListener('change', function (e) {
+      var f = e.target; if (atual < 0 || !f.dataset || !f.dataset.ref) return;
+      itensPorNota[atual][+f.closest('tr').dataset.i][f.dataset.ref] = f.checked;
     });
     notas.addEventListener('click', function (e) {
       var row = e.target.closest('tbody tr'); if (!row) return;
@@ -1594,7 +1636,7 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
     // tipo já informado na nota (grid Deduções Notas Fiscais) volta selecionado
     corpo.querySelectorAll('tr').forEach(function (r, k) {
       var s = r.querySelector('select.tipo-atividade'); if (!s) return;
-      var atual = linhas[k].cells[5].querySelector('input').value.trim();
+      var atual = linhas[k].cells[7].querySelector('input').value.trim();
       Array.prototype.forEach.call(s.options, function (op) { if (op.value && op.textContent === atual) s.value = op.value; });
     });
   }
@@ -1772,7 +1814,7 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
         var nota = r.cells[2].textContent.trim();
         Array.prototype.forEach.call(notas, function (n) {
           if (n.cells[1].querySelector('input').value.trim() === nota) {
-            n.cells[5].querySelector('input').value = sel.options[sel.selectedIndex].textContent;
+            n.cells[7].querySelector('input').value = sel.options[sel.selectedIndex].textContent;
             levadas++;
           }
         });
@@ -1794,6 +1836,121 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
       mostrarAviso(partes.length ? 'Tipo de Atividade levado para ' + partes.join(' e ') : 'Nenhum Tipo de Atividade preenchido');
     });
     janela.addEventListener('click', function (e) { if (e.target === janela) fechar(); });
+  });
+  // Processar (barra de ferramentas) no D-1121: pergunta antes de ajustar as notas do mês logado
+  document.getElementById('process-btn-shared').addEventListener('click', function (e) {
+    if (!document.getElementById('screen-d1121').classList.contains('active')) return;
+    e.stopImmediatePropagation(); // no D-1121 o aviso padrão do Processar é substituído pela pergunta
+    var paineis = document.querySelectorAll('#screen-d1121 > .table-section > .mid-pane');
+    var ativosAberto = paineis[0] && paineis[0].classList.contains('active');
+    document.getElementById(ativosAberto ? 'modal-processar-d1121-ativos' : 'modal-processar-d1121').classList.add('active');
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    var janela = document.getElementById('modal-processar-d1121');
+    var fechar = function () { janela.classList.remove('active'); };
+    function ajustar(usarContabil) {
+      var mesBtn = document.querySelector('.month-btn.active');
+      var mes = mesBtn ? mesBtn.getAttribute('data-month') : '';
+      var ano = document.getElementById('year-select').value;
+      var ajustadas = 0;
+      document.querySelectorAll('#d1121-notas-table tbody tr').forEach(function (r) {
+        var inp = function (i) { return r.cells[i].querySelector('input'); };
+        var data = inp(0).value.trim().split('/');
+        if (data.length !== 3 || data[1] !== mes || data[2] !== ano) return;
+        var valor = usarContabil ? (inp(2).value.trim() || '0,00') : '0,00';
+        [3, 5].forEach(function (c) { // Valor Total Dedutível e Valor da Dedução no Período
+          var campo = inp(c);
+          var flag = r.cells[c + 1].querySelector('.flag-digitado');
+          if (flag && flag.checked) return; // valor digitado com [x] marcado é mantido
+          campo.value = valor;
+          campo.classList.remove('manual');
+        });
+        ajustadas++;
+      });
+      fechar();
+      mostrarAviso(ajustadas ? ajustadas + ' nota(s) do mês ajustada(s)' : 'Nenhuma nota no mês logado');
+    }
+    document.getElementById('processar-d1121-sim').addEventListener('click', function () { ajustar(true); });
+    document.getElementById('processar-d1121-nao').addEventListener('click', function () { ajustar(false); });
+    janela.querySelector('.modal-close-btn').addEventListener('click', fechar);
+  });
+  // D-1121: a coluna [x] se marca quando o valor da coluna à esquerda é digitado pelo usuário
+  ['d1121-notas-table', 'd1121-itens-table', 'd1121-ativos-table'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', function (e) {
+      var td = e.target.closest('td');
+      var prox = td && td.nextElementSibling;
+      var flag = prox && prox.classList.contains('col-x') ? prox.querySelector('.flag-digitado') : null;
+      if (flag) { flag.checked = true; e.target.classList.add('manual'); }
+    });
+  });
+  // Ferramentas (barra de ferramentas)
+  (function () {
+    var btn = document.getElementById('ferramentas-btn');
+    var menu = document.getElementById('ferramentas-menu');
+    btn.addEventListener('click', function (e) { e.stopPropagation(); menu.hidden = !menu.hidden; btn.setAttribute('aria-expanded', String(!menu.hidden)); });
+    document.addEventListener('click', function (e) { if (!e.target.closest('.tools-dropdown')) { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); } });
+    // Limpar Valores: apaga os valores digitados (volta a 0,00) e desmarca as colunas [x]
+    document.getElementById('limpar-valores').addEventListener('click', function () {
+      menu.hidden = true;
+      var limpos = 0;
+      document.querySelectorAll('#d1121-notas-table .cell-input.manual, #d1121-ativos-table .cell-input.manual').forEach(function (c) {
+        c.value = '0,00'; c.classList.remove('manual'); limpos++;
+      });
+      document.querySelectorAll('#d1121-notas-table .flag-digitado, #d1121-ativos-table .flag-digitado').forEach(function (f) { f.checked = false; });
+      if (window.itensD1121) {
+        var totalNotas = document.querySelectorAll('#d1121-notas-table tbody tr').length;
+        for (var n = 0; n < totalNotas; n++) {
+          window.itensD1121.daNota(n).forEach(function (it) {
+            ['dedutivel', 'deducao'].forEach(function (c) {
+              if (it[c + 'Digitado']) { it[c] = '0,00'; limpos++; }
+              it[c + 'Digitado'] = false;
+            });
+          });
+        }
+        window.itensD1121.render();
+      }
+      mostrarAviso(limpos ? limpos + ' valor(es) digitado(s) apagado(s)' : 'Nenhum valor digitado para apagar');
+    });
+  })();
+  // Opções > Exibir Colunas de Indicação de valor editado [x]
+  document.getElementById('exibirColunasX').addEventListener('change', function () {
+    document.getElementById('app').classList.toggle('oculta-col-x', !this.checked);
+  });
+  // D-1121: as subdivisões da árvore abrem a parte correspondente (Ativos Imobiliários / Deduções Notas Fiscais)
+  document.querySelectorAll('.tree-item[data-event="d1121"][data-aba]').forEach(function (no) {
+    no.addEventListener('click', function () {
+      var aba = document.querySelectorAll('#screen-d1121 > .table-section > .mid-tabs .mid-tab')[+no.dataset.aba];
+      if (aba) aba.click();
+    });
+  });
+  // D-1121 Ativos Imobiliários: Sim = Valor da Aquisição; Não = 0,00; só ativos com Data da Aquisição no mês logado; [x] marcado é mantido
+  document.addEventListener('DOMContentLoaded', function () {
+    var janela = document.getElementById('modal-processar-d1121-ativos');
+    var fechar = function () { janela.classList.remove('active'); };
+    function ajustar(usarAquisicao) {
+      var mesBtn = document.querySelector('.month-btn.active');
+      var mes = mesBtn ? mesBtn.getAttribute('data-month') : '';
+      var ano = document.getElementById('year-select').value;
+      var ajustados = 0;
+      document.querySelectorAll('#d1121-ativos-table tbody tr').forEach(function (r) {
+        var inp = function (i) { return r.cells[i].querySelector('input'); };
+        var data = inp(5).value.trim().split('/'); // Data da Aquisição (dd/mm/aaaa)
+        if (data.length !== 3 || data[1] !== mes || data[2] !== ano) return;
+        var valor = usarAquisicao ? (inp(6).value.trim() || '0,00') : '0,00';
+        [9, 11].forEach(function (c) { // Valor Total Dedutível e Valor da Dedução no Período
+          var flag = r.cells[c + 1].querySelector('.flag-digitado');
+          if (flag && flag.checked) return;
+          inp(c).value = valor;
+          inp(c).classList.remove('manual');
+        });
+        ajustados++;
+      });
+      fechar();
+      mostrarAviso(ajustados ? ajustados + ' ativo(s) imobiliário(s) do mês ajustado(s)' : 'Nenhum ativo imobiliário com aquisição no mês logado');
+    }
+    document.getElementById('processar-d1121-ativos-sim').addEventListener('click', function () { ajustar(true); });
+    document.getElementById('processar-d1121-ativos-nao').addEventListener('click', function () { ajustar(false); });
+    janela.querySelector('.modal-close-btn').addEventListener('click', fechar);
   });
   // Expandir / recolher pastas da árvore
   document.querySelectorAll('.tree .tgl:not(.blank)').forEach(function (b) {
@@ -3139,6 +3296,44 @@ tr.oculta-zerada, tr.oculta-pesquisa, tr.oculta-grupo { display: none; }
             <div class="modal-footer">
                 <button class="modal-footer-btn confirm">Confirmar</button>
                 <button class="modal-footer-btn">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: D-1121 PERGUNTA AO PROCESSAR -->
+    <div class="modal-overlay" id="modal-processar-d1121" role="dialog" aria-modal="true" aria-labelledby="titulo-processar-d1121">
+        <div class="modal modal-pergunta">
+            <div class="modal-header">
+                <span id="titulo-processar-d1121">Processar D-1121</span>
+                <button class="modal-close-btn" aria-label="Fechar">×</button>
+            </div>
+            <div class="modal-content pergunta-texto">
+                <p>Deseja que os campos Valor Total Dedutível e Valor da Dedução no Período recebam o mesmo valor do campo Valor Contábil?</p>
+                <p>Se sim, os campos serão preenchidos com o Valor Contábil. Se não, serão zerados.</p>
+                <p>Em ambos os casos, somente as notas do mês logado serão ajustadas.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-footer-btn confirm" id="processar-d1121-sim">Sim</button>
+                <button class="modal-footer-btn" id="processar-d1121-nao">Não</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: D-1121 ATIVOS IMOBILIÁRIOS - PERGUNTA AO PROCESSAR -->
+    <div class="modal-overlay" id="modal-processar-d1121-ativos" role="dialog" aria-modal="true" aria-labelledby="titulo-processar-d1121-ativos">
+        <div class="modal modal-pergunta">
+            <div class="modal-header">
+                <span id="titulo-processar-d1121-ativos">Processar D - 1121 - Ativos Imobiliários</span>
+                <button class="modal-close-btn" aria-label="Fechar">×</button>
+            </div>
+            <div class="modal-content pergunta-texto">
+                <p>Deseja preencher os campos Valor Total Dedutível e Valor da Dedução no Período com o Valor da Aquisição?</p>
+                <p>Se sim, os campos serão preenchidos com o Valor da Aquisição. Se não, serão zerados. A replicação ocorre somente no primeiro mês em que o ativo imobiliário for informado, e apenas os ativos do mês selecionado são ajustados.</p>
+                <p>Valores com a coluna de indicação de valor editado [x] selecionada não serão recalculados.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-footer-btn confirm" id="processar-d1121-ativos-sim">Sim</button>
+                <button class="modal-footer-btn" id="processar-d1121-ativos-nao">Não</button>
             </div>
         </div>
     </div>
